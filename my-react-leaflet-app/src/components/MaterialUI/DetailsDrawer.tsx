@@ -43,8 +43,6 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
       role="presentation"
       onKeyDown={toggleDrawer(anchor, false)}
     >
-
-      <div>{selectedMark?.length}</div>
       <div className="">
         {selectedMark?.map((doc, index) => (
           <Accordion key={index}>
