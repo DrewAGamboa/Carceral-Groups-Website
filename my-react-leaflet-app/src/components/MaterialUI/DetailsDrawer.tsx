@@ -37,14 +37,17 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
         setState({ ...state, [anchor]: open });
       };
 
-  const list = (anchor: string) => (
-    <Box
-      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-      role="presentation"
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <div className="">
-        {selectedMark?.map((doc, index) => (
+  const docTypeAccordions = CarceralDocument.getCarceralDocumentsByType(selectedMark || []).map((docType, index) => (
+    <Accordion key={index}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1-content"
+        id="panel1-header"
+      >
+        <Typography>{docType.type}</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        {docType.docs.map((doc, index) => (
           <Accordion key={index}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -54,15 +57,23 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
               <Typography>{doc.getTitle()}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                malesuada lacus ex, sit amet blandit leo lobortis eget.
-              </Typography>
               <FormDialog />
             </AccordionDetails>
           </Accordion>
         ))
         }
+      </AccordionDetails>
+    </Accordion>
+  ));
+
+  const list = (anchor: string) => (
+    <Box
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      role="presentation"
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <div className="">
+        {docTypeAccordions}
       </div>
     </Box>
   );

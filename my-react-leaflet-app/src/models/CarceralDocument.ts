@@ -5,6 +5,7 @@ export default class CarceralDocument {
     // Properties
     private id: string;
     private title: string;
+    private docType: string;
     private createdAt: Date;
     private group: string;
     private parentGroup: string;
@@ -12,9 +13,10 @@ export default class CarceralDocument {
     private latlng: number[];
 
     // Constructor
-    constructor(id: string, title: string, group: string, parentGroup: string, latlngStr: string, latlng: number[], createdAt: Date = new Date()) {
+    constructor(id: string, title: string, docType: string, group: string, parentGroup: string, latlngStr: string, latlng: number[], createdAt: Date = new Date()) {
         this.id = id;
         this.title = title;
+        this.docType = docType;
         this.group = group;
         this.parentGroup = parentGroup;
         this.latlngStr = latlngStr;
@@ -26,6 +28,7 @@ export default class CarceralDocument {
         return new CarceralDocument(
             generateUUID(),
             dataRow['Document title'],
+            dataRow['Document type'],
             dataRow['Filter name 2'],
             dataRow['Filter name 1'],
             dataRow['Geographic location (coordinates)'],
@@ -62,6 +65,30 @@ export default class CarceralDocument {
     {
         const uniquePoints = CarceralDocument.uniquePoints(docs);
         return uniquePoints.map((doc) => doc.toGeoJson());
+    }
+
+    static uniqueDocumentTypes(docs: CarceralDocument[])
+    {
+        const uniqueObjects = docs.reduce((uniqueArr: CarceralDocument[], currentObj: CarceralDocument) => {
+            const isDuplicate = uniqueArr.some((obj) => obj.docType === currentObj.docType);
+            if (!isDuplicate) {
+                uniqueArr.push(currentObj);
+            }
+            return uniqueArr;
+        }, []);
+        return uniqueObjects;
+    }
+
+    static getCarceralDocumentsByType(docs: CarceralDocument[])
+    {
+        const uniqueTypes = CarceralDocument.uniqueDocumentTypes(docs);
+        const docsByType = uniqueTypes.map((type) => {
+            return {
+                type: type.docType,
+                docs: docs.filter((doc) => doc.docType === type.docType)
+            }
+        });
+        return docsByType;
     }
 
     static filterOptions(docs: CarceralDocument[])
