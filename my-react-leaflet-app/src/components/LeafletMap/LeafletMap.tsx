@@ -19,32 +19,10 @@ type LeafLetHelper = {
   groups: LeafLetGroup[];
 };
 
-const RedMarkerIcon_1 = L.icon({
-  iconUrl: '/assets/red_pin.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-const RedMarkerIcon_2 = L.icon({
-  iconUrl: '/assets/red_pin_2.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-const RedMarkerIcon_3 = L.icon({
-  iconUrl: '/assets/red_pin_3.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
-const RedMarkerIcon_4 = L.icon({
-  iconUrl: '/assets/red_pin_4.gif',
+const RedMarkerIcon = L.icon({
+  // iconUrl: '/assets/red_pin.png',
+  // TODO: figure out how to get the assets URL from the environment in squarespace.
+  iconUrl: "https://vialekhnstore.z1.web.core.windows.net/assets/red_pin.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -58,7 +36,6 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
   const handleOnMarkerClick = (event: LeafletMouseEvent) => {
     console.log(`Marker was clicked at ${event.latlng}}!`, event)
     const latlng = `${event.latlng.lat}, ${event.latlng.lng}`
-
     onMarkerClick(latlng)
   }
 
@@ -100,7 +77,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
       // Add GeoJSON layer
       const geoJSON = L.geoJSON(geojson, {
         pointToLayer: (geoJsonPoint, latlng) => {
-          return L.marker(latlng, { icon: RedMarkerIcon_2 })
+          return L.marker(latlng, { icon: RedMarkerIcon })
         },
         onEachFeature: (feature, layer) => {
           if (feature.properties?.popupContent) {

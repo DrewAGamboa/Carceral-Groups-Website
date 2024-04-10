@@ -49,6 +49,7 @@
     ]
   },
   "devDependencies": {
-    "@types/papaparse": "^5.3.14"
+    "@types/papaparse": "^5.3.14",
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.12"
   }
 }
