@@ -9,85 +9,89 @@ export interface LeafletMapProps {
   onMarkerClick: (latlng?: string) => void;
 }
 
+type LeafLetGroup = {
+  group: L.LayerGroup;
+  name: string;
+};
+
+type LeafLetHelper = {
+  map: L.Map;
+  groups: LeafLetGroup[];
+};
+
+const RedMarkerIcon = L.icon({
+  // iconUrl: '/assets/red_pin.png',
+  // TODO: figure out how to get the assets URL from the environment in squarespace.
+  iconUrl: "https://vialekhnstore.z1.web.core.windows.net/assets/red_pin.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick }) => {
-  const mapRef = useRef<L.Map | null>(null);
-  const mapLayerControlRef = useRef<L.Control.Layers | null>(null);
-  const mapCustomLayerGroupRef = useRef<L.LayerGroup | null>(null);
+  const leafletHelperRef = useRef<LeafLetHelper | null>(null);
   const toolRef = useRef<string>(tool);
 
   const handleOnMarkerClick = (event: LeafletMouseEvent) => {
     console.log(`Marker was clicked at ${event.latlng}}!`, event)
-    const latlng = event.latlng.toString()
-
-    onMarkerClick(latlng.toString())
+    const latlng = `${event.latlng.lat}, ${event.latlng.lng}`
+    onMarkerClick(latlng)
   }
 
-  const handleMapClick = (event: LeafletMouseEvent) => {
-    const curTool = toolRef.current;
-    console.log(`Map was clicked at ${event.latlng}!`);
-    console.log('Tool:', curTool)
-    if (curTool === 'place_marker') {
-      console.log('Placing marker');
-      const marker = L.marker(event.latlng).addTo(mapRef.current as L.Map);
-      marker.bindPopup('You clicked here!').openPopup();
-      marker.on('click', () => onMarkerClick(event.latlng.toString()));
-      mapCustomLayerGroupRef.current?.addLayer(marker);
-    } else {
-      console.log('clicked map but no tool selected');
-    }
-  };
-
   useEffect(() => {
-    if (!mapRef.current) {
+    if (!leafletHelperRef.current) {
+      leafletHelperRef.current = { map: L.map('leaflet_map_container'), groups: [] };
+      const map = leafletHelperRef.current.map
       console.log('Initializing map')
       // Initialize the map only when the div is available and the map hasn't been initialized
       let cartoTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution: '© OpenStreetMap contributors, © CARTO'
       });
 
-      let osmTileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-      });
-
-      mapRef.current = L.map('leaflet_map_container', {center: [47.84, -122.21], zoom: 13, layers: [cartoTileLayer, osmTileLayer]})
-      mapCustomLayerGroupRef.current = L.layerGroup().addTo(mapRef.current);
-      mapLayerControlRef.current = L.control.layers({ "Carto Dark Matter": cartoTileLayer, "OSM": osmTileLayer }).addTo(mapRef.current);
-      mapLayerControlRef.current?.addOverlay(mapCustomLayerGroupRef.current, "User Added Layer");
-      mapRef.current.on('click', handleMapClick);
-
-      // Attempt to use geolocation
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        mapRef.current?.setView([latitude, longitude], 13);
-      });
+      map.setView([47.23, -119.85], 7); // Center map on Washington state
+      map.addLayer(cartoTileLayer);
     }
 
     // Cleanup function to remove the map on component unmount
     return () => {
-      mapRef.current?.remove();
-      mapRef.current = null;
+      leafletHelperRef.current?.map.remove();
+      leafletHelperRef.current = null;
     };
   }, []); // Empty dependency array ensures this effect runs only once on mount
 
   useEffect(() => {
     toolRef.current = tool;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tool]); // Re-run this effect if tool prop changes
 
   useEffect(() => {
-    if (mapRef.current && geojson) {
+    console.log('GeoJSON:', geojson)
+    const alreadyHasGeoJSON = leafletHelperRef.current?.groups.find(group => group.name === "GeoJSON");
+    if (leafletHelperRef.current && alreadyHasGeoJSON) {
+      leafletHelperRef.current.map.removeLayer(alreadyHasGeoJSON.group as L.LayerGroup);
+      leafletHelperRef.current.groups = leafletHelperRef.current.groups.filter(group => group.name !== "GeoJSON");
+    }
+    
+    if (leafletHelperRef.current && geojson) {
       // Add GeoJSON layer
       const geoJSON = L.geoJSON(geojson, {
+        pointToLayer: (geoJsonPoint, latlng) => {
+          return L.marker(latlng, { icon: RedMarkerIcon })
+        },
         onEachFeature: (feature, layer) => {
           if (feature.properties?.popupContent) {
             layer.bindPopup(feature.properties.popupContent);
             layer.on('click', handleOnMarkerClick);
           }
         },
-      }).addTo(mapRef.current);
-      mapLayerControlRef.current?.addOverlay(geoJSON, 'GeoJSON');
+        filter: (feature) => {
+          return feature.properties?.show_on_map;
+        }
+      }).addTo(leafletHelperRef.current.map);
+      leafletHelperRef.current.groups.push({ group: geoJSON, name: "GeoJSON" });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geojson]); // Re-run this effect if geojson prop changes
 
   return (
