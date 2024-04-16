@@ -85,9 +85,6 @@ export default function MenuDrawer({ options, onOptionsChange, onUpload }: MiniD
                 <Divider />
                 <AccordionOptions open={open} options={options} onOptionsChange={onOptionsChange} onUpload={onUpload} onExpand={handleDrawerOpen} />
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <DrawerHeader />
-            </Box>
         </Box>
     );
 }
