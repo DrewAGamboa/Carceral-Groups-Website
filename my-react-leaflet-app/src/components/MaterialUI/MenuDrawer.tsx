@@ -58,13 +58,12 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export interface MiniDrawerProps {
-    children: React.ReactNode,
     options: {label: string, checked: boolean, children: any[]}
     onOptionsChange: (updatedTreeData: any) => void;
     onUpload: (data: any[]) => void;
   }
 
-export default function MiniDrawer({ children, options, onOptionsChange, onUpload }: MiniDrawerProps) {
+export default function MenuDrawer({ options, onOptionsChange, onUpload }: MiniDrawerProps) {
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
@@ -88,7 +87,6 @@ export default function MiniDrawer({ children, options, onOptionsChange, onUploa
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <DrawerHeader />
-                {children}
             </Box>
         </Box>
     );
