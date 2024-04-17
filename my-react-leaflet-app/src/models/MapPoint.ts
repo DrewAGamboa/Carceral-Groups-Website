@@ -1,19 +1,38 @@
 import {generateUUID} from "../utils/stringUtils";
+import { GetLocationLabel } from "./Location";
 
 class MapPoint {
-  private id: string;
-  private latlng: number[];
+  readonly id: string;
+  readonly latlng: number[];
+  readonly uniqueGroupPoint: string;
 
   constructor(
-    private filter1: string,
-    private filter2: string,
-    private documentDisplayTitle: string,
-    private fileTitle: string,
-    private documentType: string,
-    private latlngStr: string,
+    readonly parentGroup: string,
+    readonly group: string,
+    readonly documentDisplayTitle: string,
+    readonly fileTitle: string,
+    readonly documentType: string,
+    readonly latlngStr: string,
   ) {
     this.id = generateUUID();
-    this.latlng = this.latlngStr.split(',').map((coord) => parseFloat(coord)).reverse()
+    this.latlng = this.latlngStr.split(',').map((coord) => parseFloat(coord)).reverse();
+    this.uniqueGroupPoint = this.group + this.latlngStr;
+  }
+
+  public toGeoJson() {   
+    return {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: this.latlng,
+        },
+        properties: {
+            group: this.group,
+            parentGroup: this.parentGroup,
+            popupContent: GetLocationLabel(this.latlngStr),
+            show_on_map: true,
+        },
+    }
   }
 }
 

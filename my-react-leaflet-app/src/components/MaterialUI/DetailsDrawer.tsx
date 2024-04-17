@@ -3,12 +3,13 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useEffect } from 'react';
-import CarceralDocument from '../../models/CarceralDocument';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import FormDialog from './FormDialog';
+import MapPoint from '../../models/MapPoint';
+import { getCarceralDocumentsByType } from '../../api/services/MapPointsService';
 
 type DetailsDrawerProps = {
-  selectedMark?: CarceralDocument[];
+  selectedMark?: MapPoint[];
 };
 
 export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
@@ -37,7 +38,7 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
         setState({ ...state, [anchor]: open });
       };
 
-  const docTypeAccordions = CarceralDocument.getCarceralDocumentsByType(selectedMark || []).map((docType, index) => (
+  const docTypeAccordions = getCarceralDocumentsByType().map((docType, index) => (
     <Accordion key={index}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
@@ -54,7 +55,7 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Typography>{doc.getTitle()}</Typography>
+              <Typography>{doc.fileTitle}</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <FormDialog />
