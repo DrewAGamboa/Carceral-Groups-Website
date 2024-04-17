@@ -1,0 +1,60 @@
+name: Build and Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: my-react-leaflet-app
+
+    - name: Build React project
+      run: npm run build
+      working-directory: my-react-leaflet-app
+
+    - name: Test React project
+      run: npm test
+      working-directory: my-react-leaflet-app
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: my-react-leaflet-app/build
+
+  deploy:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: build
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZ_STORAGE_DEPLOYER }}
+
+    - name: Upload to blob storage
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+            az storage blob upload-batch --overwrite --account-name ${{ secrets.AZ_STORAGE_ACCOUNT_NAME }} --auth-mode key -d '$web' -s .
+            
+    # Azure logout
+    - name: logout
+      run: |
+            az logout
+      if: always()
