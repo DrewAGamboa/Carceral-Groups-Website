@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import LeafletMap from './components/LeafletMap/LeafletMap';
-import MiniDrawer from './components/MaterialUI/MiniDrawer';
+import MenuDrawer from './components/MaterialUI/MenuDrawer';
 import { createTheme, ThemeProvider } from '@mui/material';
 import DataRow from './models/DataRow';
 import CarceralDocument from './models/CarceralDocument';
@@ -67,8 +67,8 @@ function App() {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <MiniDrawer options={treeData} onOptionsChange={handleCheckboxChange} onUpload={handleCSVData}>
-        <div className="App">
+      <MenuDrawer options={treeData} onOptionsChange={handleCheckboxChange} onUpload={handleCSVData} />
+      <div className="App">
           <LeafletMap
             label='My Leaflet Map'
             tool={'none'}
@@ -77,7 +77,6 @@ function App() {
           />
           <DetailsDrawer selectedMark={selectedMarker} />
         </div>
-      </MiniDrawer>
     </ThemeProvider>
   );
 }
