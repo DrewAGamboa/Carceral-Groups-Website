@@ -35,12 +35,12 @@ const getAllMapPoints = () => {
     return [...dataset]
 }
 
-const uniqueGeoJsonPreppedPoints = () => {
+const getUniqueGeoJsonPreppedPoints = () => {
   const points = uniquePoints(dataset);
   return points.map((doc) => doc.toGeoJson());
 }
 
-const filterOptions = () => {
+const getFilterOptions = () => {
     let filter: {label: string, checked: boolean, children: any[]} = {
         label: 'All',
         checked: true,
@@ -121,4 +121,4 @@ const uniqueDocumentTypes = (docs: MapPoint[]) => {
     return uniqueObjects;
 }
 
-export { getAllMapPoints, uniqueGeoJsonPreppedPoints, filterOptions, getCarceralDocumentsByType };
+export { getAllMapPoints, getUniqueGeoJsonPreppedPoints, getFilterOptions, getCarceralDocumentsByType };

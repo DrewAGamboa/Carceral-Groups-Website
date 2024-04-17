@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import LeafletMap from './components/LeafletMap/LeafletMap';
 import MenuDrawer from './components/MaterialUI/MenuDrawer';
 import { createTheme, ThemeProvider } from '@mui/material';
 import DetailsDrawer from './components/MaterialUI/DetailsDrawer';
 import MapPoint from './models/MapPoint';
+import { getAllMapPoints, getFilterOptions, getUniqueGeoJsonPreppedPoints } from './api/services/MapPointsService';
 
 const darkTheme = createTheme({
   palette: {
@@ -53,21 +54,14 @@ function App() {
     setSelectedMarker(filtered)
   }
 
-  // get and set initial data
-  // get and set unique geo json prepped points
-  // get and set treedata/filteroptions options
-
-
-  // const handleCSVData = (data: DataRow[]) => {
-  //   console.log('Data uploaded:', data)
-  //   const documents = data.map((dataRow) => CarceralDocument.fromDataRow(dataRow));
-  //   console.log('Documents:', documents);
-  //   const uniqueGeoJsonPreppedData = CarceralDocument.uniqueGeoJsonPreppedPoints(documents);
-  //   console.log('Unique GeoJson Prepped Data:', uniqueGeoJsonPreppedData);
-  //   setDataGeoJson(uniqueGeoJsonPreppedData);
-  //   setTreeData(CarceralDocument.filterOptions(documents));
-  //   setDocuments(documents);
-  // }
+  useEffect(() => {
+    const documents = getAllMapPoints();
+    const uniqueGeoJsonPreppedData = getUniqueGeoJsonPreppedPoints();
+    const filterOptions = getFilterOptions()
+    setDataGeoJson(uniqueGeoJsonPreppedData);
+    setTreeData(filterOptions);
+    setDocuments(documents);
+  }, [setDocuments, setTreeData, setDataGeoJson])
 
   return (
     <ThemeProvider theme={darkTheme}>
