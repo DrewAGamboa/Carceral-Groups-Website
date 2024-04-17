@@ -1,5 +1,6 @@
 import DataRow from "./DataRow";
 import {generateUUID} from "../utils/stringUtils";
+import { GetLocationLabel } from "./Location";
 
 export default class CarceralDocument {
     // Properties
@@ -167,7 +168,7 @@ export default class CarceralDocument {
             properties: {
                 group: this.group,
                 parentGroup: this.parentGroup,
-                popupContent: this.latlngStr + ' ' + this.title,
+                popupContent: GetLocationLabel(this.latlngStr),
                 show_on_map: true,
             },
         }
