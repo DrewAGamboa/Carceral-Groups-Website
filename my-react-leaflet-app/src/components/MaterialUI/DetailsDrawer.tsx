@@ -68,7 +68,7 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
 
   const list = (anchor: string) => (
     <Box
-      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 400 }}
       role="presentation"
       onKeyDown={toggleDrawer(anchor, false)}
     >
