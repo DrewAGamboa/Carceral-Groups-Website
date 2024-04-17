@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import LeafletMap from './components/LeafletMap/LeafletMap';
 import MenuDrawer from './components/MaterialUI/MenuDrawer';
 import { createTheme, ThemeProvider } from '@mui/material';
-import DataRow from './models/DataRow';
-import CarceralDocument from './models/CarceralDocument';
 import DetailsDrawer from './components/MaterialUI/DetailsDrawer';
+import MapPoint from './models/MapPoint';
+import { getAllMapPoints, getFilterOptions, getUniqueGeoJsonPreppedPoints } from './api/services/MapPointsService';
 
 const darkTheme = createTheme({
   palette: {
@@ -14,10 +14,10 @@ const darkTheme = createTheme({
 });
 
 function App() {
-  const [selectedMarker, setSelectedMarker] = useState<CarceralDocument[]>()
+  const [selectedMarker, setSelectedMarker] = useState<MapPoint[]>()
   const [dataGeoJson, setDataGeoJson] = useState<any[]>([])
   const [treeData, setTreeData] = useState<{label: string, checked:boolean, children: any[]}>({ label: 'All', checked: true, children: [] });
-  const [documents, setDocuments] = useState<CarceralDocument[]>([])
+  const [documents, setDocuments] = useState<MapPoint[]>([])
 
   const handleCheckboxChange = (updatedTreeData: { label: string, checked: boolean, children: any[] }) => {
     console.log('Updated Tree Data:', updatedTreeData)
@@ -50,24 +50,22 @@ function App() {
 
   const handleOnMarkerClick = (latlng: string | undefined) => {
     console.log(`Map was clicked at ${latlng}}!`)
-    const filtered = documents.filter((doc) => doc.getLatLngStr() === latlng)
+    const filtered = documents.filter((doc) => doc.latlngStr === latlng)
     setSelectedMarker(filtered)
   }
 
-  const handleCSVData = (data: DataRow[]) => {
-    console.log('Data uploaded:', data)
-    const documents = data.map((dataRow) => CarceralDocument.fromDataRow(dataRow));
-    console.log('Documents:', documents);
-    const uniqueGeoJsonPreppedData = CarceralDocument.uniqueGeoJsonPreppedPoints(documents);
-    console.log('Unique GeoJson Prepped Data:', uniqueGeoJsonPreppedData);
+  useEffect(() => {
+    const documents = getAllMapPoints();
+    const uniqueGeoJsonPreppedData = getUniqueGeoJsonPreppedPoints();
+    const filterOptions = getFilterOptions()
     setDataGeoJson(uniqueGeoJsonPreppedData);
-    setTreeData(CarceralDocument.filterOptions(documents));
+    setTreeData(filterOptions);
     setDocuments(documents);
-  }
+  }, [setDocuments, setTreeData, setDataGeoJson])
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <MenuDrawer options={treeData} onOptionsChange={handleCheckboxChange} onUpload={handleCSVData} />
+      <MenuDrawer options={treeData} onOptionsChange={handleCheckboxChange} />
       <div className="App">
           <LeafletMap
             label='My Leaflet Map'

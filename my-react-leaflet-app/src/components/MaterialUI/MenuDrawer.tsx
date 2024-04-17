@@ -60,10 +60,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export interface MiniDrawerProps {
     options: {label: string, checked: boolean, children: any[]}
     onOptionsChange: (updatedTreeData: any) => void;
-    onUpload: (data: any[]) => void;
   }
 
-export default function MenuDrawer({ options, onOptionsChange, onUpload }: MiniDrawerProps) {
+export default function MenuDrawer({ options, onOptionsChange }: MiniDrawerProps) {
     const [open, setOpen] = React.useState(false);
 
     const handleDrawerOpen = () => {
@@ -83,7 +82,7 @@ export default function MenuDrawer({ options, onOptionsChange, onUpload }: MiniD
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                <AccordionOptions open={open} options={options} onOptionsChange={onOptionsChange} onUpload={onUpload} onExpand={handleDrawerOpen} />
+                <AccordionOptions open={open} options={options} onOptionsChange={onOptionsChange} onExpand={handleDrawerOpen} />
             </Drawer>
         </Box>
     );
