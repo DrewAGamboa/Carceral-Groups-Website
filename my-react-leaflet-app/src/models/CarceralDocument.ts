@@ -6,6 +6,7 @@ export default class CarceralDocument {
     // Properties
     private id: string;
     private title: string;
+    private fileName: string;
     private docType: string;
     private createdAt: Date;
     private group: string;
@@ -14,9 +15,10 @@ export default class CarceralDocument {
     private latlng: number[];
 
     // Constructor
-    constructor(id: string, title: string, docType: string, group: string, parentGroup: string, latlngStr: string, latlng: number[], createdAt: Date = new Date()) {
+    constructor(id: string, title: string, fileName: string, docType: string, group: string, parentGroup: string, latlngStr: string, latlng: number[], createdAt: Date = new Date()) {
         this.id = id;
         this.title = title;
+        this.fileName = fileName
         this.docType = docType;
         this.group = group;
         this.parentGroup = parentGroup;
@@ -28,7 +30,8 @@ export default class CarceralDocument {
     static fromDataRow(dataRow: DataRow) {
         return new CarceralDocument(
             generateUUID(),
-            dataRow['Document title'],
+            dataRow['Document title (on website)'],
+            dataRow['File title'],
             dataRow['Document type'],
             dataRow['Filter name 2'],
             dataRow['Filter name 1'],
@@ -149,6 +152,10 @@ export default class CarceralDocument {
 
     public getLatLngStr(): string {
         return this.latlngStr;
+    }
+
+    public getFileName(): string {
+        return this.fileName;
     }
 
     public toGeoJson() {   

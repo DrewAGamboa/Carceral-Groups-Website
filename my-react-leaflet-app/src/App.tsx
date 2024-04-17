@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import LeafletMap from './components/LeafletMap/LeafletMap';
-import MiniDrawer from './components/MaterialUI/MiniDrawer';
+import MenuDrawer from './components/MaterialUI/MenuDrawer';
 import { createTheme, ThemeProvider } from '@mui/material';
 import DataRow from './models/DataRow';
 import CarceralDocument from './models/CarceralDocument';
@@ -15,7 +15,6 @@ const darkTheme = createTheme({
 
 function App() {
   const [selectedMarker, setSelectedMarker] = useState<CarceralDocument[]>()
-  const [tool, setTool] = useState<string>('')
   const [dataGeoJson, setDataGeoJson] = useState<any[]>([])
   const [treeData, setTreeData] = useState<{label: string, checked:boolean, children: any[]}>({ label: 'All', checked: true, children: [] });
   const [documents, setDocuments] = useState<CarceralDocument[]>([])
@@ -68,17 +67,16 @@ function App() {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <MiniDrawer options={treeData} onOptionsChange={handleCheckboxChange} onUpload={handleCSVData}>
-        <div className="App">
+      <MenuDrawer options={treeData} onOptionsChange={handleCheckboxChange} onUpload={handleCSVData} />
+      <div className="App">
           <LeafletMap
             label='My Leaflet Map'
-            tool={tool}
+            tool={'none'}
             geojson={dataGeoJson}
             onMarkerClick={handleOnMarkerClick}
           />
           <DetailsDrawer selectedMark={selectedMarker} />
         </div>
-      </MiniDrawer>
     </ThemeProvider>
   );
 }
