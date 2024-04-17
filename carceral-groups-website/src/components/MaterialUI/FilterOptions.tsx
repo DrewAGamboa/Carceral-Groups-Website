@@ -1,4 +1,4 @@
-import * as React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';

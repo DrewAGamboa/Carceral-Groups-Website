@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -15,7 +16,7 @@ interface AccordionOptionsProps {
 }
 
 export default function AccordionOptions({ open, options, onOptionsChange, onExpand }: AccordionOptionsProps) {
-    const handleOnChange = (event: React.SyntheticEvent<Element, Event>, expanded: boolean) => {
+    const handleOnChange = (_event: React.SyntheticEvent<Element, Event>, expanded: boolean) => {
         if(expanded)
             onExpand()
     }

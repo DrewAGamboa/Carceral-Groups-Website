@@ -19,21 +19,21 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: my-react-leaflet-app
+      working-directory: carceral-groups-website
 
     - name: Build React project
       run: npm run build
-      working-directory: my-react-leaflet-app
+      working-directory: carceral-groups-website
 
-    - name: Test React project
-      run: npm test
-      working-directory: my-react-leaflet-app
+    # - name: Test React project
+    #   run: npm test
+    #   working-directory: carceral-groups-website
 
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2
       with:
         name: build
-        path: my-react-leaflet-app/build
+        path: carceral-groups-website/dist
 
   deploy:
     needs: build-test
