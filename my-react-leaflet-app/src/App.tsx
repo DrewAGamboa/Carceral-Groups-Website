@@ -15,7 +15,6 @@ const darkTheme = createTheme({
 
 function App() {
   const [selectedMarker, setSelectedMarker] = useState<CarceralDocument[]>()
-  const [tool, setTool] = useState<string>('')
   const [dataGeoJson, setDataGeoJson] = useState<any[]>([])
   const [treeData, setTreeData] = useState<{label: string, checked:boolean, children: any[]}>({ label: 'All', checked: true, children: [] });
   const [documents, setDocuments] = useState<CarceralDocument[]>([])
@@ -72,7 +71,7 @@ function App() {
         <div className="App">
           <LeafletMap
             label='My Leaflet Map'
-            tool={tool}
+            tool={'none'}
             geojson={dataGeoJson}
             onMarkerClick={handleOnMarkerClick}
           />
