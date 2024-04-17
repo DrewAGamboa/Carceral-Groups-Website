@@ -55,7 +55,7 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Typography>{doc.fileTitle}</Typography>
+              <Typography>{doc.documentDisplayTitle}</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <FormDialog />
