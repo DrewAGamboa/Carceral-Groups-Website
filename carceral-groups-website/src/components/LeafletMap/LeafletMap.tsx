@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useRef } from 'react';
 import L, { LeafletMouseEvent } from 'leaflet';
 import './LeafletMap.css';
@@ -45,7 +46,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
       const map = leafletHelperRef.current.map
       console.log('Initializing map')
       // Initialize the map only when the div is available and the map hasn't been initialized
-      let cartoTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      const cartoTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution: '© OpenStreetMap contributors, © CARTO'
       });
 
@@ -76,7 +77,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
     if (leafletHelperRef.current && geojson) {
       // Add GeoJSON layer
       const geoJSON = L.geoJSON(geojson, {
-        pointToLayer: (geoJsonPoint, latlng) => {
+        pointToLayer: (_geoJsonPoint, latlng) => {
           return L.marker(latlng, { icon: RedMarkerIcon })
         },
         onEachFeature: (feature, layer) => {

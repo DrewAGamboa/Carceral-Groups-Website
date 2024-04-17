@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState } from 'react';
 import './App.css';
 import LeafletMap from './components/LeafletMap/LeafletMap';
 import MenuDrawer from './components/MaterialUI/MenuDrawer';
@@ -24,10 +25,10 @@ function App() {
     setTreeData(updatedTreeData)
     // get all options
     let queue = [updatedTreeData]
-    let allOptions: any[] = []
+    const allOptions: any[] = []
 
     while (queue.length > 0) {
-      let current = queue.shift()
+      const current = queue.shift()
       allOptions.push(current)
       if (current && current.children.length > 0)
         queue = queue.concat(current.children)
@@ -35,8 +36,8 @@ function App() {
     console.log(allOptions)
 
     // update geojson show on map
-    let newGeoJson = dataGeoJson.map((feature) => {
-      let show_on_map = allOptions.find((option) => option?.label === feature.properties.group)?.checked
+    const newGeoJson = dataGeoJson.map((feature) => {
+      const show_on_map = allOptions.find((option) => option?.label === feature.properties.group)?.checked
       return {
         ...feature,
         properties: {
