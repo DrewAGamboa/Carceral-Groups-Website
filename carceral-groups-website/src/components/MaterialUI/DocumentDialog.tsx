@@ -26,11 +26,12 @@ export default function DocumentDialog(props: DocumentDialogProps) {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-    if (!document_id) return;
+    if (!document_id || !open) return;
+
     // fetch the document by id
     // set the document
     setDoc(DUMMY_BLOBDOCUMENT);
-  }, [document_id]);
+  }, [document_id, open]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,17 +49,6 @@ export default function DocumentDialog(props: DocumentDialogProps) {
       <Dialog
         open={open}
         onClose={handleClose}
-        PaperProps={{
-          component: 'form',
-          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries((formData as any).entries());
-            const email = formJson.email;
-            console.log(email);
-            handleClose();
-          },
-        }}
       >
         {doc === null &&
           <>
