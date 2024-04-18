@@ -4,7 +4,7 @@ import Drawer from '@mui/material/Drawer';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useEffect } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
-import FormDialog from './FormDialog';
+import DocumentDialog from './DocumentDialog';
 import MapPoint from '../../models/MapPoint';
 import { getCarceralDocumentsByType } from '../../api/services/MapPointsService';
 
@@ -56,7 +56,7 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
               <Typography>{doc.documentDisplayTitle}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <FormDialog document_id={'Hello World'}/>
+              <DocumentDialog document_id={'Hello World'}/>
             </AccordionDetails>
           </Accordion>
         ))

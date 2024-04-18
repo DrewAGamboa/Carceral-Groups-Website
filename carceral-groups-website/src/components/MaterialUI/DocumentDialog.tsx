@@ -16,11 +16,11 @@ const DUMMY_BLOBDOCUMENT: BlobDocument = {
   type: 'pdf'
 };
 
-type FormDialogProps = {
+type DocumentDialogProps = {
   document_id: string;
 };
 
-export default function FormDialog(props: FormDialogProps) {
+export default function DocumentDialog(props: DocumentDialogProps) {
   const { document_id } = props;
   const [doc, setDoc] = React.useState<BlobDocument | null>(null);
   const [open, setOpen] = React.useState(false);
