@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import CommentSection from './CommentSection';
 
 export default function FormDialog() {
   // const docUrl = 'https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf'
@@ -67,6 +68,7 @@ export default function FormDialog() {
             rows={4}
             defaultValue=""
           />
+          <CommentSection />
 
         </DialogContent>
         <DialogActions>
