@@ -8,8 +8,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function FormDialog() {
-  // const docUrl = 'https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf'
+type FormDialogProps = {
+  title: string;
+};
+
+export default function FormDialog(props: FormDialogProps) {
+  const { title } = props;
+  const docUrl = 'https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf'
   // const mp3Url = 'https://vialekhnstore.blob.core.windows.net/documents/All/State/Asian Pacific Islander Cultural Awareness Group (APICAG)/2024.02.19_Ralph Dunuan 1.mp3'
   const [open, setOpen] = React.useState(false);
 
@@ -24,7 +29,7 @@ export default function FormDialog() {
   return (
     <React.Fragment>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Comment
+        View
       </Button>
       <Dialog
         open={open}
@@ -41,9 +46,9 @@ export default function FormDialog() {
           },
         }}
       >
-        <DialogTitle>Leave a Comment</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          {/* <iframe src={docUrl} title="Archival Material" width="100%" height="600px"></iframe> */}
+          <iframe src={docUrl} title="Archival Material" width="100%" height="600px"></iframe>
           {/* <iframe src={mp3Url} title="Archival Material 2" width="100%" height="100px"></iframe> */}
           <DialogContentText>
             To leave a comment for this archival material, please enter your comment here. Your comment will be stored for future reference.
