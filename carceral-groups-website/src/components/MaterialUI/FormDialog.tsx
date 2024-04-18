@@ -68,7 +68,7 @@ export default function FormDialog() {
             rows={4}
             defaultValue=""
           />
-          <CommentSection />
+          <CommentSection document_id={'1'}/>
 
         </DialogContent>
         <DialogActions>
