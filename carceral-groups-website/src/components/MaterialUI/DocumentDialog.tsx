@@ -8,6 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { BlobDocument } from '../../models/BlobDocument';
+import { getDocument } from '../../api/services/MapPointsService';
 
 const DUMMY_BLOBDOCUMENT: BlobDocument = {
   id: '1',
@@ -30,7 +31,13 @@ export default function DocumentDialog(props: DocumentDialogProps) {
 
     // fetch the document by id
     // set the document
-    setDoc(DUMMY_BLOBDOCUMENT);
+    const doc = getDocument(document_id);
+    if (doc) {
+      // TODO: replace this when files are available
+      setDoc({...doc, fileUrl: DUMMY_BLOBDOCUMENT.fileUrl}); 
+    } else {
+      setDoc(null);
+    }
   }, [document_id, open]);
 
   const handleClickOpen = () => {
