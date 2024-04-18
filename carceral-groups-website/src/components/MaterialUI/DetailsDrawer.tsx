@@ -56,7 +56,7 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
               <Typography>{doc.documentDisplayTitle}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <FormDialog title={'Hello World'}/>
+              <FormDialog document_id={'Hello World'}/>
             </AccordionDetails>
           </Accordion>
         ))
