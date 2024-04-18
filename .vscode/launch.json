@@ -5,7 +5,8 @@
         "name": "Debug MS Edge (Windows)",
         "type": "msedge",
         "request": "launch",
-        "url": "http://localhost:5173"
+        "url": "http://localhost:5173",
+        "webRoot": "${workspaceFolder}/carceral-groups-website"
       }
     ]
   }
