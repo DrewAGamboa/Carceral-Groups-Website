@@ -9,6 +9,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { BlobDocument } from '../../models/BlobDocument';
 import { getDocument } from '../../api/services/MapPointsService';
+import CommentSection from './CommentSection';
 
 const DUMMY_BLOBDOCUMENT: BlobDocument = {
   id: '1',
@@ -86,7 +87,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
                 rows={4}
                 defaultValue=""
               />
-
+              <CommentSection document_id={doc.id}/>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
