@@ -9,6 +9,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { BlobDocument } from '../../models/BlobDocument';
 import { getDocument } from '../../api/services/MapPointsService';
+import ChicagoCitation from './ChicagoCitation';
 
 const DUMMY_BLOBDOCUMENT: BlobDocument = {
   id: '1',
@@ -34,7 +35,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
     const doc = getDocument(document_id);
     if (doc) {
       // TODO: replace this when files are available
-      setDoc({...doc, fileUrl: DUMMY_BLOBDOCUMENT.fileUrl}); 
+      setDoc({ ...doc, fileUrl: DUMMY_BLOBDOCUMENT.fileUrl });
     } else {
       setDoc(null);
     }
@@ -75,6 +76,16 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             <DialogTitle>{doc.title}</DialogTitle>
             <DialogContent>
               <iframe src={doc.fileUrl} title="Archival Material" width="100%" height="600px"></iframe>
+              <ChicagoCitation
+                author="John Doe"
+                title="Understanding the Universe"
+                placeOfPublication="New York"
+                publisher="Universe Books"
+                yearOfPublication="2022"
+                pageNumbers="50-60"
+                url="http://example.com"
+                accessedDate="April 10, 2024"
+              />
               <DialogContentText>
                 To leave a comment for this archival material, please enter your comment here. Your comment will be stored for future reference.
               </DialogContentText>
