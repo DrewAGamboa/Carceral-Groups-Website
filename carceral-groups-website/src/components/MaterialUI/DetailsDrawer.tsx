@@ -4,7 +4,7 @@ import Drawer from '@mui/material/Drawer';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useEffect } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
-import FormDialog from './FormDialog';
+import DocumentDialog from './DocumentDialog';
 import MapPoint from '../../models/MapPoint';
 import { getCarceralDocumentsByType } from '../../api/services/MapPointsService';
 
@@ -13,19 +13,17 @@ type DetailsDrawerProps = {
 };
 
 export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
-  const anchor = 'right';
-  const [state, setState] = React.useState({
-    right: false,
-  });
+  const anchor = 'right'
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   useEffect(() => {
     if (selectedMark !== undefined) {
-      setState({ right: true });
+      setIsOpen(true);
     }
   }, [selectedMark]);
 
   const toggleDrawer =
-    (anchor: string, open: boolean) =>
+    (open: boolean) =>
       (event: React.KeyboardEvent | React.MouseEvent) => {
         if (
           event.type === 'keydown' &&
@@ -35,7 +33,7 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
           return;
         }
 
-        setState({ ...state, [anchor]: open });
+        setIsOpen(open);
       };
 
   const docTypeAccordions = getCarceralDocumentsByType().map((docType, index) => (
@@ -58,7 +56,7 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
               <Typography>{doc.documentDisplayTitle}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <FormDialog />
+              <DocumentDialog document_id={doc.id}/>
             </AccordionDetails>
           </Accordion>
         ))
@@ -67,15 +65,13 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
     </Accordion>
   ));
 
-  const list = (anchor: string) => (
+  const list = () => (
     <Box
-      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 400 }}
+      sx={{ width: 400 }}
       role="presentation"
-      onKeyDown={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(false)}
     >
-      <div className="">
         {docTypeAccordions}
-      </div>
     </Box>
   );
 
@@ -83,10 +79,10 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
     <>
       <Drawer
         anchor={anchor}
-        open={state[anchor]}
-        onClose={toggleDrawer(anchor, false)}
+        open={isOpen}
+        onClose={toggleDrawer(false)}
       >
-        {list(anchor)}
+        {list()}
       </Drawer>
     </>
   );
