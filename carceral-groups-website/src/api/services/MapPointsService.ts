@@ -3,6 +3,7 @@ import axios from 'axios';
 import MapPoint from '../../models/MapPoint';
 import MapPointCSVRow from '../../models/MapPointCSVRow'
 import Papa from "papaparse"
+import { BlobDocument } from '../../models/BlobDocument';
 
 // fetches map point csv from azure blob storage
 const getMapPointsCSV = async (): Promise<MapPointCSVRow[]> => {
@@ -122,4 +123,17 @@ const uniqueDocumentTypes = (docs: MapPoint[]) => {
     return uniqueObjects;
 }
 
-export { getAllMapPoints, getUniqueGeoJsonPreppedPoints, getFilterOptions, getCarceralDocumentsByType };
+const getDocument = (document_id: string) => {
+    const doc = dataset.find((doc) => doc.id === document_id);
+    if(doc === undefined) return null;
+
+    const blobDocument: BlobDocument = {
+        id: doc.id,
+        title: doc.documentDisplayTitle,
+        fileUrl: doc.fileTitle, // TODO: change to actual file url
+        type: doc.documentType
+    };
+    return blobDocument;
+}
+
+export { getAllMapPoints, getUniqueGeoJsonPreppedPoints, getFilterOptions, getCarceralDocumentsByType, getDocument };
