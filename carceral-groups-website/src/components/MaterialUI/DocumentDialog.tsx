@@ -21,32 +21,24 @@ const DUMMY_BLOBDOCUMENT: BlobDocument = {
 
 const DUMMY_COMMENTS: BlobDocumentComment[] = [
   {
-      id: '1',
-      image: { url: '/static/images/avatar/1.jpg', alt: 'Remy Sharp' },
-      title: 'Brunch this weekend?',
-      from: 'Ali Connors',
-      content: ' — I\'ll be in your neighborhood doing errands this…'
+    id: '4',
+    fromName: 'Drew Gamboa',
+    content: 'The institutional coursework at McNeil reflected the group’s membership. In MASH’s collective newsletter pamphlets called “La Palabra Alambre de MASH,” one of its winter editions—covering the group’s activities from October 1971 to March 1972—had been mailed to Shoreline Community College professor and director of the Chicano Education Association Raul Arellano. Among prisoners’ op-eds, poetry, and photographs of MASH-led events, Arellano would read about the group’s class roster for the summer and fall of 1971. The group’s editor Gil Leano wrote, “Following is but part of the roster of those carnales who are presently engaged in self-betterment through education… Education, carnales, is what the system encourages—encourages, that is, without consciously realizing that the encouragement given is the means of its own demise. We applaud the system’s efforts. En todo esto miro las semillas de cambio…” The fall roster included a list of forty-eight students enrolled in classes ranging from an English class for Spanish Speaking students (15), Mexican American culture (26), and a conglomeration of psychology, economic, business, and adult education courses (11). The presence of ESL classes at McNeil, MASH members’ enrollments in those classes, and the groups objectives surface a continuation of McNeil as a space premised on criminalizing immigrants. Through this institutional characteristic at McNeil, MASH formed partially as a transnational group that included both Mexican Americans and Mexican immigrants.'
   },
   {
-      id: '2',
-      image: { url: '/static/images/avatar/2.jpg', alt: 'Travis Howard' },
-      title: 'Summer BBQ',
-      from: 'to Scott, Alex, Jennifer',
-      content: ' — Wish I could come, but I\'m out of town this…'
+    id: '1',
+    fromName: 'Ali Connors',
+    content: 'I\'ll be in your neighborhood doing errands this…'
   },
   {
-      id: '3',
-      image: { url: '/static/images/avatar/3.jpg', alt: 'Cindy Baker' },
-      title: 'Oui Oui',
-      from: 'Sandra Adams',
-      content: ' — Do you have Paris recommendations? Have you ever…'
+    id: '2',
+    fromName: 'to Scott, Alex, Jennifer',
+    content: 'Wish I could come, but I\'m out of town this…'
   },
   {
-      id: '4',
-      image: { url: '/static/images/avatar/3.jpg', alt: 'Cindy Baker' },
-      title: 'Oui Oui',
-      from: 'Drew Gamboa',
-      content: 'The institutional coursework at McNeil reflected the group’s membership. In MASH’s collective newsletter pamphlets called “La Palabra Alambre de MASH,” one of its winter editions—covering the group’s activities from October 1971 to March 1972—had been mailed to Shoreline Community College professor and director of the Chicano Education Association Raul Arellano. Among prisoners’ op-eds, poetry, and photographs of MASH-led events, Arellano would read about the group’s class roster for the summer and fall of 1971. The group’s editor Gil Leano wrote, “Following is but part of the roster of those carnales who are presently engaged in self-betterment through education… Education, carnales, is what the system encourages—encourages, that is, without consciously realizing that the encouragement given is the means of its own demise. We applaud the system’s efforts. En todo esto miro las semillas de cambio…” The fall roster included a list of forty-eight students enrolled in classes ranging from an English class for Spanish Speaking students (15), Mexican American culture (26), and a conglomeration of psychology, economic, business, and adult education courses (11). The presence of ESL classes at McNeil, MASH members’ enrollments in those classes, and the groups objectives surface a continuation of McNeil as a space premised on criminalizing immigrants. Through this institutional characteristic at McNeil, MASH formed partially as a transnational group that included both Mexican Americans and Mexican immigrants.'
+    id: '3',
+    fromName: 'Sandra Adams',
+    content: 'Do you have Paris recommendations? Have you ever…'
   }
 ]
 
@@ -84,7 +76,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
   const handleClose = () => {
     setOpen(false);
   };
-  
+
 
   const contentTextHeader = `Artifact analysis helps us surface the significance of each archival document. Understanding the significance of this material helps illustrate the involvement that people incarcerated have done in collaboration with their communities.  Try to answer as many of the following questions as possible:`
   const contentTextList = () => {
@@ -126,7 +118,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             <DialogTitle>Document Not Found</DialogTitle>
             <DialogContent>
               <DialogContentText>
-              The document you are looking for is not available at this time. Please try again later.
+                The document you are looking for is not available at this time. Please try again later.
               </DialogContentText>
             </DialogContent>
             <DialogActions>

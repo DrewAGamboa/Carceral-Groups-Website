@@ -19,21 +19,10 @@ export default function CommentSection(props: CommentSectionProps) {
     const commentContent = (comment: BlobDocumentComment) => {
         return (
             <>
-                <ListItemAvatar>
-                    <Avatar alt={comment.image.alt} src={comment.image.url} />
-                </ListItemAvatar>
                 <ListItemText
-                    primary={comment.title}
+                    primary={comment.fromName}
                     secondary={
                         <React.Fragment>
-                            <Typography
-                                sx={{ display: 'inline' }}
-                                component="span"
-                                variant="body2"
-                                color="text.primary"
-                            >
-                                {comment.from}
-                            </Typography>
                             <ShowMoreText text={comment.content} />
                         </React.Fragment>
                     }
