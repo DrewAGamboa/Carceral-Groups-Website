@@ -50,7 +50,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
         attribution: '© OpenStreetMap contributors, © CARTO'
       });
 
-      map.setView([47.60, -122.33], 7; // Center map on Seattle, WA
+      map.setView([47.60 -122.33], 7); // Center map on Seattle, WA
       map.addLayer(cartoTileLayer);
     }
 
