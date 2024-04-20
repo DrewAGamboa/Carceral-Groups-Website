@@ -48,6 +48,23 @@ export default function DocumentDialog(props: DocumentDialogProps) {
   const handleClose = () => {
     setOpen(false);
   };
+  
+
+  const contentTextHeader = `Artifact analysis helps us surface the significance of each archival document. Understanding the significance of this material helps illustrate the involvement that people incarcerated have done in collaboration with their communities.  Try to answer as many of the following questions as possible:`
+  const contentTextList = () => {
+    return (
+      <ul>
+        <li>What is the artifact?</li>
+        <li>Who created it? What is their position/social standing, etc.?</li>
+        <li>Why did they create it? Intended audience, the context, who or what they might be trying to promote or arguing against, etc.?</li>
+        <li>When was it created? What else was happening at the time?</li>
+        <li>How was it created?</li>
+        <li>What questions do you have about the artifact? What issues can't be answered? What else do we need to know?</li>
+        <li><i>If the document is a newspaper created by a cultural group, focus on one particular part of the document (an article, poetry, pictures, etc.)  that interests you and write about its significance.</i></li>
+      </ul>
+    );
+  }
+  const contentTextFooter = `Feel free to find a document that speaks to you and submit a brief description and analysis of the artifact.`
 
   return (
     <React.Fragment>
@@ -63,7 +80,6 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries((formData as any).entries());
-            // const email = formJson.email;
             console.log(formJson);
             // handleClose();
           },
@@ -74,7 +90,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             <DialogTitle>Document Not Found</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                The document you are looking for is not available at this time. Please try again later.
+              The document you are looking for is not available at this time. Please try again later.
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -88,7 +104,9 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             <DialogContent>
               <iframe src={doc.fileUrl} title="Archival Material" width="100%" height="600px"></iframe>
               <DialogContentText>
-                To leave a comment for this archival material, please enter your comment here. Your comment will be stored for future reference.
+                {contentTextHeader}
+                {contentTextList()}
+                {contentTextFooter}
               </DialogContentText>
               <TextField
                 autoFocus
@@ -97,16 +115,6 @@ export default function DocumentDialog(props: DocumentDialogProps) {
                 name="name"
                 label="Name"
                 type="text"
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="emailAddress"
-                name="email"
-                label="Email Address"
-                type="email"
                 fullWidth
                 variant="standard"
               />
