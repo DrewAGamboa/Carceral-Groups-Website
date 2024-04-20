@@ -69,6 +69,16 @@ export default function DocumentDialog(props: DocumentDialogProps) {
 
   }, [document_id, open]);
 
+  const handleNewComment = (name: string, content: string) => {
+    // TODO: save somewhere in storage
+    const comment: BlobDocumentComment = {
+      id: `${comments.length + 1}`,
+      fromName: name,
+      content: content
+    };
+    setComments([comment, ...comments]);
+  }
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -100,6 +110,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
         View
       </Button>
       <Dialog
+        maxWidth={'lg'}
         open={open}
         onClose={handleClose}
         PaperProps={{
@@ -109,6 +120,8 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             const formData = new FormData(event.currentTarget);
             const formJson = Object.fromEntries((formData as any).entries());
             console.log(formJson);
+            // clear form
+            handleNewComment(formJson.name, formJson.comment);
             // handleClose();
           },
         }}
