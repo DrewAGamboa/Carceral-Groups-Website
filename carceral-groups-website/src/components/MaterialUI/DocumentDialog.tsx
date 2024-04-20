@@ -10,6 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { BlobDocument } from '../../models/BlobDocument';
 import { getDocument } from '../../api/services/MapPointsService';
 import CommentSection from './CommentSection';
+import { BlobDocumentComment } from '../../models/BlobDocumentComment';
 
 const DUMMY_BLOBDOCUMENT: BlobDocument = {
   id: '1',
@@ -17,6 +18,37 @@ const DUMMY_BLOBDOCUMENT: BlobDocument = {
   fileUrl: 'https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf',
   type: 'pdf'
 };
+
+const DUMMY_COMMENTS: BlobDocumentComment[] = [
+  {
+      id: '1',
+      image: { url: '/static/images/avatar/1.jpg', alt: 'Remy Sharp' },
+      title: 'Brunch this weekend?',
+      from: 'Ali Connors',
+      content: ' — I\'ll be in your neighborhood doing errands this…'
+  },
+  {
+      id: '2',
+      image: { url: '/static/images/avatar/2.jpg', alt: 'Travis Howard' },
+      title: 'Summer BBQ',
+      from: 'to Scott, Alex, Jennifer',
+      content: ' — Wish I could come, but I\'m out of town this…'
+  },
+  {
+      id: '3',
+      image: { url: '/static/images/avatar/3.jpg', alt: 'Cindy Baker' },
+      title: 'Oui Oui',
+      from: 'Sandra Adams',
+      content: ' — Do you have Paris recommendations? Have you ever…'
+  },
+  {
+      id: '4',
+      image: { url: '/static/images/avatar/3.jpg', alt: 'Cindy Baker' },
+      title: 'Oui Oui',
+      from: 'Drew Gamboa',
+      content: 'The institutional coursework at McNeil reflected the group’s membership. In MASH’s collective newsletter pamphlets called “La Palabra Alambre de MASH,” one of its winter editions—covering the group’s activities from October 1971 to March 1972—had been mailed to Shoreline Community College professor and director of the Chicano Education Association Raul Arellano. Among prisoners’ op-eds, poetry, and photographs of MASH-led events, Arellano would read about the group’s class roster for the summer and fall of 1971. The group’s editor Gil Leano wrote, “Following is but part of the roster of those carnales who are presently engaged in self-betterment through education… Education, carnales, is what the system encourages—encourages, that is, without consciously realizing that the encouragement given is the means of its own demise. We applaud the system’s efforts. En todo esto miro las semillas de cambio…” The fall roster included a list of forty-eight students enrolled in classes ranging from an English class for Spanish Speaking students (15), Mexican American culture (26), and a conglomeration of psychology, economic, business, and adult education courses (11). The presence of ESL classes at McNeil, MASH members’ enrollments in those classes, and the groups objectives surface a continuation of McNeil as a space premised on criminalizing immigrants. Through this institutional characteristic at McNeil, MASH formed partially as a transnational group that included both Mexican Americans and Mexican immigrants.'
+  }
+]
 
 type DocumentDialogProps = {
   document_id: string;
@@ -26,6 +58,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
   const { document_id } = props;
   const [doc, setDoc] = React.useState<BlobDocument | null>(null);
   const [open, setOpen] = React.useState(false);
+  const [comments, setComments] = React.useState<BlobDocumentComment[]>([]);
 
   React.useEffect(() => {
     if (!document_id || !open) return;
@@ -39,6 +72,9 @@ export default function DocumentDialog(props: DocumentDialogProps) {
     } else {
       setDoc(null);
     }
+
+    setComments(DUMMY_COMMENTS)
+
   }, [document_id, open]);
 
   const handleClickOpen = () => {
@@ -129,7 +165,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
                 rows={4}
                 defaultValue=""
               />
-              <CommentSection document_id={doc.id} />
+              <CommentSection comments={comments} />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
