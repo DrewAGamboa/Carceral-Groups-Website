@@ -69,7 +69,7 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
     <Box
       sx={{ width: 400 }}
       role="presentation"
-      onKeyDown={toggleDrawer(false)}
+      // onKeyDown={toggleDrawer(false)}
     >
         {docTypeAccordions}
     </Box>
