@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
+import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -11,7 +11,7 @@ import { BlobDocument } from '../../models/BlobDocument';
 import { getDocument } from '../../api/services/MapPointsService';
 import CommentSection from './CommentSection';
 import { BlobDocumentComment } from '../../models/BlobDocumentComment';
-import { Box, Typography } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
 
 const DUMMY_BLOBDOCUMENT: BlobDocument = {
   id: '1',
@@ -48,6 +48,17 @@ type DocumentDialogProps = {
 };
 
 export default function DocumentDialog(props: DocumentDialogProps) {
+  //TODO: Remove once width is decided
+  const [maxWidth, setMaxWidth] = React.useState<DialogProps['maxWidth']>('lg');
+  const handleMaxWidthChange = (event: SelectChangeEvent<typeof maxWidth>) => {
+    setMaxWidth(
+      // @ts-expect-error autofill of arbitrary value is not handled.
+      event.target.value,
+    );
+  };
+
+
+
   const { document_id } = props;
   const [doc, setDoc] = React.useState<BlobDocument | null>(null);
   const [open, setOpen] = React.useState(false);
@@ -111,7 +122,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
         View
       </Button>
       <Dialog
-        maxWidth={'lg'}
+        maxWidth={maxWidth}
         open={open}
         onClose={handleClose}
         scroll={'body'}
@@ -188,6 +199,27 @@ export default function DocumentDialog(props: DocumentDialogProps) {
               <CommentSection comments={comments} />
             </DialogContent>
             <DialogActions>
+            {/* //TODO: Remove once width is decided */}
+            <FormControl sx={{ mt: 2, minWidth: 120 }}>
+              <InputLabel htmlFor="max-width">maxWidth</InputLabel>
+              <Select
+                autoFocus
+                value={maxWidth}
+                onChange={handleMaxWidthChange}
+                label="maxWidth"
+                inputProps={{
+                  name: 'max-width',
+                  id: 'max-width',
+                }}
+              >
+                <MenuItem value={false as any}>false</MenuItem>
+                <MenuItem value="xs">xs</MenuItem>
+                <MenuItem value="sm">sm</MenuItem>
+                <MenuItem value="md">md</MenuItem>
+                <MenuItem value="lg">lg</MenuItem>
+                <MenuItem value="xl">xl</MenuItem>
+              </Select>
+            </FormControl>
               <Button onClick={handleClose}>Cancel</Button>
             </DialogActions>
           </>
