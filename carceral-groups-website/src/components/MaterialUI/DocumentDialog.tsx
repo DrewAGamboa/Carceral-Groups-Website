@@ -11,6 +11,7 @@ import { BlobDocument } from '../../models/BlobDocument';
 import { getDocument } from '../../api/services/MapPointsService';
 import CommentSection from './CommentSection';
 import { BlobDocumentComment } from '../../models/BlobDocumentComment';
+import { Box, Typography } from '@mui/material';
 
 const DUMMY_BLOBDOCUMENT: BlobDocument = {
   id: '1',
@@ -148,32 +149,42 @@ export default function DocumentDialog(props: DocumentDialogProps) {
               <DialogContentText>
                 {/* TODO: remove placeholder */}
                 <div className="">CITATION PLACEHOLDER</div>
-                {contentTextHeader}
-                {contentTextList()}
-                {contentTextFooter}
+                <Box component="section" sx={{ p: 2 }}>
+                  {contentTextHeader}
+                  {contentTextList()}
+                  {contentTextFooter}
+                  <Box
+                    component="section"
+                    sx={{ p: 2, my: 2, border: '1px solid grey', borderRadius: '5px' }}>
+                    <TextField
+                      required
+                      margin="dense"
+                      id="name"
+                      name="name"
+                      label="Name"
+                      type="text"
+                    />
+                    <TextField
+                      required
+                      margin='dense'
+                      id="outlined-multiline-static"
+                      name="comment"
+                      label="Leave a Comment"
+                      multiline
+                      fullWidth
+                      rows={4}
+                      defaultValue=""
+                    />
+                    <Box
+                      display="flex"
+                      justifyContent={'flex-end'}
+                      sx={{pt: 2}}
+                    >
+                      <Button type="submit">Comment</Button>
+                    </Box>
+                  </Box>
+                </Box>
               </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                name="name"
-                label="Name"
-                type="text"
-                fullWidth
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                margin='dense'
-                id="outlined-multiline-static"
-                name="comment"
-                label="Multiline"
-                multiline
-                fullWidth
-                rows={4}
-                defaultValue=""
-              />
-              <Button type="submit">Comment</Button>
               <CommentSection comments={comments} />
             </DialogContent>
             <DialogActions>

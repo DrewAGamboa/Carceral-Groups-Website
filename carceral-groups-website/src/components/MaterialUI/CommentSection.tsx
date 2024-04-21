@@ -3,11 +3,10 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { BlobDocumentComment } from '../../models/BlobDocumentComment';
 import ShowMoreText from './ShowMoreText';
+import { Box } from '@mui/material';
 
 type CommentSectionProps = {
     comments: BlobDocumentComment[];
@@ -45,10 +44,15 @@ export default function CommentSection(props: CommentSectionProps) {
             </div>
         )
     })
-    
+
     return (
-        <List>
-            {commentList}
-        </List>
+        <Box component="section" sx={{ p: 2 }}>
+            <Typography variant="h6" component="div">
+                Comments
+            </Typography>
+            <List>
+                {commentList}
+            </List>
+        </ Box>
     );
 }
