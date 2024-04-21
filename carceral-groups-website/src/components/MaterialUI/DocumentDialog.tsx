@@ -29,17 +29,17 @@ const DUMMY_COMMENTS: BlobDocumentComment[] = [
   {
     id: '1',
     fromName: 'Ali Connors',
-    content: 'I\'ll be in your neighborhood doing errands this…'
+    content: 'This analysis really highlights how inmates contribute culturally to society.'
   },
   {
     id: '2',
-    fromName: 'to Scott, Alex, Jennifer',
-    content: 'Wish I could come, but I\'m out of town this…'
+    fromName: 'Trevor Hansen',
+    content: 'It\'s fascinating to see the depth of creativity and resilience among incarcerated individuals. Understanding who created the artifact and their background provides a richer context to appreciate their work and struggles.'
   },
   {
     id: '3',
     fromName: 'Sandra Adams',
-    content: 'Do you have Paris recommendations? Have you ever…'
+    content: 'The artifact’s analysis offers profound insights into the relationship between incarcerated individuals and their communities. By examining who created it and their social standing, alongside the historical and cultural context of its creation, we begin to understand the complex narratives and power dynamics at play. This analysis not only sheds light on the artifact itself but also raises important questions about the broader implications of cultural production within prison walls. What can’t be answered directly opens new avenues for further research, urging us to delve deeper into the unexplored stories of these creators.'
   }
 ]
 
