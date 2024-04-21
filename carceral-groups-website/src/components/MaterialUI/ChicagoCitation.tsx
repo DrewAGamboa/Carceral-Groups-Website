@@ -6,13 +6,14 @@ type ChicagoCitationProps = {
     placeOfPublication: string,
     publisher: string,
     yearOfPublication: string,
-    pageNumbers: string,
+    pageNumbers?: string,
     url?: string,
-    accessedDate?: string
+    accessedDate?: string,
+    numberInList?: number
 }
 
 const ChicagoCitation = (props: ChicagoCitationProps) => {
-    const { author, title, placeOfPublication, publisher, yearOfPublication, pageNumbers, url, accessedDate } = props;
+    const { author, title, placeOfPublication, publisher, yearOfPublication, pageNumbers, url, accessedDate, numberInList } = props;
 
     const linkCitation = (linkUrl?: string, linkAccessedDate?: string) => {
         const linkElement = () => {linkUrl && <a href={linkUrl} target="_blank" rel="noopener noreferrer">Link</a>}
@@ -26,7 +27,7 @@ const ChicagoCitation = (props: ChicagoCitationProps) => {
 
     return (
         <Typography variant="caption" gutterBottom>
-            {author && `${author} ,`} <em>{title}</em>. {placeOfPublication}: {publisher}, {yearOfPublication}. {pageNumbers && `pp. ${pageNumbers}.`} {linkCitation(url, accessedDate)}
+            {numberInList && `${numberInList}. `}<em>{title}</em>, {author && `${author},`} {publisher}, {yearOfPublication}, {placeOfPublication}, {pageNumbers && `pp. ${pageNumbers}.`} {linkCitation(url, accessedDate)}
         </Typography>
     );
 }

@@ -10,7 +10,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { BlobDocument } from '../../models/BlobDocument';
 import { getDocument } from '../../api/services/MapPointsService';
 import ChicagoCitation from './ChicagoCitation';
-import { Divider } from '@mui/material';
+import { List, ListItem, ListItemText } from '@mui/material';
+import { CitationInfo } from '../../models/CitationInfo';
 
 const DUMMY_BLOBDOCUMENT: BlobDocument = {
   id: '1',
@@ -18,6 +19,25 @@ const DUMMY_BLOBDOCUMENT: BlobDocument = {
   fileUrl: 'https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf',
   type: 'pdf'
 };
+
+const DUMMY_CITATIONS: CitationInfo[] = [
+  {
+    title: "“La Palabra Alambre de MASH,” October 1971-March 1972",
+    publisher: "Tomás Ybarra-Frausto papers",
+    yearOfPublication: "1943-1988",
+    placeOfPublication: "UW Special Collections, Seattle, WA"
+  },
+  {
+    author: "John Doe",
+    title: "Understanding the Universe",
+    placeOfPublication: "New York",
+    publisher: "Universe Books",
+    yearOfPublication: "2022",
+    pageNumbers: "50-60",
+    url: "http://example.com",
+    accessedDate: "April 10, 2024"
+  }
+];
 
 type DocumentDialogProps = {
   document_id: string;
@@ -50,6 +70,14 @@ export default function DocumentDialog(props: DocumentDialogProps) {
     setOpen(false);
   };
 
+  const docCitations = DUMMY_CITATIONS.map((citation, index) => {
+    return (
+      <ListItem key={index}>
+        <ListItemText primary={<ChicagoCitation key={index} {...citation} numberInList={index + 1} />} />
+      </ListItem>
+    )
+  })
+
   return (
     <React.Fragment>
       <Button variant="outlined" onClick={handleClickOpen}>
@@ -77,25 +105,9 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             <DialogTitle>{doc.title}</DialogTitle>
             <DialogContent>
               <iframe src={doc.fileUrl} title="Archival Material" width="100%" height="600px"></iframe>
-              <ChicagoCitation
-                title="“La Palabra Alambre de MASH,”"
-                placeOfPublication="Seattle, WA"
-                publisher="Tomás Ybarra-Frausto papers"
-                yearOfPublication="1943-1988"
-                pageNumbers="UW Special Collections"
-              />
-              <Divider />
-              <ChicagoCitation
-                author="John Doe"
-                title="Understanding the Universe"
-                placeOfPublication="New York"
-                publisher="Universe Books"
-                yearOfPublication="2022"
-                pageNumbers="50-60"
-                url="http://example.com"
-                accessedDate="April 10, 2024"
-              />
-              <Divider />
+              <List>
+                {docCitations}
+              </List>
               <DialogContentText>
                 To leave a comment for this archival material, please enter your comment here. Your comment will be stored for future reference.
               </DialogContentText>
