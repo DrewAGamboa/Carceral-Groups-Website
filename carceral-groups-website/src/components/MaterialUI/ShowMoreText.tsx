@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Button } from '@mui/material';
 
 type ShowMoreTextProps = {
     text: string;
@@ -15,17 +15,14 @@ const ShowMoreText = (props: ShowMoreTextProps) => {
     };
 
     return (
-        <div>
-            <Typography variant="body1">
-                {isExpanded ? text : `${text.substring(0, maxCharacter)}${isWithinLimit ? '' : '…'}`}
-                {text.length > maxCharacter && (
+        <>
+            {isExpanded ? text : `${text.substring(0, maxCharacter)}${isWithinLimit ? '' : '…'}`}
+            {text.length > maxCharacter && (
                 <Button variant='text' onClick={handleToggle}>
                     {isExpanded ? 'Show Less' : 'Show More'}
                 </Button>
             )}
-            </Typography>
-            
-        </div>
+        </>
     );
 };
 

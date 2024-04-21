@@ -30,18 +30,13 @@ export default function CommentSection(props: CommentSectionProps) {
         )
     }
 
-    const commentList = comments.map((comment, index) => {
+    const commentList = comments.map((comment) => {
         return (
-            <div key={index}>
-                {index > 0 &&
-                    <Divider key={`divider_${index}`} variant="inset" component="li" />
-                }
-                <ListItem
-                    key={comment.id}
-                    alignItems="flex-start">
-                    {commentContent(comment)}
-                </ListItem>
-            </div>
+            <ListItem
+                key={comment.id}
+                alignItems="flex-start">
+                {commentContent(comment)}
+            </ListItem>
         )
     })
 

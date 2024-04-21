@@ -11,7 +11,7 @@ import { BlobDocument } from '../../models/BlobDocument';
 import { getDocument } from '../../api/services/MapPointsService';
 import CommentSection from './CommentSection';
 import { BlobDocumentComment } from '../../models/BlobDocumentComment';
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 const DUMMY_BLOBDOCUMENT: BlobDocument = {
   id: '1',
@@ -157,7 +157,6 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             <DialogTitle>{doc.title}</DialogTitle>
             <DialogContent>
               <iframe src={doc.fileUrl} title="Archival Material" width="100%" height="600px"></iframe>
-              <DialogContentText>
                 {/* TODO: remove placeholder */}
                 <div className="">CITATION PLACEHOLDER</div>
                 <Box component="section" sx={{ p: 2 }}>
@@ -195,7 +194,6 @@ export default function DocumentDialog(props: DocumentDialogProps) {
                     </Box>
                   </Box>
                 </Box>
-              </DialogContentText>
               <CommentSection comments={comments} />
             </DialogContent>
             <DialogActions>
