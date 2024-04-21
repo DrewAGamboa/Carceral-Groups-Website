@@ -113,6 +113,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
         maxWidth={'lg'}
         open={open}
         onClose={handleClose}
+        scroll={'body'}
         PaperProps={{
           component: 'form',
           onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
@@ -145,6 +146,8 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             <DialogContent>
               <iframe src={doc.fileUrl} title="Archival Material" width="100%" height="600px"></iframe>
               <DialogContentText>
+                {/* TODO: remove placeholder */}
+                <div className="">CITATION PLACEHOLDER</div>
                 {contentTextHeader}
                 {contentTextList()}
                 {contentTextFooter}
@@ -170,11 +173,11 @@ export default function DocumentDialog(props: DocumentDialogProps) {
                 rows={4}
                 defaultValue=""
               />
+              <Button type="submit">Comment</Button>
               <CommentSection comments={comments} />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>
-              <Button type="submit">Comment</Button>
             </DialogActions>
           </>
         }
