@@ -12,6 +12,9 @@ import { getDocument } from '../../api/services/MapPointsService';
 import CommentSection from './CommentSection';
 import { BlobDocumentComment } from '../../models/BlobDocumentComment';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import ChicagoCitation from './ChicagoCitation';
+import { List, ListItem, ListItemText } from '@mui/material';
+import { CitationInfo } from '../../models/CitationInfo';
 
 const DUMMY_BLOBDOCUMENT: BlobDocument = {
   id: '1',
@@ -43,6 +46,25 @@ const DUMMY_COMMENTS: BlobDocumentComment[] = [
   }
 ]
 
+const DUMMY_CITATIONS: CitationInfo[] = [
+  {
+    title: "“La Palabra Alambre de MASH,” October 1971-March 1972",
+    publisher: "Tomás Ybarra-Frausto papers",
+    yearOfPublication: "1943-1988",
+    placeOfPublication: "UW Special Collections, Seattle, WA"
+  },
+  {
+    author: "John Doe",
+    title: "Understanding the Universe",
+    placeOfPublication: "New York",
+    publisher: "Universe Books",
+    yearOfPublication: "2022",
+    pageNumbers: "50-60",
+    url: "http://example.com",
+    accessedDate: "April 10, 2024"
+  }
+];
+
 type DocumentDialogProps = {
   document_id: string;
 };
@@ -73,6 +95,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
     if (doc) {
       // TODO: replace this when files are available
       setDoc({ ...doc, fileUrl: DUMMY_BLOBDOCUMENT.fileUrl });
+      setDoc({ ...doc, fileUrl: DUMMY_BLOBDOCUMENT.fileUrl });
     } else {
       setDoc(null);
     }
@@ -98,6 +121,14 @@ export default function DocumentDialog(props: DocumentDialogProps) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const docCitations = DUMMY_CITATIONS.map((citation, index) => {
+    return (
+      <ListItem key={index}>
+        <ListItemText primary={<ChicagoCitation key={index} {...citation} numberInList={index + 1} />} />
+      </ListItem>
+    )
+  })
 
 
   const contentTextHeader = `Artifact analysis helps us surface the significance of each archival document. Understanding the significance of this material helps illustrate the involvement that people incarcerated have done in collaboration with their communities.  Try to answer as many of the following questions as possible:`
@@ -157,67 +188,69 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             <DialogTitle>{doc.title}</DialogTitle>
             <DialogContent>
               <iframe src={doc.fileUrl} title="Archival Material" width="100%" height="600px"></iframe>
-                {/* TODO: remove placeholder */}
-                <div className="">CITATION PLACEHOLDER</div>
-                <Box component="section" sx={{ p: 2 }}>
-                  {contentTextHeader}
-                  {contentTextList()}
-                  {contentTextFooter}
+              <List>
+                {docCitations}
+              </List>
+              <Box component="section" sx={{ p: 2 }}>
+                {contentTextHeader}
+                {contentTextList()}
+                {contentTextFooter}
+                <Box
+                  component="section"
+                  sx={{ p: 2, my: 2, border: '1px solid grey', borderRadius: '5px' }}>
+                  <TextField
+                    required
+                    margin="dense"
+                    id="name"
+                    name="name"
+                    label="Name"
+                    type="text"
+                  />
+                  <TextField
+                    required
+                    margin='dense'
+                    id="outlined-multiline-static"
+                    name="comment"
+                    label="Leave a Comment"
+                    multiline
+                    fullWidth
+                    rows={4}
+                    defaultValue=""
+                  />
                   <Box
-                    component="section"
-                    sx={{ p: 2, my: 2, border: '1px solid grey', borderRadius: '5px' }}>
-                    <TextField
-                      required
-                      margin="dense"
-                      id="name"
-                      name="name"
-                      label="Name"
-                      type="text"
-                    />
-                    <TextField
-                      required
-                      margin='dense'
-                      id="outlined-multiline-static"
-                      name="comment"
-                      label="Leave a Comment"
-                      multiline
-                      fullWidth
-                      rows={4}
-                      defaultValue=""
-                    />
-                    <Box
-                      display="flex"
-                      justifyContent={'flex-end'}
-                      sx={{pt: 2}}
-                    >
-                      <Button type="submit">Comment</Button>
-                    </Box>
+                    display="flex"
+                    justifyContent={'flex-end'}
+                    sx={{ pt: 2 }}
+                  >
+                    <Button type="submit">Comment</Button>
                   </Box>
                 </Box>
+              </Box>
               <CommentSection comments={comments} />
+
             </DialogContent>
             <DialogActions>
-            {/* //TODO: Remove once width is decided */}
-            <FormControl sx={{ mt: 2, minWidth: 120 }}>
-              <InputLabel htmlFor="max-width">maxWidth</InputLabel>
-              <Select
-                autoFocus
-                value={maxWidth}
-                onChange={handleMaxWidthChange}
-                label="maxWidth"
-                inputProps={{
-                  name: 'max-width',
-                  id: 'max-width',
-                }}
-              >
-                <MenuItem value={false as any}>false</MenuItem>
-                <MenuItem value="xs">xs</MenuItem>
-                <MenuItem value="sm">sm</MenuItem>
-                <MenuItem value="md">md</MenuItem>
-                <MenuItem value="lg">lg</MenuItem>
-                <MenuItem value="xl">xl</MenuItem>
-              </Select>
-            </FormControl>
+              {/* //TODO: Remove once width is decided */}
+              <FormControl sx={{ mt: 2, minWidth: 120 }}>
+                <InputLabel htmlFor="max-width">maxWidth</InputLabel>
+                <Select
+                  autoFocus
+                  value={maxWidth}
+                  onChange={handleMaxWidthChange}
+                  label="maxWidth"
+                  inputProps={{
+                    name: 'max-width',
+                    id: 'max-width',
+                  }}
+                >
+                  <MenuItem value={false as any}>false</MenuItem>
+                  <MenuItem value="xs">xs</MenuItem>
+                  <MenuItem value="sm">sm</MenuItem>
+                  <MenuItem value="md">md</MenuItem>
+                  <MenuItem value="lg">lg</MenuItem>
+                  <MenuItem value="xl">xl</MenuItem>
+                </Select>
+              </FormControl>
               <Button onClick={handleClose}>Cancel</Button>
             </DialogActions>
           </>
