@@ -9,7 +9,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AccordionOptions from './AccordionOptions';
 
-const drawerWidth = 600;
+const drawerWidth = '25%';
 
 const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,
@@ -45,7 +45,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     ({ theme, open }) => ({
         width: drawerWidth,
         flexShrink: 0,
-        whiteSpace: 'nowrap',
         boxSizing: 'border-box',
         ...(open && {
             ...openedMixin(theme),
