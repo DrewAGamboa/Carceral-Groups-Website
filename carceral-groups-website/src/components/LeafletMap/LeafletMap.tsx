@@ -18,6 +18,7 @@ type LeafLetGroup = {
 type LeafLetHelper = {
   map: L.Map;
   groups: LeafLetGroup[];
+  selectedMarker?: boolean;
 };
 
 const RedMarkerIcon = L.icon({
@@ -73,17 +74,28 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
       leafletHelperRef.current.map.removeLayer(alreadyHasGeoJSON.group as L.LayerGroup);
       leafletHelperRef.current.groups = leafletHelperRef.current.groups.filter(group => group.name !== "GeoJSON");
     }
-    
+
     if (leafletHelperRef.current && geojson) {
       // Add GeoJSON layer
       const geoJSON = L.geoJSON(geojson, {
         pointToLayer: (_geoJsonPoint, latlng) => {
-          return L.marker(latlng, { icon: RedMarkerIcon })
+          const marker = L.marker(latlng, { icon: RedMarkerIcon })
+
+          return marker
         },
         onEachFeature: (feature, layer) => {
           if (feature.properties?.popupContent) {
             layer.bindPopup(feature.properties.popupContent);
-            layer.on('click', handleOnMarkerClick);
+            layer.on('mouseover', () => {
+              layer.openPopup();
+            });
+            layer.on('mouseout', () => {
+              layer.closePopup();
+            });
+            layer.on('click', ((event: LeafletMouseEvent) =>{
+              handleOnMarkerClick(event)
+              layer.openPopup();
+            }));
           }
         },
         filter: (feature) => {
