@@ -18,7 +18,6 @@ type LeafLetGroup = {
 type LeafLetHelper = {
   map: L.Map;
   groups: LeafLetGroup[];
-  selectedMarker?: boolean;
 };
 
 const RedMarkerIcon = L.icon({
