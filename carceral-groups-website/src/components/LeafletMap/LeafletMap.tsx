@@ -89,11 +89,8 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
             layer.on('mouseover', () => {
               layer.openPopup();
             });
-            layer.on('mouseout', () => {
-              layer.closePopup();
-            });
             layer.on('click', ((event: LeafletMouseEvent) =>{
-              handleOnMarkerClick(event)
+              handleOnMarkerClick(event);
               layer.openPopup();
             }));
           }
