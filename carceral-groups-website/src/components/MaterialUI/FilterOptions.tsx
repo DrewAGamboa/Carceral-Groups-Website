@@ -47,7 +47,7 @@ export default function FilterOptions({options, onOptionsChange}: FilterOptionsP
   // Render checkboxes recursively
   const renderCheckboxes = (node: any, path = []) => {
     return (
-      <Box key={path.join(':')} sx={{ display: 'flex', flexDirection: 'column', ml: 2 }}>
+      <Box key={path.join(':')} sx={{ display: 'flex', flexDirection: 'column', ml: 2, textAlign: 'left' }}>
         <FormControlLabel
           label={node.label}
           control={<Checkbox checked={node.checked} onChange={(e) => handleCheckboxChange(path, e.target.checked)} />}
