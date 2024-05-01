@@ -73,14 +73,11 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
       leafletHelperRef.current.map.removeLayer(alreadyHasGeoJSON.group as L.LayerGroup);
       leafletHelperRef.current.groups = leafletHelperRef.current.groups.filter(group => group.name !== "GeoJSON");
     }
-
     if (leafletHelperRef.current && geojson) {
       // Add GeoJSON layer
       const geoJSON = L.geoJSON(geojson, {
         pointToLayer: (_geoJsonPoint, latlng) => {
-          const marker = L.marker(latlng, { icon: RedMarkerIcon })
-
-          return marker
+          return L.marker(latlng, { icon: RedMarkerIcon })
         },
         onEachFeature: (feature, layer) => {
           if (feature.properties?.popupContent) {
