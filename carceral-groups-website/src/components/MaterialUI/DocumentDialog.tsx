@@ -234,7 +234,6 @@ export default function DocumentDialog(props: DocumentDialogProps) {
               <FormControl sx={{ mt: 2, minWidth: 120 }}>
                 <InputLabel htmlFor="max-width">maxWidth</InputLabel>
                 <Select
-                  autoFocus
                   value={maxWidth}
                   onChange={handleMaxWidthChange}
                   label="maxWidth"
