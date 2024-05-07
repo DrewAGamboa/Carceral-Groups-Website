@@ -31,7 +31,7 @@ export const SignOutButton = () => {
                 onClick={(event) => setAnchorEl(event.currentTarget)}
                 color="inherit"
             >
-                <AccountCircle />
+                <AccountCircle /> Logout
             </IconButton>
             <Menu
                 id="menu-appbar"

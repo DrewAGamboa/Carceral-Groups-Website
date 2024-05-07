@@ -31,6 +31,9 @@ Example of this app can be found at https://tiger-fiddle-k95c.squarespace.com/ma
     </iframe>
     ```
 
+## Authentication
+
+- Followed https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-single-page-app-react-register-app
 
 ## Useful Links
 - [Azure Portal](https://portal.azure.com)
