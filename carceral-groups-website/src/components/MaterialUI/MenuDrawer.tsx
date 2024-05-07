@@ -9,11 +9,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AccordionOptions from './AccordionOptions';
 
-import { useIsAuthenticated } from "@azure/msal-react";
-import { SignInButton } from "../Auth/SignInButton";
-import { SignOutButton } from "../Auth/SignOutButton";
-
-
 const drawerWidth = '25%';
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -69,7 +64,6 @@ export interface MiniDrawerProps {
 
 export default function MenuDrawer({ options, onOptionsChange }: MiniDrawerProps) {
     const [open, setOpen] = React.useState(false);
-    const isAuthenticated = useIsAuthenticated();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -89,7 +83,6 @@ export default function MenuDrawer({ options, onOptionsChange }: MiniDrawerProps
                 </DrawerHeader>
                 <Divider />
                 <AccordionOptions open={open} options={options} onOptionsChange={onOptionsChange} onExpand={handleDrawerOpen} />
-                {isAuthenticated ? <SignOutButton /> : <SignInButton />}
             </Drawer>
         </Box>
     );
