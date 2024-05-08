@@ -5,6 +5,9 @@
 
 import { LogLevel } from "@azure/msal-browser";
 
+// defined in .env file
+const clientId = import.meta.env.VITE_CLIENT_ID
+
 /**
  * Configuration object to be passed to MSAL instance on creation. 
  * For a full list of MSAL.js configuration parameters, visit:
@@ -13,7 +16,7 @@ import { LogLevel } from "@azure/msal-browser";
 
 export const msalConfig = {
     auth: {
-        clientId: "5f7f903f-d4a6-476d-9894-807740a596df",
+        clientId: clientId,
         authority: "https://login.microsoftonline.com/common",
         redirectUri: "http://localhost:5173",
     },
