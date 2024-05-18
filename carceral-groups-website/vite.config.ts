@@ -6,5 +6,8 @@ export default defineConfig({
   plugins: [react()],
   build: {
     target: "esnext"
+  },
+  server: {
+    host: '127.0.0.1'
   }
 })
