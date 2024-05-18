@@ -15,7 +15,7 @@ import { AuthenticatedTemplate } from '@azure/msal-react';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
 
-const pages = [{name:'Geographic Location', link:'geographicLocations'}];
+const pages = [{name:'Geographic Location', link:'geographicLocations'}, {name:'Documents', link:'geographicDocuments'}];
 
 type ResponsiveAppBarProps = {
     isAuthenticated: boolean;
