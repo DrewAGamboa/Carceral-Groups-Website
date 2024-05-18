@@ -20,6 +20,7 @@ type GeographicDocument = {
     geographicDocumentId: string
     geographicDocumentTitle: string
     geographicDocumentUri: string
+    fromGeographicLocationId?: string
 }
 
 export default GeographicDocument;

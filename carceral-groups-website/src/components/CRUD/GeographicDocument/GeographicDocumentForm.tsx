@@ -1,7 +1,9 @@
-import { Box, Paper, TextField, Typography } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Paper, TextField, Typography } from "@mui/material";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import GeographicDocument from "../../../models/GeographicDocument";
 import { useEffect, useState } from "react";
-
+import { getGeographicLocations } from "../../../api/services/GeographicLocationService";
+import GeographicLocation from "../../../models/GeographicLocation";
 
 type GeographicDocumentFormProps = {
     geographicDocument: GeographicDocument
@@ -11,9 +13,14 @@ type GeographicDocumentFormProps = {
 
 const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     const { geographicDocument, children, isEdit } = props;
+    const [geographicLocations, setGeographicLocations] = useState<readonly GeographicLocation[]>([]);
+    const locationMenuItems = geographicLocations.map((location: GeographicLocation) => {
+        return <MenuItem key={location.geographicLocationId} value={location.geographicLocationId}>{location.geographicLocationName}</MenuItem>
+    });
 
     const [inputDocumentTitle, setInputDocumentTitle] = useState<string>(geographicDocument.geographicDocumentTitle || '');
     const [inputDocumentUri, setInputDocumentUri] = useState<string>(geographicDocument.geographicDocumentUri || '');
+    const [inputFromLocationId, setInputFromLocationId] = useState<string>(geographicDocument.fromGeographicLocationId || '');
 
     const handleDocumentTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputDocumentTitle(event.target.value);
@@ -23,11 +30,29 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputDocumentUri(event.target.value);
     }
 
+    const handleFormLocationChange = (event: SelectChangeEvent) => {
+        setInputFromLocationId(event.target.value);
+    }
+
     const textProps = isEdit ? { required: true } : { disabled: true };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const locations = await getGeographicLocations();
+                setGeographicLocations([...locations]);
+            }
+            catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchData();
+    }, [])
 
     useEffect(() => {
         setInputDocumentTitle(geographicDocument.geographicDocumentTitle);
         setInputDocumentUri(geographicDocument.geographicDocumentUri);
+        setInputFromLocationId(geographicDocument.fromGeographicLocationId || '');
     }, [geographicDocument])
 
     return (
@@ -66,6 +91,19 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                 onChange={handleDocumentUriChange}
                 {...textProps}
             />
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="fromGeographicLocationId-select-label">Location</InputLabel>
+                <Select
+                    id="fromGeographicLocationId-select"
+                    name="fromGeographicLocationId"
+                    label="Location"
+                    value={inputFromLocationId}
+                    onChange={handleFormLocationChange}
+                    {...textProps}
+                >
+                    {locationMenuItems}
+                </Select>
+            </FormControl>
             <Box
                 display="flex"
                 justifyContent={'flex-end'}
