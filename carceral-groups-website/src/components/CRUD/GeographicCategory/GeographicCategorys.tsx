@@ -43,7 +43,7 @@ const GeographicCategorys = () => {
                     noWrap
                     sx={{ flexGrow: 1 }}
                 >
-                    Documents
+                    Categories
                 </Typography>
                 <Box
                     display="flex"
