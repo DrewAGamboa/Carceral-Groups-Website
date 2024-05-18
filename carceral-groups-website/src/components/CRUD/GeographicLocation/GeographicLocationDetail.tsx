@@ -7,7 +7,6 @@ import GeographicLocationForm from "./GeographicLocationForm";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function loader({ params }: any) {
     const geographicLocation = await getGeographicLocation(params.id);
-    console.log('TODO-loader', geographicLocation)
     return { geographicLocation }
 }
 
