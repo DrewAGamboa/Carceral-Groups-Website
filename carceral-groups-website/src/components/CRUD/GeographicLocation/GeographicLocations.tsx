@@ -9,6 +9,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import { createGeographicLocation, getGeographicLocations } from "../../../api/services/GeographicLocationService";
 import BasicTable from "../../MaterialUI/BasicTable";
+import Paper from '@mui/material/Paper';
 
 export async function loader() {
     const geographicLocations = await getGeographicLocations();
@@ -22,7 +23,7 @@ export async function action() {
 
 const GeographicLocations = () => {
     const { geographicLocations } = useLoaderData() as { geographicLocations: GeographicLocation[] };
-    const tableHeaderInfo = [{ name: "Id"}, { name: "Name"}, { name: "Latitude"}, { name: "Long"}]
+    const tableHeaderInfo = [{ name: "Id" }, { name: "Name" }, { name: "Latitude" }, { name: "Long" }]
     const tableRows = geographicLocations.map((geographicLocation) => {
         return {
             id: geographicLocation.geographicLocationId,
@@ -39,17 +40,22 @@ const GeographicLocations = () => {
 
     return (
         <>
-            <Box sx={{ m: 2 }}>
+            <Paper
+                sx={{ p: 2, my: 4 }}
+            >
                 <Typography
                     component="h1"
-                    variant="h2"
+                    variant="h4"
                     color="inherit"
                     noWrap
                     sx={{ flexGrow: 1 }}
                 >
                     Geographic Locations
                 </Typography>
-                <Box>
+                <Box
+                    display="flex"
+                    justifyContent={'flex-end'}
+                >
                     <Form method="post">
                         <Button type="submit" variant="contained" color="success">New</Button>
                     </Form>
@@ -57,11 +63,8 @@ const GeographicLocations = () => {
                 <Box sx={{ my: 2 }}>
                     <BasicTable tableHeaderInfo={tableHeaderInfo} rows={tableRows} handleTableRowClick={handleTableClick} />
                 </Box>
-                <Box>
-                    <Outlet />
-                </Box>
-            </Box>
-
+            </Paper>
+            <Outlet />
         </>
     )
 }

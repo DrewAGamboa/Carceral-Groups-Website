@@ -48,9 +48,9 @@ export default function BasicTable(props: BasicTableProps) {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
+                    {rows.map((row, index) => (
                         <TableRow
-                            key={row.name}
+                            key={index}
                             onClick={(event) => handleClick(event, row.id)}
                             selected={isSelected(row.id)}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

@@ -9,7 +9,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import { SignOutButton } from '../Auth/SignOutButton';
 import { SignInButton } from '../Auth/SignInButton';
 import { AuthenticatedTemplate } from '@azure/msal-react';
@@ -38,12 +37,11 @@ function ResponsiveAppBar(props: ResponsiveAppBarProps) {
         <AppBar position="fixed">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
                     <Typography
                         variant="h6"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
+                        href="/admin"
                         sx={{
                             mr: 2,
                             display: { xs: 'none', md: 'flex' },
@@ -54,7 +52,7 @@ function ResponsiveAppBar(props: ResponsiveAppBarProps) {
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO
+                        ADMIN
                     </Typography>
                     <AuthenticatedTemplate>
                         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -95,12 +93,11 @@ function ResponsiveAppBar(props: ResponsiveAppBarProps) {
                             </Menu>
                         </Box>
                     </AuthenticatedTemplate>
-                    <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                     <Typography
                         variant="h5"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
+                        href="/admin"
                         sx={{
                             mr: 2,
                             display: { xs: 'flex', md: 'none' },
@@ -112,7 +109,7 @@ function ResponsiveAppBar(props: ResponsiveAppBarProps) {
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO
+                        ADMIN
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         <AuthenticatedTemplate>
