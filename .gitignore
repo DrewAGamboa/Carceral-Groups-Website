@@ -30,3 +30,4 @@ dist-ssr
 x64/
 [Bb]in/
 [Oo]bj/
+.mono

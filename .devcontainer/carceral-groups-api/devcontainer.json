@@ -5,9 +5,11 @@
 	"dockerComposeFile": ["../../docker-compose.yml"],
     "service": "carceral-groups-api",
 	"shutdownAction": "none",
-    "workspaceFolder": "/workspace/carceral-groups-api"
+    "workspaceFolder": "/workspace/carceral-groups-api",
 	// Features to add to the dev container. More info: https://containers.dev/features.
-    // "features" : {},
+    "features": {
+		"azure-cli": "latest"
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
@@ -16,7 +18,16 @@
 	// "postCreateCommand": "yarn install",
 
 	// Configure tool-specific properties.
-	// "customizations": {},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-dotnettools.csdevkit",
+				"ms-mssql.mssql",
+				"ms-vscode.azurecli",
+				"ms-vscode.azure-account"
+			]
+		}
+	}
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
