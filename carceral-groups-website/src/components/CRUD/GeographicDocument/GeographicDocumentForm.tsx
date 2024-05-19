@@ -83,6 +83,8 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputDocumentTitle(geographicDocument.geographicDocumentTitle);
         setInputDocumentUri(geographicDocument.geographicDocumentUri);
         setInputFromLocationId(geographicDocument.fromGeographicLocationId || '');
+        setInputFromCategoryId(geographicDocument.fromGeographicCategoryId || '');
+        setInputFromSubCategoryId(geographicDocument.fromGeographicSubCategoryId || '');
     }, [geographicDocument])
 
     return (
