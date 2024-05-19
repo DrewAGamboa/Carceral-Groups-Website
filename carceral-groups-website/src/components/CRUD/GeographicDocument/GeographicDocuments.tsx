@@ -23,13 +23,22 @@ export async function action() {
 
 const GeographicDocuments = () => {
     const { geographicDocuments } = useLoaderData() as { geographicDocuments: GeographicDocument[] };
-    const tableHeaderInfo = [{ name: "Id" }, { name: "Document Title" }, { name: "Document URI" }, { name: "Location" }]
+    const tableHeaderInfo = [
+        { name: "Id" },
+        { name: "Document Title" },
+        { name: "Document URI" },
+        { name: "Location" },
+        { name: "Category" },
+        { name: "SubCategory" },
+    ]
     const tableRows = geographicDocuments.map((geographicDocument) => {
         return {
             id: geographicDocument.geographicDocumentId,
             geographicDocumentTitle: geographicDocument.geographicDocumentTitle,
             geographicDocumentUri: geographicDocument.geographicDocumentUri,
             fromGeographicLocationId: geographicDocument.fromGeographicLocationId,
+            fromGeographicCategoryId: geographicDocument.fromGeographicCategoryId,
+            fromGeographicSubCategoryId: geographicDocument.fromGeographicSubCategoryId,
         }
     });
     const navigate = useNavigate();

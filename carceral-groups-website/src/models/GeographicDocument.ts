@@ -21,6 +21,8 @@ type GeographicDocument = {
     geographicDocumentTitle: string
     geographicDocumentUri: string
     fromGeographicLocationId?: string
+    fromGeographicCategoryId?: string
+    fromGeographicSubCategoryId?: string
 }
 
 export default GeographicDocument;
