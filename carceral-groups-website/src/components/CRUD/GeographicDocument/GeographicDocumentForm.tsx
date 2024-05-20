@@ -1,7 +1,13 @@
-import { Box, Paper, TextField, Typography } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Paper, TextField, Typography } from "@mui/material";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import GeographicDocument from "../../../models/GeographicDocument";
 import { useEffect, useState } from "react";
-
+import { getGeographicLocations } from "../../../api/services/GeographicLocationService";
+import GeographicLocation from "../../../models/GeographicLocation";
+import GeographicCategory from "../../../models/GeographicCategory";
+import GeographicSubCategory from "../../../models/GeographicSubCategory";
+import { getGeographicCategorys } from "../../../api/services/GeographicCategoryService";
+import { getGeographicSubCategorys } from "../../../api/services/GeographicSubCategoryService";
 
 type GeographicDocumentFormProps = {
     geographicDocument: GeographicDocument
@@ -11,9 +17,26 @@ type GeographicDocumentFormProps = {
 
 const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     const { geographicDocument, children, isEdit } = props;
+    const [geographicLocations, setGeographicLocations] = useState<readonly GeographicLocation[]>([]);
+    const locationMenuItems = geographicLocations.map((location: GeographicLocation) => {
+        return <MenuItem key={location.geographicLocationId} value={location.geographicLocationId}>{location.geographicLocationName}</MenuItem>
+    });
+
+    const [geographicCategorys, setGeographicCategorys] = useState<readonly GeographicCategory[]>([]);
+    const categoryMenuItems = geographicCategorys.map((category: GeographicCategory) => {
+        return <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
+    });
+
+    const [geographicSubCategorys, setGeographicSubCategorys] = useState<readonly GeographicSubCategory[]>([]);
+    const subCategoryMenuItems = geographicSubCategorys.map((subCategory: GeographicSubCategory) => {
+        return <MenuItem key={subCategory.id} value={subCategory.id}>{subCategory.name}</MenuItem>
+    });
 
     const [inputDocumentTitle, setInputDocumentTitle] = useState<string>(geographicDocument.geographicDocumentTitle || '');
     const [inputDocumentUri, setInputDocumentUri] = useState<string>(geographicDocument.geographicDocumentUri || '');
+    const [inputFromLocationId, setInputFromLocationId] = useState<string>(geographicDocument.fromGeographicLocationId || '');
+    const [inputFromCategoryId, setInputFromCategoryId] = useState<string>(geographicDocument.fromGeographicCategoryId || '');
+    const [inputFromSubCategoryId, setInputFromSubCategoryId] = useState<string>(geographicDocument.fromGeographicSubCategoryId || '');
 
     const handleDocumentTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputDocumentTitle(event.target.value);
@@ -23,11 +46,45 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputDocumentUri(event.target.value);
     }
 
+    const handleFormLocationChange = (event: SelectChangeEvent) => {
+        setInputFromLocationId(event.target.value);
+    }
+
+    const handleFormCategoryChange = (event: SelectChangeEvent) => {
+        setInputFromCategoryId(event.target.value);
+    }
+
+    const handleFormSubCategoryChange = (event: SelectChangeEvent) => {
+        setInputFromSubCategoryId(event.target.value);
+    }
+
     const textProps = isEdit ? { required: true } : { disabled: true };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const locations = await getGeographicLocations();
+                setGeographicLocations([...locations]);
+
+                const categorys = await getGeographicCategorys();
+                setGeographicCategorys([...categorys]);
+
+                const subCategorys = await getGeographicSubCategorys();
+                setGeographicSubCategorys([...subCategorys]);
+            }
+            catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchData();
+    }, [])
 
     useEffect(() => {
         setInputDocumentTitle(geographicDocument.geographicDocumentTitle);
         setInputDocumentUri(geographicDocument.geographicDocumentUri);
+        setInputFromLocationId(geographicDocument.fromGeographicLocationId || '');
+        setInputFromCategoryId(geographicDocument.fromGeographicCategoryId || '');
+        setInputFromSubCategoryId(geographicDocument.fromGeographicSubCategoryId || '');
     }, [geographicDocument])
 
     return (
@@ -66,6 +123,45 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                 onChange={handleDocumentUriChange}
                 {...textProps}
             />
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="fromGeographicLocationId-select-label">Location</InputLabel>
+                <Select
+                    id="fromGeographicLocationId-select"
+                    name="fromGeographicLocationId"
+                    label="Location"
+                    value={inputFromLocationId}
+                    onChange={handleFormLocationChange}
+                    {...textProps}
+                >
+                    {locationMenuItems}
+                </Select>
+            </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="fromGeographicCategoryId-select-label">Category</InputLabel>
+                <Select
+                    id="fromGeographicCategoryId-select"
+                    name="fromGeographicCategoryId"
+                    label="Category"
+                    value={inputFromCategoryId}
+                    onChange={handleFormCategoryChange}
+                    {...textProps}
+                >
+                    {categoryMenuItems}
+                </Select>
+            </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="fromGeographicSubCategoryId-select-label">SubCategory</InputLabel>
+                <Select
+                    id="fromGeographicSubCategoryId-select"
+                    name="fromGeographicSubCategoryId"
+                    label="SubCategory"
+                    value={inputFromSubCategoryId}
+                    onChange={handleFormSubCategoryChange}
+                    {...textProps}
+                >
+                    {subCategoryMenuItems}
+                </Select>
+            </FormControl>
             <Box
                 display="flex"
                 justifyContent={'flex-end'}
