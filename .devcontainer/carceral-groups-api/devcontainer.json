@@ -15,7 +15,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
+	"postCreateCommand": "dotnet tool install --global dotnet-ef",
 
 	// Configure tool-specific properties.
 	"customizations": {
