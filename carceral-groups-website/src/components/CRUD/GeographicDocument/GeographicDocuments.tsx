@@ -1,24 +1,18 @@
 import {
     Outlet,
     useLoaderData,
-    Form,
-    redirect,
 } from "react-router-dom"
 import GeographicDocument from "../../../models/GeographicDocument";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Drawer, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
-import { createGeographicDocument, getGeographicDocuments } from "../../../api/services/GeographicDocumentService";
+import { getGeographicDocuments } from "../../../api/services/GeographicDocumentService";
 import BasicTable from "../../MaterialUI/BasicTable";
 import Paper from '@mui/material/Paper';
+import { useState } from "react";
 
 export async function loader() {
     const geographicDocuments = await getGeographicDocuments();
     return { geographicDocuments }
-}
-
-export async function action() {
-    const geographicDocument = await createGeographicDocument();
-    return redirect(`/admin/geographicDocuments/${geographicDocument.geographicDocumentId}/edit`);
 }
 
 const GeographicDocuments = () => {
@@ -43,8 +37,17 @@ const GeographicDocuments = () => {
     });
     const navigate = useNavigate();
 
+    const [open, setOpen] = useState(false);
+
     const handleTableClick = (rowId: string) => {
+        setOpen(true);
         navigate(`${rowId}`);
+    }
+
+
+    const handleNewClick = () => {
+        setOpen(true);
+        navigate(`new`);
     }
 
     return (
@@ -65,15 +68,24 @@ const GeographicDocuments = () => {
                     display="flex"
                     justifyContent={'flex-end'}
                 >
-                    <Form method="post">
-                        <Button type="submit" variant="contained" color="success">New</Button>
-                    </Form>
+                    <Button onClick={handleNewClick} variant="contained" color="success">
+                        New
+                    </Button>
                 </Box>
                 <Box sx={{ my: 2 }}>
                     <BasicTable tableHeaderInfo={tableHeaderInfo} rows={tableRows} handleTableRowClick={handleTableClick} />
                 </Box>
             </Paper>
-            <Outlet />
+            <Drawer
+                anchor="right"
+                open={open}
+                onClose={() => setOpen(false)}
+                sx={{
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: '25%' },
+                }}
+            >
+                <Outlet />
+            </Drawer>
         </>
     )
 }

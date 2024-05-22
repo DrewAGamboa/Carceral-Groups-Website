@@ -12,6 +12,7 @@
   "dependencies": {
     "@azure/msal-browser": "^3.14.0",
     "@azure/msal-react": "^2.0.16",
+    "@azure/storage-blob": "^12.18.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",

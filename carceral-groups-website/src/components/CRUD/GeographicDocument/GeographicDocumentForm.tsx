@@ -1,4 +1,4 @@
-import { Box, FormControl, InputLabel, MenuItem, Paper, TextField, Typography } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, TextField, Typography } from "@mui/material";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import GeographicDocument from "../../../models/GeographicDocument";
 import { useEffect, useState } from "react";
@@ -88,11 +88,12 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     }, [geographicDocument])
 
     return (
-        <Paper
+        <Box
             component="section"
             sx={{
-                '& .MuiTextField-root': { m: 1, width: '25ch' },
+                '& .MuiTextField-root': { m: 1},
                 p: 2,
+                m:4,
             }}>
             <Typography
                 component="h1"
@@ -104,7 +105,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                 Details
             </Typography>
             <TextField
-                margin="dense"
+                fullWidth
                 id="geographicDocumentTitle"
                 name="geographicDocumentTitle"
                 label="Document Title"
@@ -114,7 +115,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                 {...textProps}
             />
             <TextField
-                margin="dense"
+                fullWidth
                 id="geographicDocumentUri"
                 name="geographicDocumentUri"
                 label="Document Link"
@@ -123,7 +124,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                 onChange={handleDocumentUriChange}
                 {...textProps}
             />
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
                 <InputLabel id="fromGeographicLocationId-select-label">Location</InputLabel>
                 <Select
                     id="fromGeographicLocationId-select"
@@ -136,7 +137,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     {locationMenuItems}
                 </Select>
             </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
                 <InputLabel id="fromGeographicCategoryId-select-label">Category</InputLabel>
                 <Select
                     id="fromGeographicCategoryId-select"
@@ -149,7 +150,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     {categoryMenuItems}
                 </Select>
             </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
                 <InputLabel id="fromGeographicSubCategoryId-select-label">SubCategory</InputLabel>
                 <Select
                     id="fromGeographicSubCategoryId-select"
@@ -169,7 +170,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
             >
                 {children}
             </Box>
-        </Paper>
+        </Box>
     )
 }
 
