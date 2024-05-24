@@ -13,9 +13,19 @@ export const DUMMY_FILTERS: Filter[] = [
         ]
     },
 ]
+
 type Filter = {
     Category: string,
     Institutions?: string[],
 }
+
+export type FilterOption = {
+    prefix: string,
+    label: string,
+    level: number,
+    checked: boolean
+    indeterminate: boolean
+}
+
 
 export default Filter

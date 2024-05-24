@@ -4,6 +4,7 @@ import MapPoint from '../../models/MapPoint';
 import MapPointCSVRow from '../../models/MapPointCSVRow'
 import Papa from "papaparse"
 import { BlobDocument } from '../../models/BlobDocument';
+import Filter from '../../models/Filter';
 
 // fetches map point csv from azure blob storage
 const getMapPointsCSV = async (): Promise<MapPointCSVRow[]> => {
@@ -43,39 +44,25 @@ const getUniqueGeoJsonPreppedPoints = () => {
 }
 
 const getFilterOptions = () => {
-    const filter: {label: string, checked: boolean, children: any[]} = {
-        label: 'All',
-        checked: true,
-        children: []
-    }
+    const categories: Filter[] = [];
+
+    // replace with an api call to get all categories
     const groups = uniqueGroups(dataset);
     groups.forEach(cur => {
-        const parentGroup = cur.parentGroup;
-        const subGroup = cur.group;
-        const foundParentGroup = filter.children.find((group) => group.label === parentGroup);
-        if (foundParentGroup) {
-            foundParentGroup.children.push({
-                label: subGroup,
-                checked: true,
-                children: []
+        const category = cur.parentGroup;
+        const institution = cur.group;
+        if(!categories.some((cat) => cat.Category === category)) {
+            categories.push({
+                Category: category,
+                Institutions: []
             });
         }
-        else{
-            const parentFilter =  {
-                label: parentGroup,
-                checked: true,
-                children: [
-                    {
-                        label: subGroup,
-                        checked: true,
-                        children: []
-                    }
-                ]
-            }
-            filter.children.push(parentFilter);
-        }
+        const foundCategory = categories.find((cat) => cat.Category === category);
+        foundCategory?.Institutions?.push(institution);
     });
-    return filter;
+    console.log('TODO_getFilterOptions', categories, groups)
+
+    return categories;
 }
 
 const getCarceralDocumentsByType = () => {

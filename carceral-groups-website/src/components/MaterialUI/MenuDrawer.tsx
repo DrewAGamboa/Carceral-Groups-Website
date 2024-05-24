@@ -8,6 +8,8 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AccordionOptions from './AccordionOptions';
+import Filter from '../../models/Filter';
+import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 
 const drawerWidth = '25%';
 
@@ -58,8 +60,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export interface MiniDrawerProps {
-    options: {label: string, checked: boolean, children: any[]}
-    onOptionsChange: (updatedTreeData: any) => void;
+    options: Filter[]
+    onOptionsChange: (geographicLocationFilters: GeographicLocationFilter[]) => void;
   }
 
 export default function MenuDrawer({ options, onOptionsChange }: MiniDrawerProps) {

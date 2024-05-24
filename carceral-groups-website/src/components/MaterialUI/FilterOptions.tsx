@@ -3,64 +3,68 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useEffect, useState } from 'react';
-import { DUMMY_FILTERS } from '../../models/Filter';
+import Filter from '../../models/Filter';
+import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 
 
 
 
 
 export interface FilterOptionsProps {
-  options: {label: string, checked: boolean, children: any[]}
-  onOptionsChange: (updatedTreeData: {label: string, checked: boolean, children: any[]}) => void;
+  options: Filter[]
+  onOptionsChange: (geographicLocationFilters: GeographicLocationFilter[]) => void;
 }
 
 type filterOptionModel = { 
   prefix: string,
   label: string,
   level: number,
-  checked: boolean
-  indeterminate: boolean
+  checked: boolean,
+  indeterminate: boolean,
+  geographicLocationFilter?: GeographicLocationFilter,
+}
+
+const transformFiltersToFilterOptions = (filters: Filter[]): filterOptionModel[] => {
+  // add all option
+  const newFilterOptions: filterOptionModel[] = []
+  const defaultOption: filterOptionModel = {prefix: '', label: 'All', level: 0, checked: true, indeterminate: false}
+  newFilterOptions.push(defaultOption)
+
+  // add categories and institutions
+  const categoryOptions = filters.map((filter) => {
+    const institionOptions = []
+    if (filter.Institutions) {
+      const possibleInstitutions = filter.Institutions.map((institution) => {
+        return {
+          prefix: `:All:${filter.Category}`,
+          label: institution,
+          level: 4,
+          checked: true,
+          indeterminate: false,
+          geographicLocationFilter: {Category: filter.Category, Institution: institution}
+        }
+      })
+      institionOptions.push(...possibleInstitutions)
+    }
+
+    return {category: {prefix: ':All', label: filter.Category, level: 2, checked: true, indeterminate: false}, institutions: institionOptions}
+  })
+  
+  categoryOptions.forEach((categoryOption) => {
+    newFilterOptions.push(categoryOption.category)
+    newFilterOptions.push(...categoryOption.institutions)
+  })
+  console.log('TODO_transformFiltersToFilterOptions', filters, newFilterOptions)
+  return newFilterOptions
 }
 
 export default function FilterOptions({options, onOptionsChange}: FilterOptionsProps) {
   const [filterOptions, setFilterOptions] = useState<filterOptionModel[]>([])
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const filters = DUMMY_FILTERS
-
-        // add all option
-        const newFilterOptions: filterOptionModel[] = []
-        const defaultOption: filterOptionModel = {prefix: '', label: 'All', level: 0, checked: true, indeterminate: false}
-        newFilterOptions.push(defaultOption)
-
-        // add categories and institutions
-        const categoryOptions = filters.map((filter) => {
-          const institionOptions = []
-          if (filter.Institutions) {
-            const possibleInstitutions = filter.Institutions.map((instition) => {
-              return {prefix: `:All:${filter.Category}`, label: instition, level: 4, checked: true, indeterminate: false }
-            });
-            institionOptions.push(...possibleInstitutions)
-          }
-
-          return {category: {prefix: ':All', label: filter.Category, level: 2, checked: true, indeterminate: false}, institions: institionOptions}
-        })
-        
-        categoryOptions.forEach((categoryOption) => {
-          newFilterOptions.push(categoryOption.category)
-          newFilterOptions.push(...categoryOption.institions)
-        })
-
-        setFilterOptions(newFilterOptions)
-      }
-      catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
-    fetchData();
-  }, [])
+    const newFilterOptions = transformFiltersToFilterOptions(options)
+    setFilterOptions(newFilterOptions)
+  }, [options])
 
   // Handle change event for checkboxes
   const handleCheckboxChange = (option: filterOptionModel, isChecked: boolean) => {
@@ -83,6 +87,11 @@ export default function FilterOptions({options, onOptionsChange}: FilterOptionsP
       return node;
     });
     setFilterOptions(updatedOptions);
+
+    const selectedOptions = updatedOptions.filter((option) => option.checked && option.geographicLocationFilter)
+    const selectedCategoryInstitutions = selectedOptions.map((option) => option.geographicLocationFilter)
+    console.log('TODO_Selected_Options:', selectedOptions, selectedCategoryInstitutions)
+    onOptionsChange(selectedCategoryInstitutions)
   };
 
   // Render checkboxes recursively
