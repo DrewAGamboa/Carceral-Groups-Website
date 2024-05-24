@@ -5,42 +5,64 @@ import MapPointCSVRow from '../../models/MapPointCSVRow'
 import Papa from "papaparse"
 import { BlobDocument } from '../../models/BlobDocument';
 import Filter from '../../models/Filter';
+import GeographicLocationFilter from '../../models/GeographicLocationFilter';
+import GeographicLocation from '../../models/GeographicLocation';
+import { GetLocationLabel } from '../../models/Location';
 
 // fetches map point csv from azure blob storage
 const getMapPointsCSV = async (): Promise<MapPointCSVRow[]> => {
     try {
-      const response = await axios.get("https://carceralgroups.blob.core.windows.net/map-coordinates/map_coordinates.csv");
-  
-      const records = Papa.parse<MapPointCSVRow>(response.data, {
-        header: true,
-        delimiter: ",",
-        skipEmptyLines: true
-      }).data
-  
-      return records;
+        const response = await axios.get("https://carceralgroups.blob.core.windows.net/map-coordinates/map_coordinates.csv");
+
+        const records = Papa.parse<MapPointCSVRow>(response.data, {
+            header: true,
+            delimiter: ",",
+            skipEmptyLines: true
+        }).data
+
+        return records;
     } catch (error) {
-      throw new Error('Error fetching or processing CSV file');
+        throw new Error('Error fetching or processing CSV file');
     }
-  };
-  
-  const dataset = (await getMapPointsCSV()).map(row => 
+};
+
+const dataset = (await getMapPointsCSV()).map(row =>
     new MapPoint(
-      row.filter1,
-      row.filter2,
-      row.documentDisplayTitle,
-      row.fileTitle,
-      row.documentType,
-      row.geographicLocation
+        row.filter1,
+        row.filter2,
+        row.documentDisplayTitle,
+        row.fileTitle,
+        row.documentType,
+        row.geographicLocation
     ));
-  
+
 // service methods
 const getAllMapPoints = () => {
     return [...dataset]
 }
 
-const getUniqueGeoJsonPreppedPoints = () => {
-  const points = uniquePoints(dataset);
-  return points.map((doc) => doc.toGeoJson());
+const getGeographicLocations = (selectedGeographicLocationFilters: GeographicLocationFilter[]) => {
+    // TODO: replace with api call START
+    console.log('TODO_getGeographicLocations', selectedGeographicLocationFilters)
+    const points = uniquePoints(dataset);
+    const filteredPoints = points.filter((point) => {
+        return selectedGeographicLocationFilters.some((filter) =>
+            point.parentGroup === filter.Category && point.group === filter.Institution
+        );
+    });
+
+    const geographicLocations: GeographicLocation[] = filteredPoints.map((point) => {
+        const [latitude, longitude] = point.latlngStr.split(',').map((coord) => parseFloat(coord)).reverse();
+        return {
+            geographicLocationId: point.id,
+            geographicLocationLat: latitude.toString(),
+            geographicLocationLong: longitude.toString(),
+            geographicLocationName: GetLocationLabel(point.latlngStr),
+        }
+    });
+    // TODO: replace with api call END
+
+    return geographicLocations
 }
 
 const getFilterOptions = () => {
@@ -51,7 +73,7 @@ const getFilterOptions = () => {
     groups.forEach(cur => {
         const category = cur.parentGroup;
         const institution = cur.group;
-        if(!categories.some((cat) => cat.Category === category)) {
+        if (!categories.some((cat) => cat.Category === category)) {
             categories.push({
                 Category: category,
                 Institutions: []
@@ -75,7 +97,7 @@ const getCarceralDocumentsByType = () => {
     });
     return docsByType;
 }
-  
+
 // internal methods
 const uniquePoints = (docs: MapPoint[]) => {
     const uniqueObjects = docs.reduce((uniqueArr: MapPoint[], currentObj: MapPoint) => {
@@ -112,7 +134,7 @@ const uniqueDocumentTypes = (docs: MapPoint[]) => {
 
 const getDocument = (document_id: string) => {
     const doc = dataset.find((doc) => doc.id === document_id);
-    if(doc === undefined) return null;
+    if (doc === undefined) return null;
 
     const blobDocument: BlobDocument = {
         id: doc.id,
@@ -123,4 +145,4 @@ const getDocument = (document_id: string) => {
     return blobDocument;
 }
 
-export { getAllMapPoints, getUniqueGeoJsonPreppedPoints, getFilterOptions, getCarceralDocumentsByType, getDocument };
+export { getAllMapPoints, getGeographicLocations, getFilterOptions, getCarceralDocumentsByType, getDocument };

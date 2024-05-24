@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import MapPoint from "../models/MapPoint";
-import { getAllMapPoints, getFilterOptions, getUniqueGeoJsonPreppedPoints } from "../api/services/MapPointsService";
+import { getAllMapPoints, getFilterOptions, getGeographicLocations } from "../api/services/MapPointsService";
 import Filter from "../models/Filter";
 import GeographicLocationFilter from "../models/GeographicLocationFilter";
+import GeographicLocation from "../models/GeographicLocation";
+// import GeographicLocation from "../models/GeographicLocation";
 
 const useLeafletMap = () => {
   const [selectedMarker, setSelectedMarker] = useState<MapPoint[]>()
+  // const [selectedGeographicLocation, setSelectedGeographicLocation] = useState<GeographicLocation>()
   const [dataGeoJson, setDataGeoJson] = useState<any[]>([])
   const [treeData, setTreeData] = useState<Filter[]>([]);
   const [selectedGeographicLocationFilters, setSelectedGeographicLocationFilter] = useState<GeographicLocationFilter[]>([]);
@@ -45,19 +48,22 @@ const useLeafletMap = () => {
   useEffect(() => {
     // Used to update markers shown on map when filters are changed
 
-    // TODO: replace with api call
-    const uniqueGeoJsonPreppedData = getUniqueGeoJsonPreppedPoints();
-    const newGeoJson = uniqueGeoJsonPreppedData.map((feature) => {
-      const show_on_map = selectedGeographicLocationFilters.find((option) => option.Institution === feature.properties.group) ? true : false
+    const newGeographicLocations = getGeographicLocations(selectedGeographicLocationFilters);
+    const geoJson = newGeographicLocations.map((location) => {
       return {
-        ...feature,
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [location.geographicLocationLat, location.geographicLocationLong],
+        },
         properties: {
-          ...feature.properties,
-          show_on_map
-        }
+          popupContent: location.geographicLocationName,
+          show_on_map: true,
+          
+        },
       }
     })
-    setDataGeoJson(newGeoJson)
+    setDataGeoJson(geoJson)
   }, [selectedGeographicLocationFilters])
 
   useEffect(() => {
