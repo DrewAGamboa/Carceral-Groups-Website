@@ -19,10 +19,11 @@ type filterOptionModel = {
   label: string,
   level: number,
   checked: boolean
+  indeterminate: boolean
 }
 
 export default function FilterOptions({options, onOptionsChange}: FilterOptionsProps) {
-  const [filterOptions, setFilterOptions] = useState<filterOptionModel[]>()
+  const [filterOptions, setFilterOptions] = useState<filterOptionModel[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,7 +32,7 @@ export default function FilterOptions({options, onOptionsChange}: FilterOptionsP
 
         // add all option
         const newFilterOptions: filterOptionModel[] = []
-        const defaultOption: filterOptionModel = {prefix: '', label: 'All', level: 0, checked: true}
+        const defaultOption: filterOptionModel = {prefix: '', label: 'All', level: 0, checked: true, indeterminate: false}
         newFilterOptions.push(defaultOption)
 
         // add categories and institutions
@@ -39,12 +40,12 @@ export default function FilterOptions({options, onOptionsChange}: FilterOptionsP
           const institionOptions = []
           if (filter.Institutions) {
             const possibleInstitutions = filter.Institutions.map((instition) => {
-              return {prefix: `All:${filter.Category}`, label: instition, level: 4, checked: true}
+              return {prefix: `:All:${filter.Category}`, label: instition, level: 4, checked: true, indeterminate: false }
             });
             institionOptions.push(...possibleInstitutions)
           }
 
-          return {category: {prefix: 'All', label: filter.Category, level: 2, checked: true}, institions: institionOptions }
+          return {category: {prefix: ':All', label: filter.Category, level: 2, checked: true, indeterminate: false}, institions: institionOptions}
         })
         
         categoryOptions.forEach((categoryOption) => {
@@ -63,20 +64,19 @@ export default function FilterOptions({options, onOptionsChange}: FilterOptionsP
 
   // Handle change event for checkboxes
   const handleCheckboxChange = (option: filterOptionModel, isChecked: boolean) => {
-    const updatedOption =  {...option, checked: isChecked};
-
-    const updatedOptions = filterOptions?.map((node) => {
-      if(updatedOption.label === 'All') {
-        return {...node, checked: isChecked}
+    const updatedOptions = filterOptions.map((node) => {
+      const prefix = `${option.prefix}:${option.label}`
+      if(option.label === 'All') {
+        return {...node, checked: isChecked}  
       }
 
       // update the node
       if (node.label === option.label) {
-        return updatedOption;
+        return {...node, checked: isChecked} 
       }
 
       // update all children
-      if(node.prefix === `${option.prefix}:${option.label}`) {
+      if(node.prefix === prefix) {
         return {...node, checked: isChecked}
       }
 
@@ -91,7 +91,7 @@ export default function FilterOptions({options, onOptionsChange}: FilterOptionsP
       <Box key={index} sx={{ display: 'flex', flexDirection: 'column', ml: option.level, textAlign: 'left' }}>
         <FormControlLabel
           label={option.label}
-          control={<Checkbox checked={option.checked} onChange={(e) => handleCheckboxChange(option, e.target.checked)} />}
+          control={<Checkbox checked={option.checked} indeterminate={option.indeterminate} onChange={(e) => handleCheckboxChange(option, e.target.checked)} />}
         />
       </Box>
     );
