@@ -1,15 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import localforage from "localforage"
 import GeographicDocument, { DUMMY_GEO_DOCS } from "../../models/GeographicDocument"
+import { uploadFileToBlob } from "./AzureStorageService";
 
 const localForageKey = "geo-docs"
 
-export async function createGeographicDocument() {
+
+export async function uploadFile(fileInfo: {fileToUpload: File}) {
+    if (!fileInfo.fileToUpload.size) throw new TypeError("No file to upload");
+
+    // upload file to Azure Blob Storage
+    // get the URI of the uploaded file
+    try {
+        const url = await uploadFileToBlob(fileInfo.fileToUpload)
+        const sasTokenIndex = url.indexOf('?');
+        return url.substring(0, sasTokenIndex);
+    } 
+    catch (error) {
+        throw new Error("Error uploading file to Azure Blob Storage")
+    }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function createGeographicDocument(newDocument: GeographicDocument) {
     const id = Date.now().toString()
     const newGeographicDocument = {
+        ...newDocument,
         geographicDocumentId: id,
-        geographicDocumentTitle: "1970.03.15, Letter | Pablo Griego to Theresa Aragon de Shepro",
-        geographicDocumentUri: "https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf",
     }
     let geographicDocuments = await getGeographicDocuments();
     geographicDocuments = [newGeographicDocument, ...geographicDocuments]
