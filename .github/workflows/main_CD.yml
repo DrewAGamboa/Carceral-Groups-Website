@@ -51,7 +51,7 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-            az storage blob upload-batch --overwrite --account-name ${{ secrets.AZ_STORAGE_ACCOUNT_NAME }} --auth-mode key -d '$web' -s .
+            az storage blob upload-batch --overwrite --account-name carceralwebmapstorage --auth-mode key -d '$web' -s .
             
     # Azure logout
     - name: logout
