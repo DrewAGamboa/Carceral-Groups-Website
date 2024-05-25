@@ -1,0 +1,66 @@
+name: Build and Deploy to Azure
+
+on:
+  workflow_dispatch:
+    inputs:
+      storage-account-name:
+        description: 'Azure Storage Account Name'
+        required: true
+        default: 'myfakestorageaccount'
+      storage-deployer-sp:
+        description: 'Azure Service Principle Credentials'
+        required: true
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+      working-directory: carceral-groups-website
+
+    - name: Build React project
+      run: npm run build
+      working-directory: carceral-groups-website
+
+    # - name: Test React project
+    #   run: npm test
+    #   working-directory: carceral-groups-website
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: carceral-groups-website/dist
+
+  deploy:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/download-artifact@v2
+      with:
+        name: build
+
+    - uses: azure/login@v1
+      with:
+        creds: ${{ github.event.inputs.storage-deployer-sp }} 
+
+    - name: Upload to blob storage
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+            az storage blob upload-batch --overwrite --account-name ${{ github.event.inputs.storage-account-name }} --auth-mode login -d '$web' -s .
+            
+    # Azure logout
+    - name: logout
+      run: |
+            az logout
+      if: always()
