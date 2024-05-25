@@ -8,6 +8,7 @@ import Filter from '../../models/Filter';
 import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 import GeographicLocation from '../../models/GeographicLocation';
 import { GetLocationLabel } from '../../models/Location';
+import { GeographicDocumentResponse } from '../../models/GeographicDocument';
 
 // fetches map point csv from azure blob storage
 const getMapPointsCSV = async (): Promise<MapPointCSVRow[]> => {
@@ -68,7 +69,7 @@ const getGeographicLocations = (selectedGeographicLocationFilters: GeographicLoc
 const getFilterOptions = () => {
     const categories: Filter[] = [];
 
-    // replace with an api call to get all categories
+    // TODO: replace with an api call to get all categories START
     const groups = uniqueGroups(dataset);
     groups.forEach(cur => {
         const category = cur.parentGroup;
@@ -83,6 +84,7 @@ const getFilterOptions = () => {
         foundCategory?.Institutions?.push(institution);
     });
     console.log('TODO_getFilterOptions', categories, groups)
+    // TODO: replace with an api call to get all categories END
 
     return categories;
 }
@@ -145,4 +147,38 @@ const getDocument = (document_id: string) => {
     return blobDocument;
 }
 
-export { getAllMapPoints, getGeographicLocations, getFilterOptions, getCarceralDocumentsByType, getDocument };
+const getGeographicLocationsDocumentTypes = (geographicLocation: GeographicLocation) => {
+    // TODO: replace with api call START
+    console.log('TODO_getGeographicLocationsDocumentTypes', geographicLocation)
+    const points = getAllMapPoints();
+    const filteredPoints = points.filter((point) => {
+        const latlng = `${geographicLocation.geographicLocationLong}, ${geographicLocation.geographicLocationLat}`
+        return point.latlngStr === latlng;
+    });
+    const documentTypes = uniqueDocumentTypes(filteredPoints).map((type) => type.documentType)
+    // TODO: replace with api call END
+
+    return documentTypes;
+}
+
+const getDocumentsByLocationAndType = (geographicLocation: GeographicLocation, documentType: string) => {
+    const documents: GeographicDocumentResponse[] = []
+    // TODO: replace with api call START
+    console.log('TODO_getDocumentsByLocationAndType', geographicLocation, documentType)
+    const points = getAllMapPoints();
+    const filteredPoints = points.filter((point) => {
+        const latlng = `${geographicLocation.geographicLocationLong}, ${geographicLocation.geographicLocationLat}`
+        const isType = point.documentType === documentType;
+        return point.latlngStr === latlng && isType;
+    });
+    filteredPoints.forEach((point) => {
+        documents.push({
+            geographicDocumentId: point.id,
+            geographicDocumentTitle: point.documentDisplayTitle
+        });
+    })
+    // TODO: replace with api call END
+    return documents
+}
+
+export { getAllMapPoints, getGeographicLocations, getFilterOptions, getCarceralDocumentsByType, getDocument, getGeographicLocationsDocumentTypes, getDocumentsByLocationAndType };

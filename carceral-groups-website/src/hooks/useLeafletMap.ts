@@ -8,8 +8,9 @@ import GeographicLocation from "../models/GeographicLocation";
 // import GeographicLocation from "../models/GeographicLocation";
 
 const useLeafletMap = () => {
-  const [selectedMarker, setSelectedMarker] = useState<MapPoint[]>()
-  // const [selectedGeographicLocation, setSelectedGeographicLocation] = useState<GeographicLocation>()
+  // const [selectedMarker, setSelectedMarker] = useState<MapPoint[]>()
+  const [selectedGeographicLocation, setSelectedGeographicLocation] = useState<GeographicLocation>()
+  const [selectedGeographicLocations, setSelectedGeographicLocations] = useState<GeographicLocation[]>([])
   const [dataGeoJson, setDataGeoJson] = useState<any[]>([])
   const [treeData, setTreeData] = useState<Filter[]>([]);
   const [selectedGeographicLocationFilters, setSelectedGeographicLocationFilter] = useState<GeographicLocationFilter[]>([]);
@@ -19,10 +20,12 @@ const useLeafletMap = () => {
     setSelectedGeographicLocationFilter(geographicLocationFilters)
   }
 
-  const handleOnMarkerClick = (latlng: string | undefined) => {
-    console.log(`Map was clicked at ${latlng}}!`)
-    const filtered = documents.filter((doc) => doc.latlngStr === latlng)
-    setSelectedMarker(filtered)
+  const handleOnMarkerClick = (geographicLocationId: string) => {
+    console.log(`GeographicLocation was clicked!`, geographicLocationId)
+    const newSelectedGeographicLocation = selectedGeographicLocations.find((location) => location.geographicLocationId === geographicLocationId)
+    setSelectedGeographicLocation(newSelectedGeographicLocation)
+    // const filtered = documents.filter((doc) => doc.latlngStr === latlng)
+    // setSelectedMarker(filtered)
   }
 
   useEffect(() => {
@@ -47,8 +50,9 @@ const useLeafletMap = () => {
 
   useEffect(() => {
     // Used to update markers shown on map when filters are changed
-
     const newGeographicLocations = getGeographicLocations(selectedGeographicLocationFilters);
+    setSelectedGeographicLocations(newGeographicLocations)
+
     const geoJson = newGeographicLocations.map((location) => {
       return {
         type: 'Feature',
@@ -59,7 +63,7 @@ const useLeafletMap = () => {
         properties: {
           popupContent: location.geographicLocationName,
           show_on_map: true,
-          
+          geographicLocationId: location.geographicLocationId,
         },
       }
     })
@@ -72,7 +76,7 @@ const useLeafletMap = () => {
   }, [])
 
   return {
-    selectedMarker,
+    selectedGeographicLocation,
     dataGeoJson,
     treeData,
     documents,

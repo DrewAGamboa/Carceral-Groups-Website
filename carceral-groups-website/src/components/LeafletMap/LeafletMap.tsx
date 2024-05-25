@@ -7,7 +7,7 @@ export interface LeafletMapProps {
   label: string;
   geojson?: any;
   tool: string;
-  onMarkerClick: (latlng?: string) => void;
+  onMarkerClick: (geographicLocationId: string) => void;
 }
 
 type LeafLetGroup = {
@@ -34,10 +34,10 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
   const leafletHelperRef = useRef<LeafLetHelper | null>(null);
   const toolRef = useRef<string>(tool);
 
-  const handleOnMarkerClick = (event: LeafletMouseEvent) => {
-    console.log(`Marker was clicked at ${event.latlng}}!`, event)
-    const latlng = `${event.latlng.lat}, ${event.latlng.lng}`
-    onMarkerClick(latlng)
+  const handleOnMarkerClick = (event: LeafletMouseEvent, geographicLocationId: string) => {
+    console.log(`Marker was clicked at ${event.latlng}} with geographicLocationId:${geographicLocationId}!`, event)
+    // const latlng = `${event.latlng.lat}, ${event.latlng.lng}`
+    onMarkerClick(geographicLocationId)
   }
 
   useEffect(() => {
@@ -86,7 +86,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
               layer.openPopup();
             });
             layer.on('click', ((event: LeafletMouseEvent) =>{
-              handleOnMarkerClick(event);
+              handleOnMarkerClick(event, feature.properties.geographicLocationId);
               layer.openPopup();
             }));
           }

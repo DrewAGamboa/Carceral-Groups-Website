@@ -13,7 +13,7 @@ const darkTheme = createTheme({
 
 function App() {
   const {
-    selectedMarker,
+    selectedGeographicLocation,
     dataGeoJson,
     treeData,
     handleCheckboxChange,
@@ -29,7 +29,7 @@ function App() {
         geojson={dataGeoJson}
         onMarkerClick={handleOnMarkerClick}
       />
-      <DetailsDrawer selectedMark={selectedMarker} />
+      <DetailsDrawer selectedMark={selectedGeographicLocation} />
     </ThemeProvider>
   )
 }

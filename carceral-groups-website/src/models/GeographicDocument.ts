@@ -25,4 +25,9 @@ type GeographicDocument = {
     fromGeographicSubCategoryId?: string
 }
 
+export type GeographicDocumentResponse = {
+    geographicDocumentId: string
+    geographicDocumentTitle: string
+}
+
 export default GeographicDocument;
