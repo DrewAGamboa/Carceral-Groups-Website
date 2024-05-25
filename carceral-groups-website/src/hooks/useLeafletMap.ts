@@ -1,39 +1,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { getFilterOptions, getGeographicLocations } from "../api/services/MapPointsService";
-import FiltersResponseFilter from "../models/Filter";
+import FiltersResponseFilter from "../models/FiltersResponseFilter";
 import GeographicLocationFilter from "../models/GeographicLocationFilter";
 import GeographicLocation from "../models/GeographicLocation";
 // import GeographicLocation from "../models/GeographicLocation";
 
 const useLeafletMap = () => {
+  const [filterOptions, setFilterOptions] = useState<FiltersResponseFilter[]>([]);
+  const [selectedGeographicLocationFilters, setSelectedGeographicLocationFilter] = useState<GeographicLocationFilter[]>([]);
+  const [selectedGeoJSON, setDataGeoJson] = useState<any[]>([])
   const [selectedGeographicLocation, setSelectedGeographicLocation] = useState<GeographicLocation>()
   const [selectedGeographicLocations, setSelectedGeographicLocations] = useState<GeographicLocation[]>([])
-  const [dataGeoJson, setDataGeoJson] = useState<any[]>([])
-  const [treeData, setTreeData] = useState<FiltersResponseFilter[]>([]);
-  const [selectedGeographicLocationFilters, setSelectedGeographicLocationFilter] = useState<GeographicLocationFilter[]>([]);
 
   const handleSelectedInstitutions = (geographicLocationFilters: GeographicLocationFilter[]) => {
     setSelectedGeographicLocationFilter(geographicLocationFilters)
   }
 
-  const handleOnMarkerClick = (geographicLocationId: string) => {
+  const handleOnGeographicLocationClick = (geographicLocationId: string) => {
     console.log(`GeographicLocation was clicked!`, geographicLocationId)
     const newSelectedGeographicLocation = selectedGeographicLocations.find((location) => location.GeographicLocationId === geographicLocationId)
     setSelectedGeographicLocation(newSelectedGeographicLocation)
   }
 
   useEffect(() => {
-    // Used to populate the filter options and set the initial selected filters
-
-    // TODO: replace with api call
     const filterOptions = getFilterOptions()
-    setTreeData(filterOptions);
+    setFilterOptions(filterOptions);
 
     // set selected filters to all and pull markers in
     const newSelectedGeographicLocationFilters: GeographicLocationFilter[] = []
     filterOptions.forEach((category) => {
-      if (!category.Institutions) {
+      if (!category.Institutions) { // if no institutions, skip
         return
       }
       category.Institutions.forEach((institution) => {
@@ -48,7 +45,7 @@ const useLeafletMap = () => {
     const newGeographicLocations = getGeographicLocations(selectedGeographicLocationFilters);
     setSelectedGeographicLocations(newGeographicLocations)
 
-    const geoJson = newGeographicLocations.map((location) => {
+    const newGeoJSON = newGeographicLocations.map((location) => {
       return {
         type: 'Feature',
         geometry: {
@@ -62,15 +59,15 @@ const useLeafletMap = () => {
         },
       }
     })
-    setDataGeoJson(geoJson)
+    setDataGeoJson(newGeoJSON)
   }, [selectedGeographicLocationFilters])
 
   return {
     selectedGeographicLocation,
-    dataGeoJson,
-    treeData,
-    handleCheckboxChange: handleSelectedInstitutions,
-    handleOnMarkerClick
+    selectedGeoJSON,
+    filterOptions,
+    handleSelectedInstitutions,
+    handleOnGeographicLocationClick
   }
 }
 

@@ -11,21 +11,20 @@ type DetailsDrawerProps = {
   selectedMark?: GeographicLocation;
 };
 
-export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
+export default function DetailsDrawer({ selectedMark: selectedLocation }: DetailsDrawerProps) {
   const anchor = 'right'
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [selectedGeographicLocation, setSelectedGeographicLocation] = useState<GeographicLocation | undefined>(undefined);
   const [documentTypes, setDocumentTypes] = useState<string[]>([]);
 
   useEffect(() => {
-    if (selectedMark !== undefined) {
+    if (selectedLocation !== undefined) {
       setIsOpen(true);
-      setSelectedGeographicLocation(selectedMark);
-      // get document types
-      const docTypes = getGeographicLocationsDocumentTypes(selectedMark);
+      setSelectedGeographicLocation(selectedLocation);
+      const docTypes = getGeographicLocationsDocumentTypes(selectedLocation);
       setDocumentTypes(docTypes)
     }
-  }, [selectedMark]);
+  }, [selectedLocation]);
 
   const toggleDrawer =
     (open: boolean) =>
@@ -37,27 +36,8 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
         ) {
           return;
         }
-
         setIsOpen(open);
       };
-
-  const docTypeAccordions = documentTypes.map((docType) => {
-    if (!selectedGeographicLocation) return;
-
-    return (
-      <AccordionOptionDocuments docType={docType} geographicLocation={selectedGeographicLocation}  />
-    )
-  }
-  );
-
-  const list = () => (
-    <Box
-      sx={{ width: 400 }}
-      role="presentation"
-    >
-      {docTypeAccordions}
-    </Box>
-  );
 
   return (
     <>
@@ -66,8 +46,20 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
         open={isOpen}
         onClose={toggleDrawer(false)}
       >
-        <Typography variant="h6">{selectedGeographicLocation?.GeographicLocationName}</Typography>
-        {list()}
+        {selectedGeographicLocation &&
+          <>
+            <Typography variant="h6">{selectedGeographicLocation.GeographicLocationName}</Typography>
+            <Box
+              sx={{ width: 400 }}
+              role="presentation">
+              {
+                documentTypes.map((docType) => {
+                  return <AccordionOptionDocuments docType={docType} geographicLocation={selectedGeographicLocation} />
+                })
+              }
+            </Box>
+          </>
+        }
       </Drawer>
     </>
   );

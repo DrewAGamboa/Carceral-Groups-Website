@@ -7,33 +7,28 @@ import { DocumentListResponseItem } from "../../models/GeographicDocument";
 import DocumentDialog from "./DocumentDialog";
 
 type AccordionOptionDocumentProps = {
-    docType: string;
-    geographicLocation: GeographicLocation;
+  docType: string;
+  geographicLocation: GeographicLocation;
 }
 
 const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
-    const { docType, geographicLocation } = props;
-    const [geographicDocumentResponse, setGeographicDocumentResponse] = useState<DocumentListResponseItem[]>([]);
-    const [expanded, setExpanded] = useState<boolean>(false);
+  const { docType, geographicLocation } = props;
+  const [geographicDocumentResponse, setGeographicDocumentResponse] = useState<DocumentListResponseItem[]>([]);
+  const [expanded, setExpanded] = useState<boolean>(false);
 
+  useEffect(() => {
+    if (expanded) {
+      const documents = getDocumentsByLocationAndType(geographicLocation, docType)
+      setGeographicDocumentResponse(documents)
+    }
+  }, [expanded, docType, geographicLocation]);
 
-    useEffect(() => {
-        if (expanded) {
-          const documents = getDocumentsByLocationAndType(geographicLocation, docType)
-            setGeographicDocumentResponse(documents)
-        }
-      }, [expanded]);
+  const handleChange = (_event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded)
+  };
 
-
-    const handleChange = (docType: string, geographicLocation: GeographicLocation) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
-        // setExpanded(isExpanded ? panel : false);
-        const documents = getDocumentsByLocationAndType(geographicLocation, docType)
-        console.log('TODO_handleChange', geographicLocation, docType, isExpanded, documents)
-        setExpanded(isExpanded)
-      };
-
-    return (
-        <Accordion onChange={handleChange(docType, geographicLocation)}>
+  return (
+    <Accordion onChange={handleChange}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
@@ -52,14 +47,14 @@ const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
               <Typography>{doc.DocumentTitle}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <DocumentDialog document_id={doc.DocumentId}/>
+              <DocumentDialog document_id={doc.DocumentId} />
             </AccordionDetails>
           </Accordion>
         ))
         }
       </AccordionDetails>
     </Accordion>
-    )
+  )
 }
 
 export default AccordionOptionDocuments

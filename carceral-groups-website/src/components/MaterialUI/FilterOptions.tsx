@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useEffect, useState } from 'react';
-import FiltersResponseFilter from '../../models/Filter';
+import FiltersResponseFilter from '../../models/FiltersResponseFilter';
 import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 
 

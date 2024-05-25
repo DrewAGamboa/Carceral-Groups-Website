@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import AccordionOptions from './AccordionOptions';
-import FiltersResponseFilter from '../../models/Filter';
+import FiltersResponseFilter from '../../models/FiltersResponseFilter';
 import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 
 const drawerWidth = '25%';

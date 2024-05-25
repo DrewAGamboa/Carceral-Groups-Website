@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FilterOptions from './FilterOptions';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import FiltersResponseFilter from '../../models/Filter';
+import FiltersResponseFilter from '../../models/FiltersResponseFilter';
 import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 
 interface AccordionOptionsProps {

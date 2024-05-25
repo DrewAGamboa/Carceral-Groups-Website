@@ -15,6 +15,7 @@ import ChicagoCitation from './ChicagoCitation';
 import { List, ListItem, ListItemText } from '@mui/material';
 import { CitationInfo } from '../../models/CitationInfo';
 import DocumentResponse from '../../models/DocumentResponse';
+import { useEffect, useState } from 'react';
 
 const DUMMY_COMMENTS: BlobDocumentComment[] = [
   {
@@ -72,28 +73,20 @@ export default function DocumentDialog(props: DocumentDialogProps) {
     );
   };
 
-
-
   const { document_id } = props;
-  const [doc, setDoc] = React.useState<DocumentResponse | null>(null);
-  const [open, setOpen] = React.useState(false);
-  const [comments, setComments] = React.useState<BlobDocumentComment[]>([]);
+  const [doc, setDoc] = useState<DocumentResponse | null>(null);
+  const [open, setOpen] = useState(false);
+  const [comments, setComments] = useState<BlobDocumentComment[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!document_id || !open) return;
 
     // fetch the document by id
     // set the document
     const doc = getDocument(document_id);
-    if (doc) {
-      // TODO: replace this when files are available
-      setDoc(doc);
-    } else {
-      setDoc(null);
-    }
-
+    setDoc(doc);
+    // get comments
     setComments(DUMMY_COMMENTS)
-
   }, [document_id, open]);
 
   const handleNewComment = (name: string, content: string) => {
@@ -121,7 +114,6 @@ export default function DocumentDialog(props: DocumentDialogProps) {
       </ListItem>
     )
   })
-
 
   const contentTextHeader = `Artifact analysis helps us surface the significance of each archival document. Understanding the significance of this material helps illustrate the involvement that people incarcerated have done in collaboration with their communities.  Try to answer as many of the following questions as possible:`
   const contentTextList = () => {
