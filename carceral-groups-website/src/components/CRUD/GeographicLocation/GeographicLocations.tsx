@@ -18,7 +18,7 @@ export async function loader() {
 
 export async function action() {
     const geographicLocation = await createGeographicLocation();
-    return redirect(`/admin/geographicLocations/${geographicLocation.geographicLocationId}/edit`);
+    return redirect(`/admin/geographicLocations/${geographicLocation.GeographicLocationId}/edit`);
 }
 
 const GeographicLocations = () => {

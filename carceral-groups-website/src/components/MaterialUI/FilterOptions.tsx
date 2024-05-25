@@ -54,7 +54,6 @@ const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filt
     newFilterOptions.push(categoryOption.category)
     newFilterOptions.push(...categoryOption.institutions)
   })
-  console.log('TODO_transformFiltersToFilterOptions', filters, newFilterOptions)
   return newFilterOptions
 }
 
@@ -89,8 +88,11 @@ export default function FilterOptions({options, onOptionsChange}: FilterOptionsP
     setFilterOptions(updatedOptions);
 
     const selectedOptions = updatedOptions.filter((option) => option.checked && option.geographicLocationFilter)
-    const selectedCategoryInstitutions = selectedOptions.map((option) => option.geographicLocationFilter)
-    console.log('TODO_Selected_Options:', selectedOptions, selectedCategoryInstitutions)
+    const selectedCategoryInstitutions: GeographicLocationFilter[] = [] 
+    selectedOptions.forEach((option) => {
+      if(option.geographicLocationFilter) {
+        selectedCategoryInstitutions.push(option.geographicLocationFilter)
+      }})
     onOptionsChange(selectedCategoryInstitutions)
   };
 

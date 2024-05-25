@@ -6,11 +6,11 @@ const localForageKey = "geo-locs"
 
 export async function createGeographicLocation() {
     const id = Date.now().toString()
-    const newGeographicLocation = {
-        geographicLocationId: id,
-        geographicLocationLat: "45",
-        geographicLocationLong: "-120",
-        geographicLocationName: "A New Location",
+    const newGeographicLocation: GeographicLocation = {
+        GeographicLocationId: id,
+        GeographicLocationName: "A New Location",
+        Latitude: "45",
+        Longitude: "-120",
     }
     let geographicLocations = await getGeographicLocations();
     geographicLocations = [newGeographicLocation, ...geographicLocations]
