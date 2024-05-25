@@ -13,23 +13,21 @@ const darkTheme = createTheme({
 
 function App() {
   const {
-    selectedMarker,
-    dataGeoJson,
-    treeData,
-    handleCheckboxChange,
-    handleOnMarkerClick
+    filterOptions,
+    selectedGeographicLocation,
+    selectedGeoJSON,
+    handleSelectedInstitutions,
+    handleOnGeographicLocationClick
   } = useLeafletMap()
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <MenuDrawer options={treeData} onOptionsChange={handleCheckboxChange} />
+      <MenuDrawer options={filterOptions} onOptionsChange={handleSelectedInstitutions} />
       <LeafletMap
-        label='My Leaflet Map'
-        tool={'none'}
-        geojson={dataGeoJson}
-        onMarkerClick={handleOnMarkerClick}
+        geojson={selectedGeoJSON}
+        onMarkerClick={handleOnGeographicLocationClick}
       />
-      <DetailsDrawer selectedMark={selectedMarker} />
+      <DetailsDrawer selectedMark={selectedGeographicLocation} />
     </ThemeProvider>
   )
 }

@@ -1,66 +1,74 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import MapPoint from "../models/MapPoint";
-import { getAllMapPoints, getFilterOptions, getUniqueGeoJsonPreppedPoints } from "../api/services/MapPointsService";
+import { getFilterOptions, getGeographicLocations } from "../api/services/MapPointsService";
+import FiltersResponseFilter from "../models/FiltersResponseFilter";
+import GeographicLocationFilter from "../models/GeographicLocationFilter";
+import GeographicLocation from "../models/GeographicLocation";
+// import GeographicLocation from "../models/GeographicLocation";
 
 const useLeafletMap = () => {
-    const [selectedMarker, setSelectedMarker] = useState<MapPoint[]>()
-    const [dataGeoJson, setDataGeoJson] = useState<any[]>([])
-    const [treeData, setTreeData] = useState<{label: string, checked:boolean, children: any[]}>({ label: 'All', checked: true, children: [] });
-    const [documents, setDocuments] = useState<MapPoint[]>([])
+  const [filterOptions, setFilterOptions] = useState<FiltersResponseFilter[]>([]);
+  const [selectedGeographicLocationFilters, setSelectedGeographicLocationFilter] = useState<GeographicLocationFilter[]>([]);
+  const [selectedGeoJSON, setDataGeoJson] = useState<any[]>([])
+  const [selectedGeographicLocation, setSelectedGeographicLocation] = useState<GeographicLocation>()
+  const [selectedGeographicLocations, setSelectedGeographicLocations] = useState<GeographicLocation[]>([])
 
-    const handleCheckboxChange = (updatedTreeData: { label: string, checked: boolean, children: any[] }) => {
-        console.log('Updated Tree Data:', updatedTreeData)
-        setTreeData(updatedTreeData)
-        // get all options
-        let queue = [updatedTreeData]
-        const allOptions: any[] = []
-    
-        while (queue.length > 0) {
-          const current = queue.shift()
-          allOptions.push(current)
-          if (current && current.children.length > 0)
-            queue = queue.concat(current.children)
-        }
-        console.log(allOptions)
-    
-        // update geojson show on map
-        const newGeoJson = dataGeoJson.map((feature) => {
-          const show_on_map = allOptions.find((option) => option?.label === feature.properties.group)?.checked
-          return {
-            ...feature,
-            properties: {
-              ...feature.properties,
-              show_on_map
-            }
-          }
-        })
-        setDataGeoJson(newGeoJson)
+  const handleSelectedInstitutions = (geographicLocationFilters: GeographicLocationFilter[]) => {
+    setSelectedGeographicLocationFilter(geographicLocationFilters)
+  }
+
+  const handleOnGeographicLocationClick = (geographicLocationId: string) => {
+    console.log(`GeographicLocation was clicked!`, geographicLocationId)
+    const newSelectedGeographicLocation = selectedGeographicLocations.find((location) => location.GeographicLocationId === geographicLocationId)
+    setSelectedGeographicLocation(newSelectedGeographicLocation)
+  }
+
+  useEffect(() => {
+    const filterOptions = getFilterOptions()
+    setFilterOptions(filterOptions);
+
+    // set selected filters to all and pull markers in
+    const newSelectedGeographicLocationFilters: GeographicLocationFilter[] = []
+    filterOptions.forEach((category) => {
+      if (!category.Institutions) { // if no institutions, skip
+        return
       }
+      category.Institutions.forEach((institution) => {
+        newSelectedGeographicLocationFilters.push({ Category: category.Category, Institution: institution })
+      })
+    });
+    setSelectedGeographicLocationFilter(newSelectedGeographicLocationFilters)
+  }, [])
 
-    const handleOnMarkerClick = (latlng: string | undefined) => {
-        console.log(`Map was clicked at ${latlng}}!`)
-        const filtered = documents.filter((doc) => doc.latlngStr === latlng)
-        setSelectedMarker(filtered)
-    }
+  useEffect(() => {
+    // Used to update markers shown on map when filters are changed
+    const newGeographicLocations = getGeographicLocations(selectedGeographicLocationFilters);
+    setSelectedGeographicLocations(newGeographicLocations)
 
-    useEffect(() => {
-        const documents = getAllMapPoints();
-        const uniqueGeoJsonPreppedData = getUniqueGeoJsonPreppedPoints();
-        const filterOptions = getFilterOptions()
-        setDataGeoJson(uniqueGeoJsonPreppedData);
-        setTreeData(filterOptions);
-        setDocuments(documents);
-      }, [setDocuments, setTreeData, setDataGeoJson])
+    const newGeoJSON = newGeographicLocations.map((location) => {
+      return {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [location.Latitude, location.Longitude],
+        },
+        properties: {
+          popupContent: location.GeographicLocationName,
+          show_on_map: true,
+          geographicLocationId: location.GeographicLocationId,
+        },
+      }
+    })
+    setDataGeoJson(newGeoJSON)
+  }, [selectedGeographicLocationFilters])
 
-    return {
-        selectedMarker,
-        dataGeoJson,
-        treeData,
-        documents,
-        handleCheckboxChange,
-        handleOnMarkerClick
-    }
+  return {
+    selectedGeographicLocation,
+    selectedGeoJSON,
+    filterOptions,
+    handleSelectedInstitutions,
+    handleOnGeographicLocationClick
+  }
 }
 
 export default useLeafletMap;

@@ -7,7 +7,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { BlobDocument } from '../../models/BlobDocument';
 import { getDocument } from '../../api/services/MapPointsService';
 import CommentSection from './CommentSection';
 import { BlobDocumentComment } from '../../models/BlobDocumentComment';
@@ -15,13 +14,8 @@ import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } fro
 import ChicagoCitation from './ChicagoCitation';
 import { List, ListItem, ListItemText } from '@mui/material';
 import { CitationInfo } from '../../models/CitationInfo';
-
-const DUMMY_BLOBDOCUMENT: BlobDocument = {
-  id: '1',
-  title: '1971.07.21_Arellano Contribution MASH Pinto Fund',
-  fileUrl: 'https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf',
-  type: 'pdf'
-};
+import DocumentResponse from '../../models/DocumentResponse';
+import { useEffect, useState } from 'react';
 
 const DUMMY_COMMENTS: BlobDocumentComment[] = [
   {
@@ -79,29 +73,20 @@ export default function DocumentDialog(props: DocumentDialogProps) {
     );
   };
 
-
-
   const { document_id } = props;
-  const [doc, setDoc] = React.useState<BlobDocument | null>(null);
-  const [open, setOpen] = React.useState(false);
-  const [comments, setComments] = React.useState<BlobDocumentComment[]>([]);
+  const [doc, setDoc] = useState<DocumentResponse | null>(null);
+  const [open, setOpen] = useState(false);
+  const [comments, setComments] = useState<BlobDocumentComment[]>([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!document_id || !open) return;
 
     // fetch the document by id
     // set the document
     const doc = getDocument(document_id);
-    if (doc) {
-      // TODO: replace this when files are available
-      setDoc({ ...doc, fileUrl: DUMMY_BLOBDOCUMENT.fileUrl });
-      setDoc({ ...doc, fileUrl: DUMMY_BLOBDOCUMENT.fileUrl });
-    } else {
-      setDoc(null);
-    }
-
+    setDoc(doc);
+    // get comments
     setComments(DUMMY_COMMENTS)
-
   }, [document_id, open]);
 
   const handleNewComment = (name: string, content: string) => {
@@ -129,7 +114,6 @@ export default function DocumentDialog(props: DocumentDialogProps) {
       </ListItem>
     )
   })
-
 
   const contentTextHeader = `Artifact analysis helps us surface the significance of each archival document. Understanding the significance of this material helps illustrate the involvement that people incarcerated have done in collaboration with their communities.  Try to answer as many of the following questions as possible:`
   const contentTextList = () => {
@@ -185,9 +169,9 @@ export default function DocumentDialog(props: DocumentDialogProps) {
         }
         {doc &&
           <>
-            <DialogTitle>{doc.title}</DialogTitle>
+            <DialogTitle>{doc.DocumentTitle}</DialogTitle>
             <DialogContent>
-              <iframe src={doc.fileUrl} title="Archival Material" width="100%" height="600px"></iframe>
+              <iframe src={doc.DocumentURI} title="Archival Material" width="100%" height="600px"></iframe>
               <List>
                 {docCitations}
               </List>

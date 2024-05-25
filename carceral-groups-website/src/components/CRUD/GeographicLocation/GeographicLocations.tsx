@@ -18,7 +18,7 @@ export async function loader() {
 
 export async function action() {
     const geographicLocation = await createGeographicLocation();
-    return redirect(`/admin/geographicLocations/${geographicLocation.geographicLocationId}/edit`);
+    return redirect(`/admin/geographicLocations/${geographicLocation.GeographicLocationId}/edit`);
 }
 
 const GeographicLocations = () => {
@@ -26,10 +26,10 @@ const GeographicLocations = () => {
     const tableHeaderInfo = [{ name: "Id" }, { name: "Name" }, { name: "Latitude" }, { name: "Long" }]
     const tableRows = geographicLocations.map((geographicLocation) => {
         return {
-            id: geographicLocation.geographicLocationId,
-            geographicLocationName: geographicLocation.geographicLocationName,
-            geographicLocationLat: geographicLocation.geographicLocationLat,
-            geographicLocationLong: geographicLocation.geographicLocationLong,
+            id: geographicLocation.GeographicLocationId,
+            geographicLocationName: geographicLocation.GeographicLocationName,
+            geographicLocationLat: geographicLocation.Latitude,
+            geographicLocationLong: geographicLocation.Longitude,
         }
     });
     const navigate = useNavigate();

@@ -1,5 +1,4 @@
 import {generateUUID} from "../utils/stringUtils";
-import { GetLocationLabel } from "./Location";
 
 class MapPoint {
   readonly id: string;
@@ -17,22 +16,6 @@ class MapPoint {
     this.id = generateUUID();
     this.latlng = this.latlngStr.split(',').map((coord) => parseFloat(coord)).reverse();
     this.uniqueGroupPoint = this.group + this.latlngStr;
-  }
-
-  public toGeoJson() {   
-    return {
-        type: 'Feature',
-        geometry: {
-            type: 'Point',
-            coordinates: this.latlng,
-        },
-        properties: {
-            group: this.group,
-            parentGroup: this.parentGroup,
-            popupContent: GetLocationLabel(this.latlngStr),
-            show_on_map: true,
-        },
-    }
   }
 }
 

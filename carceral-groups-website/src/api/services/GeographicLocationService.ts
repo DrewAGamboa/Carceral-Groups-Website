@@ -6,11 +6,11 @@ const localForageKey = "geo-locs"
 
 export async function createGeographicLocation() {
     const id = Date.now().toString()
-    const newGeographicLocation = {
-        geographicLocationId: id,
-        geographicLocationLat: "45",
-        geographicLocationLong: "-120",
-        geographicLocationName: "A New Location",
+    const newGeographicLocation: GeographicLocation = {
+        GeographicLocationId: id,
+        GeographicLocationName: "A New Location",
+        Latitude: "45",
+        Longitude: "-120",
     }
     let geographicLocations = await getGeographicLocations();
     geographicLocations = [newGeographicLocation, ...geographicLocations]
@@ -27,7 +27,7 @@ export async function getGeographicLocations() {
 export async function getGeographicLocation(id: string) {
     const geographicLocations = await getGeographicLocations();
     const geographicLocation = geographicLocations.find(
-        geographicLocation => geographicLocation.geographicLocationId === id
+        geographicLocation => geographicLocation.GeographicLocationId === id
     );
     return geographicLocation ?? null;
 }
@@ -35,11 +35,11 @@ export async function getGeographicLocation(id: string) {
 export async function updateGeographicLocation(id: string, updates: any) {
     let geographicLocations = await getGeographicLocations();
     const geographicLocation = geographicLocations.find(
-        geographicLocation => geographicLocation.geographicLocationId === id
+        geographicLocation => geographicLocation.GeographicLocationId === id
     );
     const updatedGeographicLocation = { ...geographicLocation, ...updates }
     geographicLocations = geographicLocations.map(
-        geographicLocation => geographicLocation.geographicLocationId === id ? updatedGeographicLocation : geographicLocation
+        geographicLocation => geographicLocation.GeographicLocationId === id ? updatedGeographicLocation : geographicLocation
     )
     await set(geographicLocations);
     return updatedGeographicLocation;
@@ -48,7 +48,7 @@ export async function updateGeographicLocation(id: string, updates: any) {
 export async function deleteGeographicLocation(id: string) {
     let geographicLocations = await getGeographicLocations();
     const index = geographicLocations.findIndex(
-        geographicLocation => geographicLocation.geographicLocationId === id
+        geographicLocation => geographicLocation.GeographicLocationId === id
     );
     if (index > -1) {
         geographicLocations.splice(index, 1);

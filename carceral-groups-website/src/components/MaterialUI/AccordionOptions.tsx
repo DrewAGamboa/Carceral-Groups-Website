@@ -7,11 +7,13 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FilterOptions from './FilterOptions';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import FiltersResponseFilter from '../../models/FiltersResponseFilter';
+import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 
 interface AccordionOptionsProps {
     open?: boolean,
-    options: { label: string, checked: boolean, children: any[] }
-    onOptionsChange: (updatedTreeData: any) => void;
+    options: FiltersResponseFilter[]
+    onOptionsChange: (geographicLocationFilters: GeographicLocationFilter[]) => void;
     onExpand: () => void;
 }
 
