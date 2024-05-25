@@ -66,7 +66,7 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
         open={isOpen}
         onClose={toggleDrawer(false)}
       >
-        <Typography variant="h6">{selectedGeographicLocation?.geographicLocationName}</Typography>
+        <Typography variant="h6">{selectedGeographicLocation?.GeographicLocationName}</Typography>
         {list()}
       </Drawer>
     </>

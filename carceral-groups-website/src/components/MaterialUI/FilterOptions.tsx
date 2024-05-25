@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useEffect, useState } from 'react';
-import Filter from '../../models/Filter';
+import FiltersResponseFilter from '../../models/Filter';
 import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 
 
@@ -11,7 +11,7 @@ import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 
 
 export interface FilterOptionsProps {
-  options: Filter[]
+  options: FiltersResponseFilter[]
   onOptionsChange: (geographicLocationFilters: GeographicLocationFilter[]) => void;
 }
 
@@ -24,7 +24,7 @@ type filterOptionModel = {
   geographicLocationFilter?: GeographicLocationFilter,
 }
 
-const transformFiltersToFilterOptions = (filters: Filter[]): filterOptionModel[] => {
+const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filterOptionModel[] => {
   // add all option
   const newFilterOptions: filterOptionModel[] = []
   const defaultOption: filterOptionModel = {prefix: '', label: 'All', level: 0, checked: true, indeterminate: false}

@@ -7,12 +7,12 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FilterOptions from './FilterOptions';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import Filter from '../../models/Filter';
+import FiltersResponseFilter from '../../models/Filter';
 import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 
 interface AccordionOptionsProps {
     open?: boolean,
-    options: Filter[]
+    options: FiltersResponseFilter[]
     onOptionsChange: (geographicLocationFilters: GeographicLocationFilter[]) => void;
     onExpand: () => void;
 }

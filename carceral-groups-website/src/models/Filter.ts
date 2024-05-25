@@ -1,4 +1,4 @@
-export const DUMMY_FILTERS: Filter[] = [
+export const DUMMY_FILTERS: FiltersResponseFilter[] = [
     {
         Category: "Federal",
         Institutions: [
@@ -14,7 +14,7 @@ export const DUMMY_FILTERS: Filter[] = [
     },
 ]
 
-type Filter = {
+type FiltersResponseFilter = {
     Category: string,
     Institutions?: string[],
 }
@@ -28,4 +28,4 @@ export type FilterOption = {
 }
 
 
-export default Filter
+export default FiltersResponseFilter

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getDocumentsByLocationAndType } from "../../api/services/MapPointsService";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GeographicLocation from "../../models/GeographicLocation";
-import { GeographicDocumentResponse } from "../../models/GeographicDocument";
+import { DocumentListResponseItem } from "../../models/GeographicDocument";
 import DocumentDialog from "./DocumentDialog";
 
 type AccordionOptionDocumentProps = {
@@ -13,7 +13,7 @@ type AccordionOptionDocumentProps = {
 
 const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
     const { docType, geographicLocation } = props;
-    const [geographicDocumentResponse, setGeographicDocumentResponse] = useState<GeographicDocumentResponse[]>([]);
+    const [geographicDocumentResponse, setGeographicDocumentResponse] = useState<DocumentListResponseItem[]>([]);
     const [expanded, setExpanded] = useState<boolean>(false);
 
 
@@ -49,10 +49,10 @@ const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Typography>{doc.geographicDocumentTitle}</Typography>
+              <Typography>{doc.DocumentTitle}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <DocumentDialog document_id={doc.geographicDocumentId}/>
+              <DocumentDialog document_id={doc.DocumentId}/>
             </AccordionDetails>
           </Accordion>
         ))
