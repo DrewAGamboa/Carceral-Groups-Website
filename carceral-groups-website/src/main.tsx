@@ -17,10 +17,11 @@ import GeographicLocationDetails, { loader as geographicLocationLoader } from '.
 import GeographicLocationEdit, { loader as geographicLocationEditLoader, action as geographicLocationEditAction } from './components/CRUD/GeographicLocation/GeographicLocationEdit.tsx';
 import { action as geographicLocationDestroyAction }  from './components/CRUD/GeographicLocation/GeographicLocationDestroy.tsx';
 
-import GeographicDocuments, {loader as geographicDocumentsLoader, action as geographicDocumentsAction } from './components/CRUD/GeographicDocument/GeographicDocuments.tsx';
+import GeographicDocuments, {loader as geographicDocumentsLoader } from './components/CRUD/GeographicDocument/GeographicDocuments.tsx';
 import GeographicDocumentDetails, { loader as geographicDocumentLoader } from './components/CRUD/GeographicDocument/GeographicDocumentDetail.tsx';
 import GeographicDocumentEdit, { loader as geographicDocumentEditLoader, action as geographicDocumentEditAction } from './components/CRUD/GeographicDocument/GeographicDocumentEdit.tsx';
 import { action as geographicDocumentDestroyAction }  from './components/CRUD/GeographicDocument/GeographicDocumentDestroy.tsx';
+import { action as geographicDocumentCreateAction }  from './components/CRUD/GeographicDocument/GeographicDocumentCreate.tsx';
 
 import GeographicCategorys, {loader as geographicCategorysLoader, action as geographicCategorysAction } from './components/CRUD/GeographicCategory/GeographicCategorys.tsx';
 import GeographicCategoryDetails, { loader as geographicCategoryLoader } from './components/CRUD/GeographicCategory/GeographicCategoryDetail.tsx';
@@ -31,6 +32,7 @@ import GeographicSubCategorys, {loader as geographicSubCategorysLoader, action a
 import GeographicSubCategoryDetails, { loader as geographicSubCategoryLoader } from './components/CRUD/GeographicSubCategory/GeographicSubCategoryDetail.tsx';
 import GeographicSubCategoryEdit, { loader as geographicSubCategoryEditLoader, action as geographicSubCategoryEditAction } from './components/CRUD/GeographicSubCategory/GeographicSubCategoryEdit.tsx';
 import { action as geographicSubCategoryDestroyAction }  from './components/CRUD/GeographicSubCategory/GeographicSubCategoryDestroy.tsx';
+import GeographicDocumentCreate from './components/CRUD/GeographicDocument/GeographicDocumentCreate.tsx';
 
 
 const msalInstance = new PublicClientApplication(msalConfig);
@@ -73,8 +75,12 @@ const router = createBrowserRouter([
         path: "geographicDocuments",
         element: <GeographicDocuments/>,
         loader: geographicDocumentsLoader,
-        action: geographicDocumentsAction,
         children: [
+          {
+            path: "new",
+            element: <GeographicDocumentCreate />,
+            action: geographicDocumentCreateAction
+          },
           {
             path: ":id",
             element: <GeographicDocumentDetails />,
