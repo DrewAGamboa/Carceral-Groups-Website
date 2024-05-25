@@ -12,8 +12,8 @@ import DocumentResponse from '../../models/DocumentResponse';
 // fetches map point csv from azure blob storage
 const getMapPointsCSV = async (): Promise<MapPointCSVRow[]> => {
     try {
-        const response = await axios.get("https://carceralgroups.blob.core.windows.net/map-coordinates/map_coordinates.csv");
-
+        const response = await axios.get("https://carceralwebmapstorage.blob.core.windows.net/map-coordinates/map_coordinates.csv");
+        
         const records = Papa.parse<MapPointCSVRow>(response.data, {
             header: true,
             delimiter: ",",
