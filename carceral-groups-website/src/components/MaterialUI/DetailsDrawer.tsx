@@ -1,26 +1,30 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useEffect } from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
-import DocumentDialog from './DocumentDialog';
-import MapPoint from '../../models/MapPoint';
-import { getCarceralDocumentsByType } from '../../api/services/MapPointsService';
+import { useEffect, useState } from 'react';
+import { Typography } from '@mui/material';
+import { getGeographicLocationsDocumentTypes } from '../../api/services/MapPointsService';
+import GeographicLocation from '../../models/GeographicLocation';
+import AccordionOptionDocuments from './AccordionOptionDocuments';
 
 type DetailsDrawerProps = {
-  selectedMark?: MapPoint[];
+  selectedMark?: GeographicLocation;
 };
 
-export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
+export default function DetailsDrawer({ selectedMark: selectedLocation }: DetailsDrawerProps) {
   const anchor = 'right'
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const [selectedGeographicLocation, setSelectedGeographicLocation] = useState<GeographicLocation | undefined>(undefined);
+  const [documentTypes, setDocumentTypes] = useState<string[]>([]);
 
   useEffect(() => {
-    if (selectedMark !== undefined) {
+    if (selectedLocation !== undefined) {
       setIsOpen(true);
+      setSelectedGeographicLocation(selectedLocation);
+      const docTypes = getGeographicLocationsDocumentTypes(selectedLocation);
+      setDocumentTypes(docTypes)
     }
-  }, [selectedMark]);
+  }, [selectedLocation]);
 
   const toggleDrawer =
     (open: boolean) =>
@@ -32,47 +36,8 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
         ) {
           return;
         }
-
         setIsOpen(open);
       };
-
-  const docTypeAccordions = getCarceralDocumentsByType().map((docType, index) => (
-    <Accordion key={index}>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1-content"
-        id="panel1-header"
-      >
-        <Typography>{docType.type}</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        {docType.docs.map((doc, index) => (
-          <Accordion key={index}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1-content"
-              id="panel1-header"
-            >
-              <Typography>{doc.documentDisplayTitle}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <DocumentDialog document_id={doc.id}/>
-            </AccordionDetails>
-          </Accordion>
-        ))
-        }
-      </AccordionDetails>
-    </Accordion>
-  ));
-
-  const list = () => (
-    <Box
-      sx={{ width: 400 }}
-      role="presentation"
-    >
-        {docTypeAccordions}
-    </Box>
-  );
 
   return (
     <>
@@ -81,7 +46,20 @@ export default function DetailsDrawer({ selectedMark }: DetailsDrawerProps) {
         open={isOpen}
         onClose={toggleDrawer(false)}
       >
-        {list()}
+        {selectedGeographicLocation &&
+          <>
+            <Typography variant="h6">{selectedGeographicLocation.GeographicLocationName}</Typography>
+            <Box
+              sx={{ width: 400 }}
+              role="presentation">
+              {
+                documentTypes.map((docType) => {
+                  return <AccordionOptionDocuments docType={docType} geographicLocation={selectedGeographicLocation} />
+                })
+              }
+            </Box>
+          </>
+        }
       </Drawer>
     </>
   );

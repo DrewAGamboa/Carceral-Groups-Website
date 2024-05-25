@@ -3,13 +3,6 @@ import React, { useEffect, useRef } from 'react';
 import L, { LeafletMouseEvent } from 'leaflet';
 import './LeafletMap.css';
 
-export interface LeafletMapProps {
-  label: string;
-  geojson?: any;
-  tool: string;
-  onMarkerClick: (latlng?: string) => void;
-}
-
 type LeafLetGroup = {
   group: L.LayerGroup;
   name: string;
@@ -30,14 +23,16 @@ const RedMarkerIcon = L.icon({
   shadowSize: [41, 41]
 });
 
-const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick }) => {
-  const leafletHelperRef = useRef<LeafLetHelper | null>(null);
-  const toolRef = useRef<string>(tool);
+type LeafletMapProps = {
+  geojson?: any;
+  onMarkerClick: (geographicLocationId: string) => void;
+};
 
-  const handleOnMarkerClick = (event: LeafletMouseEvent) => {
-    console.log(`Marker was clicked at ${event.latlng}}!`, event)
-    const latlng = `${event.latlng.lat}, ${event.latlng.lng}`
-    onMarkerClick(latlng)
+const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, onMarkerClick }) => {
+  const leafletHelperRef = useRef<LeafLetHelper | null>(null);
+
+  const handleOnMarkerClick = (_event: LeafletMouseEvent, geographicLocationId: string) => {
+    onMarkerClick(geographicLocationId)
   }
 
   useEffect(() => {
@@ -62,12 +57,6 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
   }, []); // Empty dependency array ensures this effect runs only once on mount
 
   useEffect(() => {
-    toolRef.current = tool;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tool]); // Re-run this effect if tool prop changes
-
-  useEffect(() => {
-    console.log('GeoJSON:', geojson)
     const alreadyHasGeoJSON = leafletHelperRef.current?.groups.find(group => group.name === "GeoJSON");
     if (leafletHelperRef.current && alreadyHasGeoJSON) {
       leafletHelperRef.current.map.removeLayer(alreadyHasGeoJSON.group as L.LayerGroup);
@@ -86,7 +75,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, tool, onMarkerClick })
               layer.openPopup();
             });
             layer.on('click', ((event: LeafletMouseEvent) =>{
-              handleOnMarkerClick(event);
+              handleOnMarkerClick(event, feature.properties.geographicLocationId);
               layer.openPopup();
             }));
           }
