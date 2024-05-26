@@ -11,7 +11,7 @@ namespace carceral_groups_api.Controllers
     {
         private readonly AppDbContext _dbContext = dbContext;
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult?> Get(int id)
         {
             Category? category = null;
