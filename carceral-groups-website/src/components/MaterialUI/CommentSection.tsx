@@ -3,25 +3,25 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
-import { BlobDocumentComment } from '../../models/BlobDocumentComment';
 import ShowMoreText from './ShowMoreText';
 import { Box } from '@mui/material';
+import GeographicDocumentComment from '../../models/GeographicDocumentComment';
 
 type CommentSectionProps = {
-    comments: BlobDocumentComment[];
+    comments: GeographicDocumentComment[];
 };
 
 export default function CommentSection(props: CommentSectionProps) {
     const { comments } = props;
 
-    const commentContent = (comment: BlobDocumentComment) => {
+    const commentContent = (comment: GeographicDocumentComment) => {
         return (
             <>
                 <ListItemText
-                    primary={comment.fromName}
+                    primary={comment.commentAuthor}
                     secondary={
                         <React.Fragment>
-                            <ShowMoreText text={comment.content} />
+                            <ShowMoreText text={comment.commentText} />
                         </React.Fragment>
                     }
                 />
@@ -32,7 +32,7 @@ export default function CommentSection(props: CommentSectionProps) {
     const commentList = comments.map((comment) => {
         return (
             <ListItem
-                key={comment.id}
+                key={comment.commentId}
                 alignItems="flex-start">
                 {commentContent(comment)}
             </ListItem>
