@@ -6,13 +6,13 @@ import { uploadFileToBlob } from "./AzureStorageService";
 const localForageKey = "geo-docs"
 
 
-export async function uploadFile(fileInfo: {fileToUpload: File}) {
+export async function uploadFile(fileInfo: {fileToUpload: File}, token: string) {
     if (!fileInfo.fileToUpload.size) throw new TypeError("No file to upload");
 
     // upload file to Azure Blob Storage
     // get the URI of the uploaded file
     try {
-        const url = await uploadFileToBlob(fileInfo.fileToUpload)
+        const url = await uploadFileToBlob(fileInfo.fileToUpload, token)
         const sasTokenIndex = url.indexOf('?');
         return url.substring(0, sasTokenIndex);
     } 

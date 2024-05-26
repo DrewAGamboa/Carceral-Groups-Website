@@ -1,4 +1,5 @@
 import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
+// import { DefaultAzureCredential } from '@azure/identity';
 
 
 /*
@@ -7,18 +8,19 @@ import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
     get the url of the uploaded file
     https://github.com/Azure/azure-sdk-for-js/tree/main/sdk/storage/storage-blob#cors
 */
-const blobSasUrl = import.meta.env.VITE_AZURE_BLOB_SAS_URL as string;
 const containerName = import.meta.env.VITE_AZURE_BLOB_CONTAINER_NAME as string;
 
+const storageUrl = "https://carceralwebmapstorage.blob.core.windows.net"
 const credential = undefined;
-
-export const getContainerClient = (): ContainerClient => {
-    const blobServiceClient = new BlobServiceClient(blobSasUrl, credential);
+export const getContainerClient = (token: string): ContainerClient => {
+    console.log("token", token)
+    // const defaultAzureCredential = new DefaultAzureCredential({token});
+    const blobServiceClient = new BlobServiceClient(storageUrl, credential);
     return blobServiceClient.getContainerClient(containerName);
 };
 
-export const uploadFileToBlob = async (file: File): Promise<string> => {
-    const containerClient = getContainerClient();
+export const uploadFileToBlob = async (file: File, token: string): Promise<string> => {
+    const containerClient = getContainerClient(token);
     const blobName = file.name;
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
