@@ -12,6 +12,7 @@ export async function createGeographicDocumentComment(newComment: GeographicDocu
         commentId: id
     }
     let geographicDocumentComments = await localforage.getItem(localForageKey) as GeographicDocumentComment[];
+    if (!geographicDocumentComments) geographicDocumentComments = [];
     geographicDocumentComments = [newGeographicDocumentComment, ...geographicDocumentComments]
     await set(geographicDocumentComments);
     return newGeographicDocumentComment;
@@ -19,7 +20,8 @@ export async function createGeographicDocumentComment(newComment: GeographicDocu
 
 export async function getGeographicDocumentComments(documentId: string) {
     let geographicDocumentComments = await localforage.getItem(localForageKey) as GeographicDocumentComment[];
-    geographicDocumentComments = geographicDocumentComments.filter((comment) => comment.geographicDocumentId === documentId)
+    if (!geographicDocumentComments) geographicDocumentComments = [];
+    geographicDocumentComments = geographicDocumentComments.filter((comment) => comment.geographicDocumentId === documentId && comment.isApproved)
     return geographicDocumentComments
 }
 
