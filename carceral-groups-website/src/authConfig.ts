@@ -59,7 +59,10 @@ export const msalConfig = {
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
 export const loginRequest = {
-    scopes: ["User.Read"]
+    scopes: ["https://graph.microsoft.com/User.Read", 
+    "https://storage.azure.com/user_impersonation",
+    // "https://carceralwebmapstorage.blob.core.windows.net/user_impersonation",
+]
 };
 
 /**
@@ -69,3 +72,10 @@ export const loginRequest = {
 export const graphConfig = {
     graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
 };
+
+/**
+ * Scope for the Azure Storage API
+ */
+export const storageRequest = {
+    scopes: ["user_impersonation"]
+  };

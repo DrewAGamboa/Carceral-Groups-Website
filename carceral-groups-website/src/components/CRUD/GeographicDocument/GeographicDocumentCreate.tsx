@@ -5,6 +5,8 @@ import GeographicDocumentForm from "./GeographicDocumentForm";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { FormEvent, useState } from "react";
 import GeographicDocument from "../../../models/GeographicDocument";
+import { useMsal } from "@azure/msal-react";
+import { loginRequest } from "../../../authConfig";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function action({ request }: any) {
@@ -33,6 +35,7 @@ const VisuallyHiddenInput = styled('input')({
 
 
 export default function GeographicDocumentCreate() {
+    const {instance, accounts} = useMsal();
     const navigate = useNavigate();
     const [uploadedFile, setUploadedFile] = useState(false);
     const [geographicDocument, setGeographicDocument] = useState({
@@ -51,7 +54,12 @@ export default function GeographicDocumentCreate() {
 
         // handle upload file
         try{
-            const documentUri = await uploadFile(newFile);
+            const response = await instance.acquireTokenSilent({
+                ...loginRequest,
+                account: accounts[0]
+              });
+            const token = response.accessToken;
+            const documentUri = await uploadFile(newFile, token);
             const newDocument = {
                 ...geographicDocument,
                 geographicDocumentTitle: newFile.fileToUpload.name,
