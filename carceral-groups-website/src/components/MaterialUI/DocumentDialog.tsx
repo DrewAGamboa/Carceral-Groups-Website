@@ -9,36 +9,15 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { getDocument } from '../../api/services/MapPointsService';
 import CommentSection from './CommentSection';
-import { BlobDocumentComment } from '../../models/BlobDocumentComment';
 import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import ChicagoCitation from './ChicagoCitation';
 import { List, ListItem, ListItemText } from '@mui/material';
 import { CitationInfo } from '../../models/CitationInfo';
 import DocumentResponse from '../../models/DocumentResponse';
 import { useEffect, useState } from 'react';
-
-const DUMMY_COMMENTS: BlobDocumentComment[] = [
-  {
-    id: '4',
-    fromName: 'Drew Gamboa',
-    content: 'The institutional coursework at McNeil reflected the group’s membership. In MASH’s collective newsletter pamphlets called “La Palabra Alambre de MASH,” one of its winter editions—covering the group’s activities from October 1971 to March 1972—had been mailed to Shoreline Community College professor and director of the Chicano Education Association Raul Arellano. Among prisoners’ op-eds, poetry, and photographs of MASH-led events, Arellano would read about the group’s class roster for the summer and fall of 1971. The group’s editor Gil Leano wrote, “Following is but part of the roster of those carnales who are presently engaged in self-betterment through education… Education, carnales, is what the system encourages—encourages, that is, without consciously realizing that the encouragement given is the means of its own demise. We applaud the system’s efforts. En todo esto miro las semillas de cambio…” The fall roster included a list of forty-eight students enrolled in classes ranging from an English class for Spanish Speaking students (15), Mexican American culture (26), and a conglomeration of psychology, economic, business, and adult education courses (11). The presence of ESL classes at McNeil, MASH members’ enrollments in those classes, and the groups objectives surface a continuation of McNeil as a space premised on criminalizing immigrants. Through this institutional characteristic at McNeil, MASH formed partially as a transnational group that included both Mexican Americans and Mexican immigrants.'
-  },
-  {
-    id: '1',
-    fromName: 'Ali Connors',
-    content: 'This analysis really highlights how inmates contribute culturally to society.'
-  },
-  {
-    id: '2',
-    fromName: 'Trevor Hansen',
-    content: 'It\'s fascinating to see the depth of creativity and resilience among incarcerated individuals. Understanding who created the artifact and their background provides a richer context to appreciate their work and struggles.'
-  },
-  {
-    id: '3',
-    fromName: 'Sandra Adams',
-    content: 'The artifact’s analysis offers profound insights into the relationship between incarcerated individuals and their communities. By examining who created it and their social standing, alongside the historical and cultural context of its creation, we begin to understand the complex narratives and power dynamics at play. This analysis not only sheds light on the artifact itself but also raises important questions about the broader implications of cultural production within prison walls. What can’t be answered directly opens new avenues for further research, urging us to delve deeper into the unexplored stories of these creators.'
-  }
-]
+import { createGeographicDocumentComment, getGeographicDocumentComments } from '../../api/services/GeographicDocumentCommentService';
+import GeographicDocumentComment from '../../models/GeographicDocumentComment';
+import CustomSnackBar from './CustomSnackBar';
 
 const DUMMY_CITATIONS: CitationInfo[] = [
   {
@@ -76,27 +55,41 @@ export default function DocumentDialog(props: DocumentDialogProps) {
   const { document_id } = props;
   const [doc, setDoc] = useState<DocumentResponse | null>(null);
   const [open, setOpen] = useState(false);
-  const [comments, setComments] = useState<BlobDocumentComment[]>([]);
+  const [comments, setComments] = useState<GeographicDocumentComment[]>([]);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
 
   useEffect(() => {
     if (!document_id || !open) return;
 
-    // fetch the document by id
-    // set the document
-    const doc = getDocument(document_id);
-    setDoc(doc);
-    // get comments
-    setComments(DUMMY_COMMENTS)
+    const fetchData = async () => {
+      const doc = await getDocument(document_id);
+      setDoc(doc);
+      const comments = await getGeographicDocumentComments(document_id);
+      setComments(comments);
+    }
+    fetchData();
   }, [document_id, open]);
 
   const handleNewComment = (name: string, content: string) => {
     // TODO: save somewhere in storage
-    const comment: BlobDocumentComment = {
-      id: `${comments.length + 1}`,
-      fromName: name,
-      content: content
+    if (!doc) return;
+
+    const comment: GeographicDocumentComment = {
+      commentId: '-1',
+      geographicDocumentId: doc.DocumentId,
+      commentText: content,
+      commentAuthor: name,
+      commentAuthorEmail: name + "@example.com",
+      commentDate: new Date().toISOString(),
+      isApproved: false
     };
-    setComments([comment, ...comments]);
+    const fetchComments = async () => {
+      await createGeographicDocumentComment(comment);
+      const comments = await getGeographicDocumentComments(document_id);
+      setComments(comments);
+      setOpenSnackBar(true);
+    }
+    fetchComments();
   }
 
   const handleClickOpen = () => {
@@ -208,6 +201,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
                   >
                     <Button type="submit">Comment</Button>
                   </Box>
+                  <CustomSnackBar open={openSnackBar} handleClose={() => setOpenSnackBar(false)} message={'Thank you. Your comment has been submitted for approval.'}  />
                 </Box>
               </Box>
               <CommentSection comments={comments} />

@@ -54,7 +54,7 @@ export default function DetailsDrawer({ selectedMark: selectedLocation }: Detail
               role="presentation">
               {
                 documentTypes.map((docType) => {
-                  return <AccordionOptionDocuments docType={docType} geographicLocation={selectedGeographicLocation} />
+                  return <AccordionOptionDocuments key={docType} docType={docType} geographicLocation={selectedGeographicLocation} />
                 })
               }
             </Box>
