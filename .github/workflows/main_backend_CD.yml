@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths:
-    - 'carceral-groups-api'
+    - 'carceral-groups-api/**'
   workflow_dispatch:
 
 jobs:
