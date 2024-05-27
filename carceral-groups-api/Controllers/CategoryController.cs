@@ -14,43 +14,37 @@ namespace carceral_groups_api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult?> Get(int id)
         {
-            Category? category = null;
-
             try{
-                category = await _dbContext.Categories.AsNoTracking()
+                Category? category = await _dbContext.Categories.AsNoTracking()
                     .FirstOrDefaultAsync(m => m.CategoryId == id);
+
+                if(category == null)
+                    return NotFound(category);
+                
+                return Ok(category);
             }
             catch(Exception){
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
-
-            if(category != null){
-                return Ok(category);
-            }
-
-            return NotFound(category);
         }
 
         [HttpPost]
         public async Task<IActionResult?> Post([FromBody]string name)
         {
-            var category = new Category{
-                Name = name
-            };
-
             try{
-                var categoryExists = _dbContext.Categories
-                    .Any(m => m.Name == name);
-
-                if(categoryExists){
+                var categoryExists = _dbContext.Categories.Any(m => m.Name == name);
+                if(categoryExists)
                     return StatusCode((int)HttpStatusCode.Conflict, Messages.ResourceAlreadyExists);
-                }
             }
             catch(Exception){
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
 
             try{
+                var category = new Category{
+                    Name = name
+                };
+
                 await _dbContext.Categories.AddAsync(category);
                 await _dbContext.SaveChangesAsync();
                 return Ok(category);
@@ -68,25 +62,27 @@ namespace carceral_groups_api.Controllers
 
             try{
                 category = await _dbContext.Categories.FirstOrDefaultAsync(m => m.CategoryId == id);
+                if(category == null)
+                    return NotFound();
+
+                var categoryExists = _dbContext.Categories.Any(m => m.Name == name);
+                if(categoryExists)
+                    return StatusCode((int)HttpStatusCode.Conflict, Messages.ResourceAlreadyExists);
             }
             catch(Exception){
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
 
-            if(category != null)
-            {
-                try{
-                    category.Name = name;
-                    _dbContext.Categories.Update(category);
-                    await _dbContext.SaveChangesAsync();
-                    return Ok(category);
-                }
-                catch(Exception){
-                    return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseSaveError);
-                }
-            }
+            try{
+                category.Name = name;
 
-            return NotFound();
+                _dbContext.Categories.Update(category);
+                await _dbContext.SaveChangesAsync();
+                return Ok(category);
+            }
+            catch(Exception){
+                return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseSaveError);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -95,26 +91,22 @@ namespace carceral_groups_api.Controllers
             Category? category = null;
 
             try{
-                category = await _dbContext.Categories.Where(m => m.CategoryId == id)
-                    .FirstOrDefaultAsync();
+                category = await _dbContext.Categories.FirstOrDefaultAsync(m => m.CategoryId == id);
+                if(category == null)
+                    return NotFound();
             }
             catch(Exception){
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
 
-            if(category != null)
-            {
-                try{
-                    _dbContext.Categories.Remove(category);
-                    await _dbContext.SaveChangesAsync();
-                    return Ok();
-                }
-                catch(Exception){
-                    return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseSaveError);
-                }
+            try{
+                _dbContext.Categories.Remove(category);
+                await _dbContext.SaveChangesAsync();
+                return Ok();
             }
-
-            return NotFound();
+            catch(Exception){
+                return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseSaveError);
+            }
         }
     }
 }
