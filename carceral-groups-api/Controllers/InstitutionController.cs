@@ -14,43 +14,37 @@ namespace carceral_groups_api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult?> Get(int id)
         {
-            Institution? institution = null;
-
             try{
-                institution = await _dbContext.Institutions.AsNoTracking()
+                Institution? institution = await _dbContext.Institutions.AsNoTracking()
                     .FirstOrDefaultAsync(m => m.InstitutionId == id);
+
+                if(institution == null)
+                    return NotFound(institution);
+
+                return Ok(institution);
             }
             catch(Exception){
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
-
-            if(institution != null){
-                return Ok(institution);
-            }
-
-            return NotFound(institution);
         }
 
         [HttpPost]
         public async Task<IActionResult?> Post([FromBody]string name)
         {
-            var institution = new Institution{
-                Name = name
-            };
-
             try{
-                var institutionExists = _dbContext.Institutions
-                    .Any(m => m.Name == name);
-
-                if(institutionExists){
+                var institutionExists = _dbContext.Institutions.Any(m => m.Name == name);
+                if(institutionExists)
                     return StatusCode((int)HttpStatusCode.Conflict, Messages.ResourceAlreadyExists);
-                }
             }
             catch(Exception){
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
 
             try{
+                var institution = new Institution{
+                    Name = name
+                };
+
                 await _dbContext.Institutions.AddAsync(institution);
                 await _dbContext.SaveChangesAsync();
                 return Ok(institution);
@@ -68,25 +62,27 @@ namespace carceral_groups_api.Controllers
 
             try{
                 institution = await _dbContext.Institutions.FirstOrDefaultAsync(m => m.InstitutionId == id);
+                if(institution == null)
+                    return NotFound();
+                
+                var institutionExists = _dbContext.Institutions.Any(m => m.Name == name);
+                if(institutionExists)
+                    return StatusCode((int)HttpStatusCode.Conflict, Messages.ResourceAlreadyExists);
             }
             catch(Exception){
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
 
-            if(institution != null)
-            {
-                try{
-                    institution.Name = name;
-                    _dbContext.Institutions.Update(institution);
-                    await _dbContext.SaveChangesAsync();
-                    return Ok(institution);
-                }
-                catch(Exception){
-                    return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseSaveError);
-                }
-            }
+            try{
+                institution.Name = name;
 
-            return NotFound();
+                _dbContext.Institutions.Update(institution);
+                await _dbContext.SaveChangesAsync();
+                return Ok(institution);
+            }
+            catch(Exception){
+                return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseSaveError);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -95,26 +91,22 @@ namespace carceral_groups_api.Controllers
             Institution? institution = null;
 
             try{
-                institution = await _dbContext.Institutions.Where(m => m.InstitutionId == id)
-                    .FirstOrDefaultAsync();
+                institution = await _dbContext.Institutions.FirstOrDefaultAsync(m => m.InstitutionId == id);
+                if(institution == null)
+                    return NotFound();
             }
             catch(Exception){
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
 
-            if(institution != null)
-            {
-                try{
-                    _dbContext.Institutions.Remove(institution);
-                    await _dbContext.SaveChangesAsync();
-                    return Ok();
-                }
-                catch(Exception){
-                    return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseSaveError);
-                }
+            try{
+                _dbContext.Institutions.Remove(institution);
+                await _dbContext.SaveChangesAsync();
+                return Ok();
             }
-
-            return NotFound();
+            catch(Exception){
+                return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseSaveError);
+            }
         }
     }
 }
