@@ -81,7 +81,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
       commentAuthor: name,
       commentAuthorEmail: name + "@example.com",
       commentDate: new Date().toISOString(),
-      isApproved: false
+      isApproved: true // TODO: change to false when we have hooked correctly to backend
     };
     const fetchComments = async () => {
       await createGeographicDocumentComment(comment);
