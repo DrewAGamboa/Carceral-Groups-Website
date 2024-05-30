@@ -16,7 +16,7 @@ namespace carceral_groups_api.Controllers
         }
 
         [HttpPost]
-        public async Task<IEnumerable<GeographicLocation>> Post(GeographicFilterRequest request)
+        public async Task<IEnumerable<GeographicLocation?>> Post(GeographicFilterRequest request)
         {
             var query = _dbContext.Documents.AsQueryable();
 

@@ -11,21 +11,21 @@ namespace CarceralGroupsAPI
         public required string DocumentTitle { get; set; }
 
         [StringLength(maximumLength: 256)]
-        public required string FileTitle {get; set; }
+        public string? FileTitle {get; set; }
 
         [StringLength(maximumLength: 512)]
         public required string    URI { get; set; }
 
-        public int DocumentTypeId { get; set; }
-        public required DocumentType DocumentType { get; set; }
+        public required int DocumentTypeId { get; set; }
+        public DocumentType? DocumentType { get; set; }
 
-        public int CategoryId { get; set; }
-        public required Category Category { get; set; }
+        public required int CategoryId { get; set; }
+        public Category? Category { get; set; }
         
-        public int InstitutionId { get; set; }
-        public required Institution Institution { get; set; }
+        public required int InstitutionId { get; set; }
+        public Institution? Institution { get; set; }
 
-        public int GeographicLocationId { get; set; }
-        public required GeographicLocation GeographicLocation { get; set; }
+        public required int GeographicLocationId { get; set; }
+        public GeographicLocation? GeographicLocation { get; set; }
     }
 }

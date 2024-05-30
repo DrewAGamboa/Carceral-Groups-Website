@@ -28,7 +28,7 @@ namespace carceral_groups_api.Controllers
                     Category = category.Name,
                     Institutions = await _dbContext.Documents
                         .Where(m => m.CategoryId == category.CategoryId)
-                        .Select(m => m.Institution.Name)
+                        .Select(m => m.Institution != null ? m.Institution.Name : string.Empty)
                         .Distinct()
                         .ToListAsync()
                 });
