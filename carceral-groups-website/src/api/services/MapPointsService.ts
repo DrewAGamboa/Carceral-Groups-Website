@@ -8,6 +8,7 @@ import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 import GeographicLocation from '../../models/GeographicLocation';
 import { DocumentListResponseItem } from '../../models/GeographicDocument';
 import DocumentResponse from '../../models/DocumentResponse';
+import localforage from 'localforage';
 
 // defined in .env file
 const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
@@ -192,8 +193,7 @@ export const getDocumentsByLocationAndType = (geographicLocation: GeographicLoca
  */
 export const getFilterOptions = async () => {
     try {
-        const response = await fetch(`${backend_api_url}/filters`);
-        const resJson = await response.json();
+        const resJson = await fetchWithLocalCache(`${backend_api_url}/filters`, 'filters')
         const filters = resJson.filters as FiltersResponseFilter[];
         return filters;
     } catch (error) {
@@ -237,3 +237,28 @@ export const getGeographicLocations = (selectedGeographicLocationFilters: Geogra
 
     return geographicLocations
 }
+
+const fetchWithLocalCache = async (url: string, cacheKey: string, cacheDuration: number = 5) => {
+    const now = new Date().getTime();
+
+    const cache: { timestamp: number, data: string } | null = await localforage.getItem(cacheKey);
+    // check cache if it exists
+    if (cache) {
+        const { timestamp, data } = cache;
+        // if it does, check if it's expired
+        if (now - timestamp < cacheDuration * 60 * 1000) {
+            // if it's not expired, return cache
+            const parsedData = JSON.parse(data);
+            return parsedData;
+        }
+    }
+    // if it's expired, fetch new data and update cache
+    const response = await fetch(url);
+    const data = await response.json();
+    localforage.setItem(cacheKey, JSON.stringify({
+        timestamp: now,
+        data,
+    }));
+    return data;
+}
+
