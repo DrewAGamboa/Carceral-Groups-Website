@@ -24,20 +24,28 @@ const useLeafletMap = () => {
   }
 
   useEffect(() => {
-    const filterOptions = getFilterOptions()
-    setFilterOptions(filterOptions);
+    const fetchData = async () => {
+      try {
+        const filterOptions = await getFilterOptions()
+        setFilterOptions(filterOptions);
 
-    // set selected filters to all and pull markers in
-    const newSelectedGeographicLocationFilters: GeographicLocationFilter[] = []
-    filterOptions.forEach((category) => {
-      if (!category.Institutions) { // if no institutions, skip
-        return
+        // set selected filters to all and pull markers in
+        const newSelectedGeographicLocationFilters: GeographicLocationFilter[] = []
+        filterOptions.forEach((category) => {
+          if (!category.institutions) { // if no institutions, skip
+            return
+          }
+          category.institutions.forEach((institution) => {
+            newSelectedGeographicLocationFilters.push({ Category: category.category, Institution: institution })
+          })
+        });
+        setSelectedGeographicLocationFilter(newSelectedGeographicLocationFilters)
       }
-      category.Institutions.forEach((institution) => {
-        newSelectedGeographicLocationFilters.push({ Category: category.Category, Institution: institution })
-      })
-    });
-    setSelectedGeographicLocationFilter(newSelectedGeographicLocationFilters)
+      catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
   }, [])
 
   useEffect(() => {

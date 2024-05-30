@@ -9,11 +9,14 @@ import GeographicLocation from '../../models/GeographicLocation';
 import { DocumentListResponseItem } from '../../models/GeographicDocument';
 import DocumentResponse from '../../models/DocumentResponse';
 
+// defined in .env file
+const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
+
 // fetches map point csv from azure blob storage
 const getMapPointsCSV = async (): Promise<MapPointCSVRow[]> => {
     try {
         const response = await axios.get("https://carceralwebmapstorage.blob.core.windows.net/map-coordinates/map_coordinates.csv");
-        
+
         const records = Papa.parse<MapPointCSVRow>(response.data, {
             header: true,
             delimiter: ",",
@@ -187,24 +190,16 @@ export const getDocumentsByLocationAndType = (geographicLocation: GeographicLoca
  *   - `Category` {string} - The unique category name.
  *   - `Institutions` {string[]} - An array of institutions under the category.
  */
-export const getFilterOptions = () => {
-    const response: { Filters: FiltersResponseFilter[] } = { Filters: [] }
-    // TODO: replace with an api call to get all categories START
-    const groups = uniqueGroups(dataset);
-    groups.forEach(cur => {
-        const category = cur.parentGroup;
-        const institution = cur.group;
-        if (!response.Filters.some((cat) => cat.Category === category)) {
-            response.Filters.push({
-                Category: category,
-                Institutions: []
-            });
-        }
-        const foundCategory = response.Filters.find((cat) => cat.Category === category);
-        foundCategory?.Institutions?.push(institution);
-    });
-    // TODO: replace with an api call to get all categories END
-    return response.Filters;
+export const getFilterOptions = async () => {
+    try {
+        const response = await fetch(`${backend_api_url}/filters`);
+        const resJson = await response.json();
+        const filters = resJson.filters as FiltersResponseFilter[];
+        return filters;
+    } catch (error) {
+        console.error('Error fetching or processing filters:', error);
+        return [];
+    }
 }
 
 /**

@@ -1,6 +1,6 @@
 type FiltersResponseFilter = {
-    Category: string,
-    Institutions?: string[],
+    category: string,
+    institutions?: string[],
 }
 
 export default FiltersResponseFilter
