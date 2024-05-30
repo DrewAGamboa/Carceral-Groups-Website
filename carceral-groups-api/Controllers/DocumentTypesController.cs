@@ -20,7 +20,7 @@ namespace carceral_groups_api.Controllers
         {
             var documentTypes = await _dbContext.Documents
                 .Where(m => m.GeographicLocationId == geographicLocationId)
-                .Select(m => m.DocumentType.Name)
+                .Select(m => m.DocumentType != null ? m.DocumentType.Name : string.Empty)
                 .Distinct()
                 .ToArrayAsync();
 
