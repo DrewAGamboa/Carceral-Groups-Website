@@ -23,7 +23,7 @@ namespace CarceralGroupsAPI
         public required string DocumentTitle { get; set; }
 
         [StringLength(maximumLength: 256)]
-        public required string FileTitle {get; set; }
+        public string? FileTitle {get; set; }
 
         [StringLength(maximumLength: 512)]
         public required string URI { get; set; }
