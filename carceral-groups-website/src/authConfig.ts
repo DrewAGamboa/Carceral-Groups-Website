@@ -18,7 +18,7 @@ export const msalConfig = {
     auth: {
         clientId: clientId,
         authority: "https://login.microsoftonline.com/common",
-        redirectUri: "/",
+        redirectUri: window.location.origin,
     },
     cache: {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored
@@ -59,7 +59,8 @@ export const msalConfig = {
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
 export const loginRequest = {
-    scopes: ["https://graph.microsoft.com/User.Read", 
+    scopes: [
+        // "https://graph.microsoft.com/User.Read", 
     "https://storage.azure.com/user_impersonation",
     // "https://carceralwebmapstorage.blob.core.windows.net/user_impersonation",
 ]

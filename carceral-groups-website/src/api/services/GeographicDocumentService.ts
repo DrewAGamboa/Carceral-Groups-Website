@@ -17,6 +17,7 @@ export async function uploadFile(fileInfo: {fileToUpload: File}, token: string) 
         return url.substring(0, sasTokenIndex);
     } 
     catch (error) {
+        console.error("Error uploading file to Azure Blob Storage:", error);
         throw new Error("Error uploading file to Azure Blob Storage")
     }
 }
