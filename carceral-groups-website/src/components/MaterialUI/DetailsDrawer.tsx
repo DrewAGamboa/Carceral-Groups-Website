@@ -48,7 +48,7 @@ export default function DetailsDrawer({ selectedMark: selectedLocation }: Detail
       >
         {selectedGeographicLocation &&
           <>
-            <Typography variant="h6">{selectedGeographicLocation.GeographicLocationName}</Typography>
+            <Typography variant="h6">{selectedGeographicLocation.geographicLocationName}</Typography>
             <Box
               sx={{ width: 400 }}
               role="presentation">

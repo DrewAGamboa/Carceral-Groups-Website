@@ -45,29 +45,6 @@ const getAllMapPoints = () => {
     return [...dataset]
 }
 
-// internal methods
-const uniquePoints = (docs: MapPoint[]) => {
-    const uniqueObjects = docs.reduce((uniqueArr: MapPoint[], currentObj: MapPoint) => {
-        const isDuplicate = uniqueArr.some((obj) => obj.uniqueGroupPoint === currentObj.uniqueGroupPoint);
-        if (!isDuplicate) {
-            uniqueArr.push(currentObj);
-        }
-        return uniqueArr;
-    }, []);
-    return uniqueObjects;
-}
-
-const uniqueGroups = (docs: MapPoint[]) => {
-    const uniqueObjects = docs.reduce((uniqueArr: MapPoint[], currentObj: MapPoint) => {
-        const isDuplicate = uniqueArr.some((obj) => obj.group === currentObj.group && obj.parentGroup === currentObj.parentGroup);
-        if (!isDuplicate) {
-            uniqueArr.push(currentObj);
-        }
-        return uniqueArr;
-    }, []);
-    return uniqueObjects;
-}
-
 const uniqueDocumentTypes = (docs: MapPoint[]) => {
     const uniqueObjects = docs.reduce((uniqueArr: MapPoint[], currentObj: MapPoint) => {
         const isDuplicate = uniqueArr.some((obj) => obj.documentType === currentObj.documentType);
@@ -84,28 +61,6 @@ export type Location = {
     label: string;
 }
 
-// TODO: Remove when backend api is connected
-const MARKERLOCATIONS: Location[] = [
-    { latlngStr: '47.299723843258185, -123.17403244585927', label: 'Washington Corrections Center' },
-    { latlngStr: '46.92520017548775, -123.92100101336285', label: 'Stafford Creek Corrections Center' },
-    { latlngStr: '46.07812903003074, -118.35677764875055', label: 'Washington State Penitentiary' },
-    { latlngStr: '46.73098767622705, -117.16580759999998', label: 'Evergreen Newsroom, Murrow Center' },
-    { latlngStr: '47.19686490207005, -122.6579449486688', label: 'McNeil Island Corrections Center' },
-    { latlngStr: '47.61945939065681, -122.359439800832', label: 'Seattle Post Intelligencer building' },
-    { latlngStr: '47.601990221257424, -122.33189048910353', label: 'Smith Tower, ACLU of Washington state office' },
-    { latlngStr: '46.345958963317436, -120.19008248921602', label: 'La Escuelita, Granger, WA' },
-    { latlngStr: '47.65479243631465, -122.30745790445988', label: 'University of Washington' },
-    { latlngStr: '47.60334696496473, -122.30660900064738', label: 'Black Panthers Party Headquarters (second location)' },
-    { latlngStr: '47.61945939065681, -122.359439800832', label: 'Seattle Post Intelligencer building' },
-    { latlngStr: '47.65835361274492, -122.30385550858871', label: 'McMahon Hall, University of Washington' },
-    { latlngStr: '47.246334710589394, -122.45096066974075', label: 'Tacoma Urban League' },
-    { latlngStr: '47.84570689182511, -122.00011294155688', label: 'Monroe Correctional Complex' },
-]
-const GetLocationLabel = (latlngStr: string): string => {
-    const location = MARKERLOCATIONS.find((marker) => marker.latlngStr === latlngStr);
-    return location ? location.label : latlngStr;
-}
-
 /**
  * Retrieves unique document types for a specific geographic location.
  * 
@@ -118,7 +73,7 @@ export const getGeographicLocationsDocumentTypes = (geographicLocation: Geograph
     // TODO: replace with api call START
     const points = getAllMapPoints();
     const filteredPoints = points.filter((point) => {
-        const latlng = `${geographicLocation.Longitude}, ${geographicLocation.Latitude}`
+        const latlng = `${geographicLocation.longitude}, ${geographicLocation.latitude}`
         return point.latlngStr === latlng;
     });
     const documentTypes = uniqueDocumentTypes(filteredPoints).map((type) => type.documentType)
@@ -168,7 +123,7 @@ export const getDocumentsByLocationAndType = (geographicLocation: GeographicLoca
     // TODO: replace with api call START
     const points = getAllMapPoints();
     const filteredPoints = points.filter((point) => {
-        const latlng = `${geographicLocation.Longitude}, ${geographicLocation.Latitude}`
+        const latlng = `${geographicLocation.longitude}, ${geographicLocation.latitude}`
         const isType = point.documentType === documentTypeId;
         return point.latlngStr === latlng && isType;
     });
@@ -194,6 +149,7 @@ export const getDocumentsByLocationAndType = (geographicLocation: GeographicLoca
 export const getFilterOptions = async () => {
     try {
         const resJson = await fetchWithLocalCache(`${backend_api_url}/filters`, 'filters')
+        console.log("TODO_getFilterOptions_response", resJson)
         const filters = resJson.filters as FiltersResponseFilter[];
         return filters;
     } catch (error) {
@@ -214,28 +170,31 @@ export const getFilterOptions = async () => {
  *   - `Latitude` {string} - The latitude of the geographic location.
  *   - `Longitude` {string} - The longitude of the geographic location.
  */
-export const getGeographicLocations = (selectedGeographicLocationFilters: GeographicLocationFilter[]) => {
-    const geographicFilterRequest = { Filters: selectedGeographicLocationFilters }
-    // TODO: replace with api call START
-    const points = uniquePoints(dataset);
-    const filteredPoints = points.filter((point) => {
-        return geographicFilterRequest.Filters.some((filter) =>
-            point.parentGroup === filter.Category && point.group === filter.Institution
-        );
-    });
+export const getGeographicLocations = async (selectedGeographicLocationFilters: GeographicLocationFilter[]) => {
+    if (selectedGeographicLocationFilters.length === 0) {
+        return [];
+    }
+    try {
+        const geographicFilterRequest = { filters: selectedGeographicLocationFilters }
+        console.log("TODO_getGeographicLocations_request", geographicFilterRequest)
+        const response = await fetch(`${backend_api_url}/geographiclocations`,
+            {
+                method: 'POST',
+                body: JSON.stringify(geographicFilterRequest),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        const geographicLocations = await response.json() as GeographicLocation[];
+        console.log("TODO_getGeographicLocation_response", geographicLocations)
+        return geographicLocations
 
-    const geographicLocations: GeographicLocation[] = filteredPoints.map((point) => {
-        const [latitude, longitude] = point.latlngStr.split(',').map((coord) => parseFloat(coord)).reverse();
-        return {
-            GeographicLocationId: point.id,
-            GeographicLocationName: GetLocationLabel(point.latlngStr),
-            Latitude: latitude.toString(),
-            Longitude: longitude.toString(),
-        }
-    });
-    // TODO: replace with api call END
-
-    return geographicLocations
+    }
+    catch (error) {
+        console.error('Error fetching geographic locations:', error);
+        return [];
+    }
 }
 
 const fetchWithLocalCache = async (url: string, cacheKey: string, cacheDuration: number = 5) => {

@@ -19,7 +19,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     const { geographicDocument, children, isEdit } = props;
     const [geographicLocations, setGeographicLocations] = useState<readonly GeographicLocation[]>([]);
     const locationMenuItems = geographicLocations.map((location: GeographicLocation) => {
-        return <MenuItem key={location.GeographicLocationId} value={location.GeographicLocationId}>{location.GeographicLocationName}</MenuItem>
+        return <MenuItem key={location.geographicLocationId} value={location.geographicLocationId}>{location.geographicLocationName}</MenuItem>
     });
 
     const [geographicCategorys, setGeographicCategorys] = useState<readonly GeographicCategory[]>([]);

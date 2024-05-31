@@ -32,16 +32,17 @@ const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filt
 
   // add categories and institutions
   const categoryOptions = filters.map((filter) => {
+    // add institutions if filter is a category
     const institionOptions = []
     if (filter.institutions) {
-      const possibleInstitutions = filter.institutions.map((institution) => {
+      const possibleInstitutions = filter.institutions.map((curInstitution) => {
         return {
           prefix: `:All:${filter.category}`,
-          label: institution,
+          label: curInstitution.institution,
           level: 4,
           checked: true,
           indeterminate: false,
-          geographicLocationFilter: {Category: filter.category, Institution: institution}
+          geographicLocationFilter: {Category: filter.category, Institution: curInstitution.institution, CategoryId: filter.categoryId,  InstitutionId: curInstitution.institutionId}
         }
       })
       institionOptions.push(...possibleInstitutions)
@@ -51,7 +52,9 @@ const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filt
   })
   
   categoryOptions.forEach((categoryOption) => {
+    // add category as a filter option
     newFilterOptions.push(categoryOption.category)
+    // add each institution as a filter option
     newFilterOptions.push(...categoryOption.institutions)
   })
   return newFilterOptions

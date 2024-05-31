@@ -19,7 +19,7 @@ const useLeafletMap = () => {
 
   const handleOnGeographicLocationClick = (geographicLocationId: string) => {
     console.log(`GeographicLocation was clicked!`, geographicLocationId)
-    const newSelectedGeographicLocation = selectedGeographicLocations.find((location) => location.GeographicLocationId === geographicLocationId)
+    const newSelectedGeographicLocation = selectedGeographicLocations.find((location) => location.geographicLocationId === geographicLocationId)
     setSelectedGeographicLocation(newSelectedGeographicLocation)
   }
 
@@ -36,7 +36,7 @@ const useLeafletMap = () => {
             return
           }
           category.institutions.forEach((institution) => {
-            newSelectedGeographicLocationFilters.push({ Category: category.category, Institution: institution })
+            newSelectedGeographicLocationFilters.push({ CategoryId: category.categoryId, InstitutionId: institution.institutionId, Category: category.category, Institution: institution.institution })
           })
         });
         setSelectedGeographicLocationFilter(newSelectedGeographicLocationFilters)
@@ -50,24 +50,33 @@ const useLeafletMap = () => {
 
   useEffect(() => {
     // Used to update markers shown on map when filters are changed
-    const newGeographicLocations = getGeographicLocations(selectedGeographicLocationFilters);
-    setSelectedGeographicLocations(newGeographicLocations)
+    const fetchData = async () => {
+      try {
+        const newGeographicLocations = await getGeographicLocations(selectedGeographicLocationFilters);
+        setSelectedGeographicLocations(newGeographicLocations)
 
-    const newGeoJSON = newGeographicLocations.map((location) => {
-      return {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [location.Latitude, location.Longitude],
-        },
-        properties: {
-          popupContent: location.GeographicLocationName,
-          show_on_map: true,
-          geographicLocationId: location.GeographicLocationId,
-        },
+        const newGeoJSON = newGeographicLocations.map((location) => {
+          return {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [location.longitude, location.latitude],
+            },
+            properties: {
+              popupContent: location.geographicLocationName,
+              show_on_map: true,
+              geographicLocationId: location.geographicLocationId,
+            },
+          }
+        })
+        setDataGeoJson(newGeoJSON)
       }
-    })
-    setDataGeoJson(newGeoJSON)
+      catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
+
   }, [selectedGeographicLocationFilters])
 
   return {
