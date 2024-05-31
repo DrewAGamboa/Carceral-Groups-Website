@@ -9,6 +9,7 @@ import GeographicLocation from '../../models/GeographicLocation';
 import { DocumentListResponseItem } from '../../models/GeographicDocument';
 import DocumentResponse from '../../models/DocumentResponse';
 import localforage from 'localforage';
+import GeographicDocumentType from '../../models/GeographicDocumentType';
 
 // defined in .env file
 const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
@@ -45,17 +46,6 @@ const getAllMapPoints = () => {
     return [...dataset]
 }
 
-const uniqueDocumentTypes = (docs: MapPoint[]) => {
-    const uniqueObjects = docs.reduce((uniqueArr: MapPoint[], currentObj: MapPoint) => {
-        const isDuplicate = uniqueArr.some((obj) => obj.documentType === currentObj.documentType);
-        if (!isDuplicate) {
-            uniqueArr.push(currentObj);
-        }
-        return uniqueArr;
-    }, []);
-    return uniqueObjects;
-}
-
 export type Location = {
     latlngStr: string;
     label: string;
@@ -69,17 +59,20 @@ export type Location = {
  * @param {GeographicLocation} geographicLocation - The geographic location object containing latitude and longitude.
  * @returns {string[]} An array of unique document types available at the specified geographic location.
  */
-export const getGeographicLocationsDocumentTypes = (geographicLocation: GeographicLocation) => {
-    // TODO: replace with api call START
-    const points = getAllMapPoints();
-    const filteredPoints = points.filter((point) => {
-        const latlng = `${geographicLocation.longitude}, ${geographicLocation.latitude}`
-        return point.latlngStr === latlng;
-    });
-    const documentTypes = uniqueDocumentTypes(filteredPoints).map((type) => type.documentType)
-    // TODO: replace with api call END
+export const getGeographicLocationsDocumentTypes = async (geographicLocation: GeographicLocation) => {
+    try {
+        const geographicLocationId = geographicLocation.geographicLocationId
+        console.log("TODO_getGeographicLocationsDocumentTypes_request", geographicLocation)
+        const response = await fetch(`${backend_api_url}/geographiclocations/${geographicLocationId}/documenttypes`)
+        const geographicDocumentTypes = await response.json() as GeographicDocumentType[];
+        console.log("TODO_getGeographicLocationsDocumentTypes_response", geographicDocumentTypes)
+        return geographicDocumentTypes
 
-    return documentTypes;
+    }
+    catch (error) {
+        console.error('Error fetching geographic document types:', error);
+        return [];
+    }
 }
 
 /**
@@ -118,13 +111,13 @@ export const getDocument = (id: string) => {
  *   - `DocumentId` {string} - The unique identifier for the document.
  *   - `DocumentTitle` {string} - The title of the document.
  */
-export const getDocumentsByLocationAndType = (geographicLocation: GeographicLocation, documentTypeId: string) => {
+export const getDocumentsByLocationAndType = (geographicLocation: GeographicLocation, documentType: GeographicDocumentType) => {
     const response: { Documents: DocumentListResponseItem[] } = { Documents: [] }
     // TODO: replace with api call START
     const points = getAllMapPoints();
     const filteredPoints = points.filter((point) => {
         const latlng = `${geographicLocation.longitude}, ${geographicLocation.latitude}`
-        const isType = point.documentType === documentTypeId;
+        const isType = point.documentType === documentType.documentTypeId;
         return point.latlngStr === latlng && isType;
     });
     filteredPoints.forEach((point) => {
