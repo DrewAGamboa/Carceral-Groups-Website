@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace carceral_groups_api.Controllers
 {
     [ApiController]
-    [Route("GeographicsLocations/{geographicLocationId}/[controller]")]
+    [Route("GeographicLocations/{geographicLocationId}/[controller]")]
     public class DocumentTypesController : ControllerBase
     {
         private readonly AppDbContext _dbContext;
@@ -16,11 +16,11 @@ namespace carceral_groups_api.Controllers
         }
 
         [HttpGet]
-        public async Task<string[]> Get(int geographicLocationId)
+        public async Task<DocumentType?[]> Get(int geographicLocationId)
         {
             var documentTypes = await _dbContext.Documents
                 .Where(m => m.GeographicLocationId == geographicLocationId)
-                .Select(m => m.DocumentType != null ? m.DocumentType.Name : string.Empty)
+                .Select(m => m.DocumentType)
                 .Distinct()
                 .ToArrayAsync();
 

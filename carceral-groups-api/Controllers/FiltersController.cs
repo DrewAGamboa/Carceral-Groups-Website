@@ -26,9 +26,13 @@ namespace carceral_groups_api.Controllers
             foreach(var category in categories){
                 response.Filters.Add(new FiltersResponseFilter{
                     Category = category.Name,
+                    CategoryId = category.CategoryId,
                     Institutions = await _dbContext.Documents
                         .Where(m => m.CategoryId == category.CategoryId)
-                        .Select(m => m.Institution != null ? m.Institution.Name : string.Empty)
+                        .Select(m => m.Institution != null ? 
+                            new FiltersResponseFilterInstitution(m.Institution.InstitutionId, m.Institution.Name) 
+                            : new FiltersResponseFilterInstitution(-1, string.Empty) 
+                        )
                         .Distinct()
                         .ToListAsync()
                 });

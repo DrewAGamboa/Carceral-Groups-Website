@@ -20,11 +20,13 @@ namespace carceral_groups_api.Controllers
         {
             var query = _dbContext.Documents.AsQueryable();
 
-            foreach(var item in request.Filters){
-                query = query.Where(m => m.CategoryId == item.CategoryId && m.InstitutionId == item.InstitutionId);
-            }
+            // filed issue https://github.com/DrewAGamboa/Carceral-Groups-Website/issues/93
+            // foreach(var item in request.Filters){
+            //     query = query.Where(m => m.CategoryId == item.CategoryId && m.InstitutionId == item.InstitutionId);
+            // }
 
-            return await query.Select(m => m.GeographicLocation).Distinct().ToListAsync();
+            var locations = await query.Select(m => m.GeographicLocation).Distinct().ToListAsync();
+            return locations;
         }
     }
 }
