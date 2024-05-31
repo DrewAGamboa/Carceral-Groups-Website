@@ -1,8 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios';
-import MapPoint from '../../models/MapPoint';
-import MapPointCSVRow from '../../models/MapPointCSVRow'
-import Papa from "papaparse"
 import FiltersResponseFilter from '../../models/FiltersResponseFilter';
 import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 import GeographicLocation from '../../models/GeographicLocation';
@@ -13,38 +9,6 @@ import GeographicDocumentType from '../../models/GeographicDocumentType';
 
 // defined in .env file
 const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
-
-// fetches map point csv from azure blob storage
-const getMapPointsCSV = async (): Promise<MapPointCSVRow[]> => {
-    try {
-        const response = await axios.get("https://carceralwebmapstorage.blob.core.windows.net/map-coordinates/map_coordinates.csv");
-
-        const records = Papa.parse<MapPointCSVRow>(response.data, {
-            header: true,
-            delimiter: ",",
-            skipEmptyLines: true
-        }).data
-
-        return records;
-    } catch (error) {
-        throw new Error('Error fetching or processing CSV file');
-    }
-};
-
-const dataset = (await getMapPointsCSV()).map(row =>
-    new MapPoint(
-        row.filter1,
-        row.filter2,
-        row.documentDisplayTitle,
-        row.fileTitle,
-        row.documentType,
-        row.geographicLocation
-    ));
-
-// service methods
-const getAllMapPoints = () => {
-    return [...dataset]
-}
 
 export type Location = {
     latlngStr: string;
@@ -86,18 +50,20 @@ export const getGeographicLocationsDocumentTypes = async (geographicLocation: Ge
  *   - `DocumentTitle` {string} - The title of the document.
  *   - `DocumentURI` {string} - The URI of the document.
  */
-export const getDocument = (id: string) => {
-    // TODO: replace with api call START
-    const doc = dataset.find((doc) => doc.id === id);
-    if (doc === undefined) return null;
-    const DUMMY_FILE_URL = 'https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf'
-    const document: DocumentResponse = {
-        DocumentId: doc.id,
-        DocumentTitle: doc.documentDisplayTitle,
-        DocumentURI: DUMMY_FILE_URL, // TODO: change to actual file url
-    };
-    // TODO: replace with api call END
-    return document;
+export const getDocument = async (id: string) => {
+    try {
+        console.log("TODO_getDocument_request", id)
+        const response = await fetch(`${backend_api_url}/Document/${id}`)
+        const resJson = await response.json()
+        console.log("TODO_getGeographicLocationsDocumentTypes_response", resJson)
+        const geographicDocument = resJson as DocumentResponse
+        return geographicDocument
+
+    }
+    catch (error) {
+        console.error('Error fetching geographic document types:', error);
+        return null;
+    }
 }
 
 /**
@@ -106,28 +72,27 @@ export const getDocument = (id: string) => {
  * API Call: GET /Documents/{geographicLocationId}{documentTypeId}
  * 
  * @param {GeographicLocation} geographicLocation - The geographic location object containing latitude and longitude.
- * @param {string} documentTypeId - The ID of the document type to filter by.
+ * @param {GeographicDocumentType} documentType - The document type to filter by.
  * @returns {DocumentListResponseItem[]} An array of document list response items. Each object includes:
  *   - `DocumentId` {string} - The unique identifier for the document.
  *   - `DocumentTitle` {string} - The title of the document.
  */
-export const getDocumentsByLocationAndType = (geographicLocation: GeographicLocation, documentType: GeographicDocumentType) => {
-    const response: { Documents: DocumentListResponseItem[] } = { Documents: [] }
-    // TODO: replace with api call START
-    const points = getAllMapPoints();
-    const filteredPoints = points.filter((point) => {
-        const latlng = `${geographicLocation.longitude}, ${geographicLocation.latitude}`
-        const isType = point.documentType === documentType.documentTypeId;
-        return point.latlngStr === latlng && isType;
-    });
-    filteredPoints.forEach((point) => {
-        response.Documents.push({
-            DocumentId: point.id,
-            DocumentTitle: point.documentDisplayTitle
-        });
-    })
-    // TODO: replace with api call END
-    return response.Documents
+export const getDocumentsByLocationAndType = async (geographicLocation: GeographicLocation, documentType: GeographicDocumentType) => {
+    try {
+        const geographicLocationId = geographicLocation.geographicLocationId
+        const documentTypeId = documentType.documentTypeId
+        console.log("TODO_getDocumentsByLocationAndType_request", geographicLocation, documentType)
+        const response = await fetch(`${backend_api_url}/Documents/ByLocationAndType?geographicLocationId=${geographicLocationId}&documentTypeId=${documentTypeId}`)
+        const responseModel: { documents: DocumentListResponseItem[] } = await response.json()
+        console.log("TODO_getGeographicLocationsDocumentTypes_response", responseModel)
+        const geographicDocuments = responseModel.documents
+        return geographicDocuments
+
+    }
+    catch (error) {
+        console.error('Error fetching geographic document types:', error);
+        return [];
+    }
 }
 
 /**

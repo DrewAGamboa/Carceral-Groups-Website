@@ -76,7 +76,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
 
     const comment: GeographicDocumentComment = {
       commentId: '-1',
-      geographicDocumentId: doc.DocumentId,
+      geographicDocumentId: doc.documentId,
       commentText: content,
       commentAuthor: name,
       commentAuthorEmail: name + "@example.com",
@@ -162,9 +162,9 @@ export default function DocumentDialog(props: DocumentDialogProps) {
         }
         {doc &&
           <>
-            <DialogTitle>{doc.DocumentTitle}</DialogTitle>
+            <DialogTitle>{doc.documentTitle}</DialogTitle>
             <DialogContent>
-              <iframe src={doc.DocumentURI} title="Archival Material" width="100%" height="600px"></iframe>
+              <iframe src={doc.documentURI} title="Archival Material" width="100%" height="600px"></iframe>
               <List>
                 {docCitations}
               </List>

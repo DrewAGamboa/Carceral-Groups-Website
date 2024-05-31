@@ -19,8 +19,16 @@ const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
 
   useEffect(() => {
     if (expanded) {
-      const documents = getDocumentsByLocationAndType(geographicLocation, docType)
-      setGeographicDocumentResponse(documents)
+      const fetchData = async () => {
+        try {
+          const documents = await getDocumentsByLocationAndType(geographicLocation, docType)
+          setGeographicDocumentResponse(documents)
+        }
+        catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+      fetchData();
     }
   }, [expanded, docType, geographicLocation]);
 
@@ -45,10 +53,10 @@ const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Typography>{doc.DocumentTitle}</Typography>
+              <Typography>{doc.documentTitle}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <DocumentDialog document_id={doc.DocumentId} />
+              <DocumentDialog document_id={doc.documentId} />
             </AccordionDetails>
           </Accordion>
         ))
