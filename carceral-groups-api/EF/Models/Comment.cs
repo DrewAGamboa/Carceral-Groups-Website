@@ -12,7 +12,7 @@ namespace CarceralGroupsAPI
         [StringLength(maximumLength: 128)]
         public required string Email {get; set; }
 
-        [StringLength(maximumLength: 256)]
+        [StringLength(maximumLength: 3048)]
         public required string CommentText {get; set; }
 
         public required bool IsApproved {get; set; }
