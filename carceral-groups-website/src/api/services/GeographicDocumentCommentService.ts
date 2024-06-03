@@ -16,7 +16,7 @@ export async function createGeographicDocumentComment(newComment: GeographicDocu
         const response = await axios.post(`${backend_api_url}/comment/`, newGeographicDocumentComment)
 
         if(response.status >= 200 && response.status < 300)
-            return response.data;
+            return response.data as GeographicDocumentComment;
         else
             return null;
     }
@@ -26,10 +26,18 @@ export async function createGeographicDocumentComment(newComment: GeographicDocu
 }
 
 export async function getGeographicDocumentComments(documentId: string) {
-    let geographicDocumentComments = await localforage.getItem(localForageKey) as GeographicDocumentComment[];
-    if (!geographicDocumentComments) geographicDocumentComments = [];
-    geographicDocumentComments = geographicDocumentComments.filter((comment) => comment.documentId === documentId && comment.isApproved)
-    return geographicDocumentComments
+    try{
+        const params = { documentId: documentId}
+        const response = await axios.get(`${backend_api_url}/comments/`, { params })
+
+        if(response.status >= 200 && response.status < 300)
+            return response.data as GeographicDocumentComment[];
+        else
+            return null;
+    }
+    catch(error){
+        console.error('Error fetching comments: ', error);
+    }
 }
 
 export async function getGeographicDocumentComment(id: string) {
