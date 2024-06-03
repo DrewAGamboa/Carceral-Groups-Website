@@ -22,7 +22,8 @@ namespace carceral_groups_api.Controllers
                 .Select(m => new DocumentResponse{
                     DocumentId = m.DocumentId,
                     DocumentTitle = m.DocumentTitle,
-                    DocumentURI = m.URI
+                    DocumentURI = m.URI,
+                    Citation = m.Citation
                 });
 
             return await query.FirstOrDefaultAsync();

@@ -13,6 +13,7 @@ namespace CarceralGroupsAPI
             DocumentTitle = document.DocumentTitle;
             FileTitle = document.FileTitle;
             URI = document.URI;
+            Citation = document.Citation;
             DocumentTypeId = document.DocumentTypeId;
             CategoryId = document.CategoryId;
             InstitutionId = document.InstitutionId;
@@ -27,6 +28,9 @@ namespace CarceralGroupsAPI
 
         [StringLength(maximumLength: 512)]
         public required string URI { get; set; }
+
+        [StringLength(maximumLength: 1024)]
+        public required string Citation { get; set; }
 
         public required int DocumentTypeId { get; set; }
 
