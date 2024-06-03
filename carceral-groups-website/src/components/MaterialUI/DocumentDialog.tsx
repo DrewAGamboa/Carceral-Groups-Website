@@ -70,7 +70,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
     fetchData();
   }, [document_id, open]);
 
-  const handleNewComment = (name: string, content: string) => {
+  const handleNewComment = (name: string, content: string, email: string) => {
     // TODO: save somewhere in storage
     if (!doc) return;
 
@@ -79,7 +79,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
       documentId: document_id,
       commentText: content,
       fullName: name,
-      email: name + "@example.com",
+      email: email,
       commentDate: new Date().toISOString(),
       isApproved: true // TODO: change to false when we have hooked correctly to backend
     };
@@ -142,7 +142,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
             const formJson = Object.fromEntries((formData as any).entries());
             console.log(formJson);
             // clear form
-            handleNewComment(formJson.name, formJson.comment);
+            handleNewComment(formJson.name, formJson.comment, formJson.email);
             // handleClose();
           },
         }}
@@ -175,25 +175,39 @@ export default function DocumentDialog(props: DocumentDialogProps) {
                 <Box
                   component="section"
                   sx={{ p: 2, my: 2, border: '1px solid grey', borderRadius: '5px' }}>
-                  <TextField
-                    required
-                    margin="dense"
-                    id="name"
-                    name="name"
-                    label="Name"
-                    type="text"
-                  />
-                  <TextField
-                    required
-                    margin='dense'
-                    id="outlined-multiline-static"
-                    name="comment"
-                    label="Leave a Comment"
-                    multiline
-                    fullWidth
-                    rows={4}
-                    defaultValue=""
-                  />
+                  <div>
+                    <TextField
+                      required
+                      margin="dense"
+                      id="name"
+                      name="name"
+                      label="Name"
+                      type="text"
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      required
+                      margin="dense"
+                      id="email"
+                      name="email"
+                      label="E-mail"
+                      type="email"
+                    />
+                  </div>
+                  <div>
+                    <TextField
+                      required
+                      margin='dense'
+                      id="outlined-multiline-static"
+                      name="comment"
+                      label="Leave a Comment"
+                      multiline
+                      fullWidth
+                      rows={4}
+                      defaultValue=""
+                    />
+                  </div>
                   <Box
                     display="flex"
                     justifyContent={'flex-end'}
