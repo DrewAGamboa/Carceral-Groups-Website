@@ -8,5 +8,6 @@ namespace CarceralGroupsAPI
 
         public required string DocumentURI { get; set; }
         
+        public required string Citation { get; set; }
     }
 }
