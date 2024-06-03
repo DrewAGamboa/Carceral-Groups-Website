@@ -76,10 +76,10 @@ export default function DocumentDialog(props: DocumentDialogProps) {
 
     const comment: GeographicDocumentComment = {
       commentId: '-1',
-      geographicDocumentId: doc.documentId,
+      documentId: document_id,
       commentText: content,
-      commentAuthor: name,
-      commentAuthorEmail: name + "@example.com",
+      fullName: name,
+      email: name + "@example.com",
       commentDate: new Date().toISOString(),
       isApproved: true // TODO: change to false when we have hooked correctly to backend
     };

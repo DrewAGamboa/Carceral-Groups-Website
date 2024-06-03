@@ -1,9 +1,9 @@
 type GeographicDocumentComment = {
     commentId: string
-    geographicDocumentId: string
+    documentId: string
     commentText: string
-    commentAuthor: string
-    commentAuthorEmail: string
+    fullName: string
+    email: string
     commentDate: string
     isApproved: boolean
 }

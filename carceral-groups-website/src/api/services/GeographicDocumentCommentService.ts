@@ -1,27 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import localforage from "localforage"
 import GeographicDocumentComment from "../../models/GeographicDocumentComment"
+import axios from 'axios';
+
+// defined in .env file
+const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
 const localForageKey = "geo-docs-comments"
 
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function createGeographicDocumentComment(newComment: GeographicDocumentComment) {
-    const id = Date.now().toString()
-    const newGeographicDocumentComment = {
-        ...newComment,
-        commentId: id
+    try{
+        const newGeographicDocumentComment = {...newComment}
+        const response = await axios.post(`${backend_api_url}/comment/`, newGeographicDocumentComment)
+
+        if(response.status >= 200 && response.status < 300)
+            return response.data;
+        else
+            return null;
     }
-    let geographicDocumentComments = await localforage.getItem(localForageKey) as GeographicDocumentComment[];
-    if (!geographicDocumentComments) geographicDocumentComments = [];
-    geographicDocumentComments = [newGeographicDocumentComment, ...geographicDocumentComments]
-    await set(geographicDocumentComments);
-    return newGeographicDocumentComment;
+    catch(error){
+        console.error('Error creating comment: ', error);
+    }
 }
 
 export async function getGeographicDocumentComments(documentId: string) {
     let geographicDocumentComments = await localforage.getItem(localForageKey) as GeographicDocumentComment[];
     if (!geographicDocumentComments) geographicDocumentComments = [];
-    geographicDocumentComments = geographicDocumentComments.filter((comment) => comment.geographicDocumentId === documentId && comment.isApproved)
+    geographicDocumentComments = geographicDocumentComments.filter((comment) => comment.documentId === documentId && comment.isApproved)
     return geographicDocumentComments
 }
 

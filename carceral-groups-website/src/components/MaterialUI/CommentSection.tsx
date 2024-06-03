@@ -18,7 +18,7 @@ export default function CommentSection(props: CommentSectionProps) {
         return (
             <>
                 <ListItemText
-                    primary={comment.commentAuthor}
+                    primary={comment.fullName}
                     secondary={
                         <React.Fragment>
                             <ShowMoreText text={comment.commentText} />
