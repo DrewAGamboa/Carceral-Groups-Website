@@ -6,6 +6,7 @@ import { Typography } from '@mui/material';
 import { getGeographicLocationsDocumentTypes } from '../../api/services/MapPointsService';
 import GeographicLocation from '../../models/GeographicLocation';
 import AccordionOptionDocuments from './AccordionOptionDocuments';
+import GeographicDocumentType from '../../models/GeographicDocumentType';
 
 type DetailsDrawerProps = {
   selectedMark?: GeographicLocation;
@@ -15,14 +16,23 @@ export default function DetailsDrawer({ selectedMark: selectedLocation }: Detail
   const anchor = 'right'
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [selectedGeographicLocation, setSelectedGeographicLocation] = useState<GeographicLocation | undefined>(undefined);
-  const [documentTypes, setDocumentTypes] = useState<string[]>([]);
+  const [documentTypes, setDocumentTypes] = useState<GeographicDocumentType[]>([]);
 
   useEffect(() => {
     if (selectedLocation !== undefined) {
       setIsOpen(true);
       setSelectedGeographicLocation(selectedLocation);
-      const docTypes = getGeographicLocationsDocumentTypes(selectedLocation);
-      setDocumentTypes(docTypes)
+
+      const fetchData = async () => {
+        try {
+          const docTypes = await getGeographicLocationsDocumentTypes(selectedLocation);
+          setDocumentTypes(docTypes)
+        }
+        catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+      fetchData();
     }
   }, [selectedLocation]);
 
@@ -48,13 +58,13 @@ export default function DetailsDrawer({ selectedMark: selectedLocation }: Detail
       >
         {selectedGeographicLocation &&
           <>
-            <Typography variant="h6">{selectedGeographicLocation.GeographicLocationName}</Typography>
+            <Typography variant="h6">{selectedGeographicLocation.geographicLocationName}</Typography>
             <Box
               sx={{ width: 400 }}
               role="presentation">
               {
                 documentTypes.map((docType) => {
-                  return <AccordionOptionDocuments key={docType} docType={docType} geographicLocation={selectedGeographicLocation} />
+                  return <AccordionOptionDocuments key={docType.documentTypeId} docType={docType} geographicLocation={selectedGeographicLocation} />
                 })
               }
             </Box>

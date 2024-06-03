@@ -26,8 +26,8 @@ type GeographicDocument = {
 }
 
 export type DocumentListResponseItem = {
-    DocumentId: string
-    DocumentTitle: string
+    documentId: string
+    documentTitle: string
 }
 
 export default GeographicDocument;

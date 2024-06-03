@@ -12,9 +12,9 @@ type GeographicLocationFormProps = {
 const GeographicLocationForm = (props: GeographicLocationFormProps) => {
     const { geographicLocation, children, isEdit } = props;
 
-    const [inputName, setInputName] = useState<string>(geographicLocation.GeographicLocationName || '');
-    const [inputLatitude, setInputLatitude] = useState<string>(geographicLocation.Latitude || '');
-    const [inputLongitude, setInputLongitude] = useState<string>(geographicLocation.Longitude || '');
+    const [inputName, setInputName] = useState<string>(geographicLocation.geographicLocationName || '');
+    const [inputLatitude, setInputLatitude] = useState<string>(geographicLocation.latitude || '');
+    const [inputLongitude, setInputLongitude] = useState<string>(geographicLocation.longitude || '');
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputName(event.target.value);
@@ -31,8 +31,8 @@ const GeographicLocationForm = (props: GeographicLocationFormProps) => {
     const textProps = isEdit ? { required: true } : { disabled: true };
 
     useEffect(() => {
-        setInputName(geographicLocation.GeographicLocationName);
-        setInputLatitude(geographicLocation.Latitude);
+        setInputName(geographicLocation.geographicLocationName);
+        setInputLatitude(geographicLocation.latitude);
     }, [geographicLocation])
 
     return (

@@ -5,9 +5,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GeographicLocation from "../../models/GeographicLocation";
 import { DocumentListResponseItem } from "../../models/GeographicDocument";
 import DocumentDialog from "./DocumentDialog";
+import GeographicDocumentType from "../../models/GeographicDocumentType";
 
 type AccordionOptionDocumentProps = {
-  docType: string;
+  docType: GeographicDocumentType;
   geographicLocation: GeographicLocation;
 }
 
@@ -18,8 +19,16 @@ const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
 
   useEffect(() => {
     if (expanded) {
-      const documents = getDocumentsByLocationAndType(geographicLocation, docType)
-      setGeographicDocumentResponse(documents)
+      const fetchData = async () => {
+        try {
+          const documents = await getDocumentsByLocationAndType(geographicLocation, docType)
+          setGeographicDocumentResponse(documents)
+        }
+        catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+      fetchData();
     }
   }, [expanded, docType, geographicLocation]);
 
@@ -34,7 +43,7 @@ const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        <Typography>{docType}</Typography>
+        <Typography>{docType.name}</Typography>
       </AccordionSummary>
       <AccordionDetails>
         {geographicDocumentResponse.map((doc, index) => (
@@ -44,10 +53,10 @@ const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Typography>{doc.DocumentTitle}</Typography>
+              <Typography>{doc.documentTitle}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <DocumentDialog document_id={doc.DocumentId} />
+              <DocumentDialog document_id={doc.documentId} />
             </AccordionDetails>
           </Accordion>
         ))

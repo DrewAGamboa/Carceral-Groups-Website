@@ -1,29 +1,29 @@
 export const DUMMY_GEO_LOCS: GeographicLocation[] = [
     {
-        GeographicLocationId: "1",
-        Latitude: "47.299723843258185",
-        Longitude: "-123.17403244585927",
-        GeographicLocationName: "Washington Corrections Center",
+        geographicLocationId: "1",
+        latitude: "47.299723843258185",
+        longitude: "-123.17403244585927",
+        geographicLocationName: "Washington Corrections Center",
     },
     {
-        GeographicLocationId: "2",
-        Latitude: "46.73098767622705",
-        Longitude: "-117.16580759999998",
-        GeographicLocationName: "Evergreen Newsroom, Murrow Center",
+        geographicLocationId: "2",
+        latitude: "46.73098767622705",
+        longitude: "-117.16580759999998",
+        geographicLocationName: "Evergreen Newsroom, Murrow Center",
     },
     {
-        GeographicLocationId: "3",
-        Latitude: "46.345958963317436",
-        Longitude: "-120.19008248921602",
-        GeographicLocationName: "La Escuelita, Granger, WA",
+        geographicLocationId: "3",
+        latitude: "46.345958963317436",
+        longitude: "-120.19008248921602",
+        geographicLocationName: "La Escuelita, Granger, WA",
     }
 ]
 
 type GeographicLocation = {
-    GeographicLocationId: string
-    GeographicLocationName: string
-    Latitude: string
-    Longitude: string
+    geographicLocationId: string
+    geographicLocationName: string
+    latitude: string
+    longitude: string
 }
 
 export default GeographicLocation;
