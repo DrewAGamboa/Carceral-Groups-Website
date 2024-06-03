@@ -1,11 +1,11 @@
 namespace CarceralGroupsAPI
 {
-    public class GeographicFilterRequest()
+    public class GeographicFilterRequest
     {
         public required List<GeographicLocationFilter> Filters { get; set; }
     }
 
-    public class GeographicLocationFilter()
+    public class GeographicLocationFilter
     {
         public required int CategoryId { get; set; }
 
