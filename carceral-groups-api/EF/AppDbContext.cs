@@ -5,6 +5,7 @@ namespace CarceralGroupsAPI
     public class AppDbContext: DbContext
     {
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<GeographicLocation> GeographicLocations { get; set; }

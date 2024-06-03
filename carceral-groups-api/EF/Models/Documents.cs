@@ -27,5 +27,7 @@ namespace CarceralGroupsAPI
 
         public required int GeographicLocationId { get; set; }
         public GeographicLocation? GeographicLocation { get; set; }
+
+        public ICollection<Comment>? Comments { get; set; }
     }
 }

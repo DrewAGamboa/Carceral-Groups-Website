@@ -1,4 +1,5 @@
 using CarceralGroupsAPI;
+using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,14 +20,13 @@ namespace carceral_groups_api.Controllers
         public async Task<IEnumerable<GeographicLocation?>> Post(GeographicFilterRequest request)
         {
             var query = _dbContext.Documents.AsQueryable();
+            var predicate = PredicateBuilder.New<Document>();
 
-            // filed issue https://github.com/DrewAGamboa/Carceral-Groups-Website/issues/93
-            // foreach(var item in request.Filters){
-            //     query = query.Where(m => m.CategoryId == item.CategoryId && m.InstitutionId == item.InstitutionId);
-            // }
+            foreach(var item in request.Filters){
+                predicate = predicate.Or(m => m.CategoryId == item.CategoryId && m.InstitutionId == item.InstitutionId);
+            }
 
-            var locations = await query.Select(m => m.GeographicLocation).Distinct().ToListAsync();
-            return locations;
+            return await query.Where(predicate).Select(m => m.GeographicLocation).Distinct().ToListAsync();
         }
     }
 }
