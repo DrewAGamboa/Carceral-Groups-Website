@@ -42,6 +42,7 @@ namespace carceral_groups_api.Controllers
                     DocumentId = m.DocumentId,
                     DocumentTitle = m.DocumentTitle
                 })
+                .OrderBy(m => m.DocumentTitle)
                 .ToListAsync();
 
             return DocumentListResponse;
