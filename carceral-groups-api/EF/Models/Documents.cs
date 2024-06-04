@@ -22,6 +22,9 @@ namespace CarceralGroupsAPI
         public required int DocumentTypeId { get; set; }
         public DocumentType? DocumentType { get; set; }
 
+        public required int FileTypeId { get; set; }
+        public FileType? FileType { get; set; }
+
         public required int CategoryId { get; set; }
         public Category? Category { get; set; }
         
