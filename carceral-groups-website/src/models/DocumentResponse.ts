@@ -1,7 +1,7 @@
 type DocumentResponse = {
     documentId: string;
     documentTitle: string;
-    documentURI: string;
+    uri: string;
 }
 
 export default DocumentResponse;

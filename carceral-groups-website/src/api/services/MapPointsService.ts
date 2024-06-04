@@ -55,7 +55,7 @@ export const getDocument = async (id: string) => {
         console.log("TODO_getDocument_request", id)
         const response = await fetch(`${backend_api_url}/Document/${id}`)
         const resJson = await response.json()
-        console.log("TODO_getGeographicLocationsDocumentTypes_response", resJson)
+        console.log("TODO_getDocument_response", resJson)
         const geographicDocument = resJson as DocumentResponse
         return geographicDocument
 

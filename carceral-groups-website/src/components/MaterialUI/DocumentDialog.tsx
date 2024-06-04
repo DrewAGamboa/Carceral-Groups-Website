@@ -164,7 +164,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
           <>
             <DialogTitle>{doc.documentTitle}</DialogTitle>
             <DialogContent>
-              <iframe src={doc.documentURI} title="Archival Material" width="100%" height="600px"></iframe>
+              <iframe src={doc.uri} title="Archival Material" width="100%" height="600px"></iframe>
               <List>
                 {docCitations}
               </List>
