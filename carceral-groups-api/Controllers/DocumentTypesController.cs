@@ -18,11 +18,14 @@ namespace carceral_groups_api.Controllers
         [HttpGet]
         public async Task<DocumentType?[]> Get(int geographicLocationId)
         {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var documentTypes = await _dbContext.Documents
                 .Where(m => m.GeographicLocationId == geographicLocationId)
                 .Select(m => m.DocumentType)
                 .Distinct()
+                .OrderBy(m => m.Name)
                 .ToArrayAsync();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             return documentTypes;
         }
