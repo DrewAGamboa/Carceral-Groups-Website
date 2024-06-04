@@ -15,6 +15,7 @@ namespace CarceralGroupsAPI
             URI = document.URI;
             Citation = document.Citation;
             DocumentTypeId = document.DocumentTypeId;
+            FileTypeId = document.FileTypeId;
             CategoryId = document.CategoryId;
             InstitutionId = document.InstitutionId;
             GeographicLocationId = document.GeographicLocationId;
@@ -33,6 +34,8 @@ namespace CarceralGroupsAPI
         public required string Citation { get; set; }
 
         public required int DocumentTypeId { get; set; }
+
+        public required int FileTypeId { get; set; }
 
         public required int CategoryId { get; set; }
         

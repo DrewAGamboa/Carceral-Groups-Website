@@ -49,6 +49,7 @@ namespace carceral_groups_api.Controllers
                     URI = request.URI,
                     Citation = request.Citation,
                     DocumentTypeId = request.DocumentTypeId,
+                    FileTypeId = request.FileTypeId,
                     CategoryId = request.CategoryId,
                     InstitutionId = request.InstitutionId,
                     GeographicLocationId = request.GeographicLocationId
@@ -88,6 +89,7 @@ namespace carceral_groups_api.Controllers
                 document.URI = request.URI;
                 document.Citation = request.Citation;
                 document.DocumentTypeId = request.DocumentTypeId;
+                document.FileTypeId = request.FileTypeId;
                 document.CategoryId = request.CategoryId;
                 document.InstitutionId = request.InstitutionId;
                 document.GeographicLocationId = request.GeographicLocationId;

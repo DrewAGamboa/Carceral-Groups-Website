@@ -8,6 +8,7 @@ namespace CarceralGroupsAPI
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
+        public DbSet<FileType> FileTypes { get; set; }
         public DbSet<GeographicLocation> GeographicLocations { get; set; }
         public DbSet<Institution> Institutions { get; set; }
 
