@@ -9,6 +9,11 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
   },
+  typography: {
+    fontFamily: [
+      "Helvetica",
+    ].join(',')
+  }
 });
 
 function App() {

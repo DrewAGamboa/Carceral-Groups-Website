@@ -6,6 +6,7 @@ import GeographicLocation from "../../models/GeographicLocation";
 import { DocumentListResponseItem } from "../../models/GeographicDocument";
 import DocumentDialog from "./DocumentDialog";
 import GeographicDocumentType from "../../models/GeographicDocumentType";
+import RawTypography from "./RawTypography";
 
 type AccordionOptionDocumentProps = {
   docType: GeographicDocumentType;
@@ -53,7 +54,7 @@ const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Typography>{doc.documentTitle}</Typography>
+            <RawTypography htmlContent={doc.documentTitle} />
             </AccordionSummary>
             <AccordionDetails>
               <DocumentDialog document_id={doc.documentId} />

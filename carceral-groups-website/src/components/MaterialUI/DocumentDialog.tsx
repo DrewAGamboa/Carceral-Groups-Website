@@ -9,12 +9,13 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { getDocument } from '../../api/services/MapPointsService';
 import CommentSection from './CommentSection';
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from '@mui/material';
 import DocumentResponse from '../../models/DocumentResponse';
 import { useEffect, useState } from 'react';
 import { createGeographicDocumentComment, getGeographicDocumentComments } from '../../api/services/GeographicDocumentCommentService';
 import GeographicDocumentComment from '../../models/GeographicDocumentComment';
 import CustomSnackBar from './CustomSnackBar';
+import RawTypography from './RawTypography';
 
 type DocumentDialogProps = {
   document_id: string;
@@ -132,12 +133,10 @@ export default function DocumentDialog(props: DocumentDialogProps) {
         }
         {doc &&
           <>
-            <DialogTitle>{doc.documentTitle}</DialogTitle>
+            <DialogTitle><RawTypography htmlContent={doc.documentTitle}/></DialogTitle>
             <DialogContent>
               <iframe src={doc.uri} title="Archival Material" width="100%" height="600px"></iframe>
-              <Typography variant="caption" gutterBottom>
-                {`1. ${doc?.citation}`}
-              </Typography>
+              <RawTypography variant="caption" gutterBottom htmlContent={`1. ${doc?.citation}`}/>
               <Box component="section" sx={{ p: 2 }}>
                 {contentTextHeader}
                 {contentTextList()}
