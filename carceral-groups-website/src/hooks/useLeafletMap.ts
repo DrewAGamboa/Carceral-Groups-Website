@@ -71,6 +71,7 @@ const useLeafletMap = () => {
               popupContent: location.geographicLocationName,
               show_on_map: true,
               geographicLocationId: location.geographicLocationId,
+              color: location.color || '#0f00ff',
             },
           }
         })
