@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, List, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { getDocumentsByLocationAndType } from "../../api/services/MapPointsService";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -6,7 +6,6 @@ import GeographicLocation from "../../models/GeographicLocation";
 import { DocumentListResponseItem } from "../../models/GeographicDocument";
 import DocumentDialog from "./DocumentDialog";
 import GeographicDocumentType from "../../models/GeographicDocumentType";
-import RawTypography from "./RawTypography";
 
 type AccordionOptionDocumentProps = {
   docType: GeographicDocumentType;
@@ -47,21 +46,16 @@ const AccordionOptionDocuments = (props: AccordionOptionDocumentProps) => {
         <Typography>{docType.name}</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        {geographicDocumentResponse.map((doc, index) => (
-          <Accordion key={index}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1-content"
-              id="panel1-header"
-            >
-            <RawTypography htmlContent={doc.documentTitle} />
-            </AccordionSummary>
-            <AccordionDetails>
-              <DocumentDialog document_id={doc.documentId} />
-            </AccordionDetails>
-          </Accordion>
-        ))
-        }
+        <List>
+          {geographicDocumentResponse.map((doc, index) => (
+            <DocumentDialog
+              key={index}
+              documentId={doc.documentId}
+              documentTitle={doc.documentTitle}
+            />
+          ))
+          }
+        </List>
       </AccordionDetails>
     </Accordion>
   )

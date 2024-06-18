@@ -9,7 +9,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { getDocument } from '../../api/services/MapPointsService';
 import CommentSection from './CommentSection';
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from '@mui/material';
+import { Box, FormControl, InputLabel, ListItemButton, MenuItem, Select, SelectChangeEvent} from '@mui/material';
 import DocumentResponse from '../../models/DocumentResponse';
 import { useEffect, useState } from 'react';
 import { createGeographicDocumentComment, getGeographicDocumentComments } from '../../api/services/GeographicDocumentCommentService';
@@ -18,7 +18,8 @@ import CustomSnackBar from './CustomSnackBar';
 import RawTypography from './RawTypography';
 
 type DocumentDialogProps = {
-  document_id: string;
+  documentId: string;
+  documentTitle: string;
 };
 
 export default function DocumentDialog(props: DocumentDialogProps) {
@@ -31,23 +32,23 @@ export default function DocumentDialog(props: DocumentDialogProps) {
     );
   };
 
-  const { document_id } = props;
+  const { documentId, documentTitle } = props;
   const [doc, setDoc] = useState<DocumentResponse | null>(null);
   const [open, setOpen] = useState(false);
   const [comments, setComments] = useState<GeographicDocumentComment[]>([]);
   const [openSnackBar, setOpenSnackBar] = useState(false);
 
   useEffect(() => {
-    if (!document_id || !open) return;
+    if (!documentId || !open) return;
 
     const fetchData = async () => {
-      const doc = await getDocument(document_id);
+      const doc = await getDocument(documentId);
       setDoc(doc);
-      const comments = await getGeographicDocumentComments(document_id);
+      const comments = await getGeographicDocumentComments(documentId);
       setComments(comments);
     }
     fetchData();
-  }, [document_id, open]);
+  }, [documentId, open]);
 
   const handleNewComment = (name: string, content: string, email: string) => {
     // TODO: save somewhere in storage
@@ -55,7 +56,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
 
     const comment: GeographicDocumentComment = {
       commentId: '-1',
-      documentId: document_id,
+      documentId: documentId,
       commentText: content,
       fullName: name,
       email: email,
@@ -64,7 +65,7 @@ export default function DocumentDialog(props: DocumentDialogProps) {
     };
     const fetchComments = async () => {
       await createGeographicDocumentComment(comment);
-      const comments = await getGeographicDocumentComments(document_id);
+      const comments = await getGeographicDocumentComments(documentId);
       setComments(comments);
       setOpenSnackBar(true);
     }
@@ -97,9 +98,9 @@ export default function DocumentDialog(props: DocumentDialogProps) {
 
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        View
-      </Button>
+      <ListItemButton onClick={handleClickOpen} divider>
+        <RawTypography htmlContent={documentTitle} />
+      </ListItemButton>
       <Dialog
         maxWidth={maxWidth}
         open={open}
