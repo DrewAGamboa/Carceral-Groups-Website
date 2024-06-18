@@ -118,6 +118,17 @@ export const getFilterOptions = async () => {
 }
 
 const filterColors = (filters: FiltersResponseFilter[]) => {
+    const filterAddedColors = addColorProperty(filters)
+    return filterAddedColors;
+}
+
+const locationColors = (locations: GeographicLocation[]) => {
+    const locationAddedColors = addColorProperty(locations)
+    return locationAddedColors;
+
+}
+
+const addColorProperty = (model: any[]) => {
     const colors = [
         'red',
         'blue',
@@ -139,11 +150,10 @@ const filterColors = (filters: FiltersResponseFilter[]) => {
         'black',
         'lightgray'
     ]
-    const filterAddedColors = filters.map((filter, index) => {
-        filter.color = colors[index % colors.length]
-        return filter;
+    model.forEach((cur, index) => {
+        cur.color = colors[index % colors.length]
     })
-    return filterAddedColors;
+    return model;
 }
 
 /**
@@ -174,7 +184,8 @@ export const getGeographicLocations = async (selectedGeographicLocationFilters: 
                 }
             }
         )
-        const geographicLocations = await response.json() as GeographicLocation[];
+        let geographicLocations = await response.json() as GeographicLocation[];
+        geographicLocations = locationColors(geographicLocations) // determine if we want to add colors as part of the model or not
         console.log("TODO_getGeographicLocation_response", geographicLocations)
         return geographicLocations
 
