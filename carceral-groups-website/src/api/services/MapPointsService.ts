@@ -108,12 +108,42 @@ export const getFilterOptions = async () => {
     try {
         const resJson = await fetchWithLocalCache(`${backend_api_url}/filters`, 'filters')
         console.log("TODO_getFilterOptions_response", resJson)
-        const filters = resJson.filters as FiltersResponseFilter[];
+        let filters = resJson.filters as FiltersResponseFilter[];
+        filters = filterColors(filters) // determine if we want to add colors as part of the model or not
         return filters;
     } catch (error) {
         console.error('Error fetching or processing filters:', error);
         return [];
     }
+}
+
+const filterColors = (filters: FiltersResponseFilter[]) => {
+    const colors = [
+        'red',
+        'blue',
+        'green',
+        'purple',
+        'orange',
+        'darkred',
+        'lightred',
+        'beige',
+        'darkblue',
+        'darkgreen',
+        'cadetblue',
+        'darkpurple',
+        'white',
+        'pink',
+        'lightblue',
+        'lightgreen',
+        'gray',
+        'black',
+        'lightgray'
+    ]
+    const filterAddedColors = filters.map((filter, index) => {
+        filter.color = colors[index % colors.length]
+        return filter;
+    })
+    return filterAddedColors;
 }
 
 /**

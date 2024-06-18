@@ -1,7 +1,12 @@
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Checkbox, { CheckboxProps } from '@mui/material/Checkbox';
 
-const BpIcon = styled('span')(({ theme }) => ({
+interface CustomIconProps {
+  customColor?: string;
+}
+
+const BpIcon = styled('span')<CustomIconProps>(({ theme, customColor }) => ({
   borderRadius: 3,
   width: 16,
   height: 16,
@@ -9,7 +14,7 @@ const BpIcon = styled('span')(({ theme }) => ({
     theme.palette.mode === 'dark'
       ? '0 0 0 1px rgb(16 22 26 / 40%)'
       : 'inset 0 0 0 1px rgba(16,22,26,.2), inset 0 -1px 0 rgba(16,22,26,.1)',
-  backgroundColor: theme.palette.mode === 'dark' ? '#394b59' : '#f5f8fa',
+  backgroundColor: customColor || (theme.palette.mode === 'dark' ? '#394b59' : '#f5f8fa'),
   backgroundImage:
     theme.palette.mode === 'dark'
       ? 'linear-gradient(180deg,hsla(0,0%,100%,.05),hsla(0,0%,100%,0))'
@@ -19,17 +24,20 @@ const BpIcon = styled('span')(({ theme }) => ({
     outlineOffset: 2,
   },
   'input:hover ~ &': {
-    backgroundColor: theme.palette.mode === 'dark' ? '#30404d' : '#ebf1f5',
+    backgroundColor: customColor || (theme.palette.mode === 'dark' ? '#30404d' : '#ebf1f5'),
   },
   'input:disabled ~ &': {
     boxShadow: 'none',
-    background:
-      theme.palette.mode === 'dark' ? 'rgba(57,75,89,.5)' : 'rgba(206,217,224,.5)',
+    background: customColor
+      ? `${customColor}80`
+      : theme.palette.mode === 'dark'
+      ? 'rgba(57,75,89,.5)'
+      : 'rgba(206,217,224,.5)',
   },
 }));
 
-const BpCheckedIcon = styled(BpIcon)({
-  backgroundColor: '#137cbd',
+const BpCheckedIcon = styled(BpIcon)<CustomIconProps>(({ customColor }) => ({
+  backgroundColor: customColor || '#137cbd',
   backgroundImage: 'linear-gradient(180deg,hsla(0,0%,100%,.1),hsla(0,0%,100%,0))',
   '&::before': {
     display: 'block',
@@ -42,12 +50,16 @@ const BpCheckedIcon = styled(BpIcon)({
     content: '""',
   },
   'input:hover ~ &': {
-    backgroundColor: '#106ba3',
+    backgroundColor: customColor || '#106ba3',
   },
-});
+}));
 
 // Inspired by blueprintjs
-export default function CustomColorCheckbox(props: CheckboxProps) {
+interface CustomColorCheckboxProps extends CheckboxProps {
+  customColor?: string;
+}
+
+const CustomColorCheckbox: React.FC<CustomColorCheckboxProps> = ({ customColor, ...props }) => {
   return (
     <Checkbox
       sx={{
@@ -55,10 +67,12 @@ export default function CustomColorCheckbox(props: CheckboxProps) {
       }}
       disableRipple
       color="default"
-      checkedIcon={<BpCheckedIcon />}
-      icon={<BpIcon />}
+      checkedIcon={<BpCheckedIcon customColor={customColor} />}
+      icon={<BpIcon customColor={customColor} />}
       inputProps={{ 'aria-label': 'Checkbox' }}
       {...props}
     />
   );
-}
+};
+
+export default CustomColorCheckbox;

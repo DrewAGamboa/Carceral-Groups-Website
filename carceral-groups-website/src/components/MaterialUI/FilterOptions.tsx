@@ -23,13 +23,13 @@ type filterOptionModel = {
   checked: boolean,
   indeterminate: boolean,
   geographicLocationFilter?: GeographicLocationFilter,
-  color: string
+  color?: string
 }
 
 const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filterOptionModel[] => {
   // add all option
   const newFilterOptions: filterOptionModel[] = []
-  const defaultOption: filterOptionModel = { prefix: '', label: 'All', level: 0, checked: true, indeterminate: false, color: '#f03' }
+  const defaultOption: filterOptionModel = { prefix: '', label: 'All', level: 0, checked: true, indeterminate: false}
   newFilterOptions.push(defaultOption)
 
   // add categories and institutions
@@ -44,14 +44,14 @@ const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filt
           level: 4,
           checked: true,
           indeterminate: false,
-          color: filter.color ? filter.color : '#f03',
+          color: filter.color,
           geographicLocationFilter: { Category: filter.category, Institution: curInstitution.institution, CategoryId: filter.categoryId, InstitutionId: curInstitution.institutionId }
         }
       })
       institionOptions.push(...possibleInstitutions)
     }
 
-    return { category: { prefix: ':All', label: filter.category, level: 2, checked: true, indeterminate: false, color: filter.color ? filter.color : '#f03' }, institutions: institionOptions }
+    return { category: { prefix: ':All', label: filter.category, level: 2, checked: true, indeterminate: false, color: filter.color }, institutions: institionOptions }
   })
 
 
@@ -151,6 +151,7 @@ export default function FilterOptions({ options, onOptionsChange }: FilterOption
               checked={option.checked}
               indeterminate={option.indeterminate}
               onChange={(e) => handleCheckboxChange(option, e.target.checked)} 
+              customColor={option.color}
             />
           }
         />
