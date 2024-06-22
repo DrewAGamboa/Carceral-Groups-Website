@@ -93,7 +93,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
             sx={{
                 '& .MuiTextField-root': { m: 1},
                 p: 2,
-                m:4,
+                m: 2,
             }}>
             <Typography
                 component="h1"
