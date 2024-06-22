@@ -5,11 +5,12 @@ import {
     redirect,
 } from "react-router-dom"
 import GeographicCategory from "../../../models/GeographicCategory";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Drawer, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import { createGeographicCategory, getGeographicCategorys } from "../../../api/services/GeographicCategoryService";
 import BasicTable from "../../MaterialUI/BasicTable";
 import Paper from '@mui/material/Paper';
+import { useState } from "react";
 
 export async function loader() {
     const geographicCategorys = await getGeographicCategorys();
@@ -27,7 +28,10 @@ const GeographicCategorys = () => {
     const tableRows = geographicCategorys
     const navigate = useNavigate();
 
+    const [open, setOpen] = useState(false);
+
     const handleTableClick = (rowId: string) => {
+        setOpen(true);
         navigate(`${rowId}`);
     }
 
@@ -57,7 +61,16 @@ const GeographicCategorys = () => {
                     <BasicTable tableHeaderInfo={tableHeaderInfo} rows={tableRows} handleTableRowClick={handleTableClick} />
                 </Box>
             </Paper>
-            <Outlet />
+            <Drawer
+                anchor="right"
+                open={open}
+                onClose={() => setOpen(false)}
+                sx={{
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: '25%' },
+                }}
+            >
+                <Outlet />
+            </Drawer>
         </>
     )
 }

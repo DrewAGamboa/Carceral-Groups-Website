@@ -1,4 +1,4 @@
-import { Box, Paper, TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import GeographicLocation from "../../../models/GeographicLocation";
 import { useEffect, useState } from "react";
 
@@ -36,11 +36,12 @@ const GeographicLocationForm = (props: GeographicLocationFormProps) => {
     }, [geographicLocation])
 
     return (
-        <Paper
+        <Box
             component="section"
             sx={{
                 '& .MuiTextField-root': { m: 1, width: '25ch' },
                 p: 2,
+                m: 2,
             }}>
             <Typography
                 component="h1"
@@ -88,7 +89,7 @@ const GeographicLocationForm = (props: GeographicLocationFormProps) => {
             >
                 {children}
             </Box>
-        </Paper>
+        </Box>
     )
 }
 

@@ -1,4 +1,4 @@
-import { Box, Paper, TextField, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import GeographicCategory from "../../../models/GeographicCategory";
 import { useEffect, useState } from "react";
 
@@ -25,11 +25,12 @@ const GeographicCategoryForm = (props: GeographicCategoryFormProps) => {
     }, [geographicCategory])
 
     return (
-        <Paper
+        <Box
             component="section"
             sx={{
                 '& .MuiTextField-root': { m: 1, width: '25ch' },
                 p: 2,
+                m: 2,
             }}>
             <Typography
                 component="h1"
@@ -57,7 +58,7 @@ const GeographicCategoryForm = (props: GeographicCategoryFormProps) => {
             >
                 {children}
             </Box>
-        </Paper>
+        </Box>
     )
 }
 
