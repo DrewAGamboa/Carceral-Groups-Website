@@ -10,9 +10,10 @@ import GeographicDocumentType from '../../models/GeographicDocumentType';
 
 type DetailsDrawerProps = {
   selectedMark?: GeographicLocation;
+  onDetailsClose: () => void;
 };
 
-export default function DetailsDrawer({ selectedMark: selectedLocation }: DetailsDrawerProps) {
+export default function DetailsDrawer({ selectedMark: selectedLocation, onDetailsClose }: DetailsDrawerProps) {
   const anchor = 'right'
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const [selectedGeographicLocation, setSelectedGeographicLocation] = useState<GeographicLocation | undefined>(undefined);
@@ -47,6 +48,7 @@ export default function DetailsDrawer({ selectedMark: selectedLocation }: Detail
           return;
         }
         setIsOpen(open);
+        onDetailsClose()
       };
 
   return (

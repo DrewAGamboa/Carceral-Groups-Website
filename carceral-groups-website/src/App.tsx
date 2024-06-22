@@ -22,7 +22,8 @@ function App() {
     selectedGeographicLocation,
     selectedGeoJSON,
     handleSelectedInstitutions,
-    handleOnGeographicLocationClick
+    handleOnGeographicLocationClick,
+    handleOnDetailsClose
   } = useLeafletMap()
 
   return (
@@ -32,7 +33,7 @@ function App() {
         geojson={selectedGeoJSON}
         onMarkerClick={handleOnGeographicLocationClick}
       />
-      <DetailsDrawer selectedMark={selectedGeographicLocation} />
+      <DetailsDrawer selectedMark={selectedGeographicLocation} onDetailsClose={handleOnDetailsClose} />
     </ThemeProvider>
   )
 }
