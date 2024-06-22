@@ -23,6 +23,10 @@ const useLeafletMap = () => {
     setSelectedGeographicLocation(newSelectedGeographicLocation)
   }
 
+  const handleOnDetailsClose = () => {
+    setSelectedGeographicLocation(undefined)
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,7 +88,8 @@ const useLeafletMap = () => {
     selectedGeoJSON,
     filterOptions,
     handleSelectedInstitutions,
-    handleOnGeographicLocationClick
+    handleOnGeographicLocationClick,
+    handleOnDetailsClose
   }
 }
 
