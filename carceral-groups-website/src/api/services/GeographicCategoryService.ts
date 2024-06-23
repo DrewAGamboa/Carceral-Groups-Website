@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import localforage from "localforage"
-import GeographicCategory, { DUMMY_GEOGRAPHIC_CATEGORY } from "../../models/GeographicCategory"
+import GeographicCategory from "../../models/GeographicCategory"
 
 const localForageKey = "geo-category"
+// defined in .env file
+const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
 export async function createGeographicCategory() {
     const id = Date.now().toString()
@@ -17,9 +19,16 @@ export async function createGeographicCategory() {
 }
 
 export async function getGeographicCategorys() {
-    let geographicCategorys = await localforage.getItem(localForageKey) as GeographicCategory[];
-    if (!geographicCategorys) geographicCategorys = DUMMY_GEOGRAPHIC_CATEGORY;
-    return geographicCategorys
+    try {
+        const response = await fetch(`${backend_api_url}/Category`)
+        const resJson = await response.json()
+        const geographicDocument = resJson as GeographicCategory[]
+        return geographicDocument
+    }
+    catch (error) {
+        console.error('Error fetching geographic categories:', error);
+        return [];
+    }
 }
 
 export async function getGeographicCategory(id: string) {
