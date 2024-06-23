@@ -7,6 +7,9 @@ import { LogLevel } from "@azure/msal-browser";
 
 // defined in .env file
 const clientId = import.meta.env.VITE_CLIENT_ID
+const tenantId = import.meta.env.VITE_TENANT_ID
+export const storageUrl = import.meta.env.VITE_AZURE_BLOB_STORAGE_URL
+export const credOptions = {tenantId, clientId}
 
 /**
  * Configuration object to be passed to MSAL instance on creation. 
@@ -59,7 +62,7 @@ export const msalConfig = {
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
 export const loginRequest = {
-    scopes: ["https://graph.microsoft.com/User.Read", ]
+    scopes: ["User.Read", ]
 };
 
 /**
