@@ -1,4 +1,4 @@
-import { DefaultAzureCredential, InteractiveBrowserCredential } from '@azure/identity';
+import { InteractiveBrowserCredential } from '@azure/identity';
 import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
 // import { DefaultAzureCredential } from '@azure/identity';
 
@@ -13,8 +13,7 @@ const containerName = import.meta.env.VITE_AZURE_BLOB_CONTAINER_NAME as string;
 
 const storageUrl = "https://carceralwebmapstorage.blob.core.windows.net"
 // const credential = undefined;
-export const getContainerClient = (token: string): ContainerClient => {
-    console.log("TODO_token_not_used", token)
+export const getContainerClient = (): ContainerClient => {
     const defaultAzureCredential = new InteractiveBrowserCredential({tenantId: "3db3bda0-d8a1-49ae-99ef-593fa0541a41", clientId: "25010531-d3d4-42ac-b87e-ee58843cdd08"});
     console.log("TODO_defaultAzureCredential", defaultAzureCredential)
     const blobServiceClient = new BlobServiceClient(storageUrl, defaultAzureCredential);
@@ -24,8 +23,8 @@ export const getContainerClient = (token: string): ContainerClient => {
     return containerClient
 };
 
-export const uploadFileToBlob = async (file: File, token: string): Promise<string> => {
-    const containerClient = getContainerClient(token);
+export const uploadFileToBlob = async (file: File): Promise<string> => {
+    const containerClient = getContainerClient();
     const blobName = file.name;
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
     console.log("TODO_uploadFileToBlob", containerClient, blockBlobClient, file)

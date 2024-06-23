@@ -35,7 +35,6 @@ import { action as geographicSubCategoryDestroyAction }  from './components/CRUD
 import GeographicDocumentCreate from './components/CRUD/GeographicDocument/GeographicDocumentCreate.tsx';
 
 
-// const msalInstance = new msal.PublicClientApplication(msalConfig);
 const msalInstance = await msal.createStandardPublicClientApplication(msalConfig);
 
 const router = createBrowserRouter([

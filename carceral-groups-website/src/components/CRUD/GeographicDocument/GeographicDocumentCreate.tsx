@@ -5,9 +5,6 @@ import GeographicDocumentForm from "./GeographicDocumentForm";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { FormEvent, useState } from "react";
 import GeographicDocument from "../../../models/GeographicDocument";
-import { useMsal } from "@azure/msal-react";
-import { blobStorageRequest } from "../../../authConfig";
-import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function action({ request }: any) {
@@ -36,7 +33,6 @@ const VisuallyHiddenInput = styled('input')({
 
 
 export default function GeographicDocumentCreate() {
-    const {instance, accounts} = useMsal();
     const navigate = useNavigate();
     const [uploadedFile, setUploadedFile] = useState(false);
     const [geographicDocument, setGeographicDocument] = useState({
@@ -55,9 +51,7 @@ export default function GeographicDocumentCreate() {
 
         // handle upload file
         try{
-            const response = await instance.acquireTokenSilent(blobStorageRequest);
-            const token = response.accessToken;
-            const documentUri = await uploadFile(newFile, token);
+            const documentUri = await uploadFile(newFile);
             const newDocument = {
                 ...geographicDocument,
                 geographicDocumentTitle: newFile.fileToUpload.name,
@@ -67,10 +61,7 @@ export default function GeographicDocumentCreate() {
             setUploadedFile(true);
         }
         catch (error) {
-            if (error instanceof InteractionRequiredAuthError) {
-                console.error("TODO_InteractionRequiredAuthError")
-                return instance.acquireTokenPopup(blobStorageRequest)
-            }
+            console.error("TODO_Error uploading file:", error);
             return;
         }
     }
