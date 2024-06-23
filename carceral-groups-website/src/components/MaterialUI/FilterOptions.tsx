@@ -5,7 +5,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useEffect, useState } from 'react';
 import FiltersResponseFilter from '../../models/FiltersResponseFilter';
 import GeographicLocationFilter from '../../models/GeographicLocationFilter';
-
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 
 
@@ -15,7 +16,7 @@ export interface FilterOptionsProps {
   onOptionsChange: (geographicLocationFilters: GeographicLocationFilter[]) => void;
 }
 
-type filterOptionModel = { 
+type filterOptionModel = {
   prefix: string,
   label: string,
   level: number,
@@ -27,7 +28,7 @@ type filterOptionModel = {
 const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filterOptionModel[] => {
   // add all option
   const newFilterOptions: filterOptionModel[] = []
-  const defaultOption: filterOptionModel = {prefix: '', label: 'All', level: 0, checked: true, indeterminate: false}
+  const defaultOption: filterOptionModel = { prefix: '', label: 'All', level: 0, checked: true, indeterminate: false }
   newFilterOptions.push(defaultOption)
 
   // add categories and institutions
@@ -42,15 +43,15 @@ const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filt
           level: 4,
           checked: true,
           indeterminate: false,
-          geographicLocationFilter: {Category: filter.category, Institution: curInstitution.institution, CategoryId: filter.categoryId,  InstitutionId: curInstitution.institutionId}
+          geographicLocationFilter: { Category: filter.category, Institution: curInstitution.institution, CategoryId: filter.categoryId, InstitutionId: curInstitution.institutionId }
         }
       })
       institionOptions.push(...possibleInstitutions)
     }
 
-    return {category: {prefix: ':All', label: filter.category, level: 2, checked: true, indeterminate: false}, institutions: institionOptions}
+    return { category: { prefix: ':All', label: filter.category, level: 2, checked: true, indeterminate: false }, institutions: institionOptions }
   })
-  
+
   categoryOptions.forEach((categoryOption) => {
     // add category as a filter option
     newFilterOptions.push(categoryOption.category)
@@ -60,7 +61,7 @@ const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filt
   return newFilterOptions
 }
 
-export default function FilterOptions({options, onOptionsChange}: FilterOptionsProps) {
+export default function FilterOptions({ options, onOptionsChange }: FilterOptionsProps) {
   const [filterOptions, setFilterOptions] = useState<filterOptionModel[]>([])
 
   useEffect(() => {
@@ -72,18 +73,18 @@ export default function FilterOptions({options, onOptionsChange}: FilterOptionsP
   const handleCheckboxChange = (option: filterOptionModel, isChecked: boolean) => {
     const updatedOptions = filterOptions.map((node) => {
       const prefix = `${option.prefix}:${option.label}`
-      if(option.label === 'All') {
-        return {...node, checked: isChecked}  
+      if (option.label === 'All') {
+        return { ...node, checked: isChecked }
       }
 
       // update the node
       if (node.label === option.label) {
-        return {...node, checked: isChecked} 
+        return { ...node, checked: isChecked }
       }
 
       // update all children
-      if(node.prefix === prefix) {
-        return {...node, checked: isChecked}
+      if (node.prefix === prefix) {
+        return { ...node, checked: isChecked }
       }
 
       return node;
@@ -91,25 +92,69 @@ export default function FilterOptions({options, onOptionsChange}: FilterOptionsP
     setFilterOptions(updatedOptions);
 
     const selectedOptions = updatedOptions.filter((option) => option.checked && option.geographicLocationFilter)
-    const selectedCategoryInstitutions: GeographicLocationFilter[] = [] 
+    const selectedCategoryInstitutions: GeographicLocationFilter[] = []
     selectedOptions.forEach((option) => {
-      if(option.geographicLocationFilter) {
+      if (option.geographicLocationFilter) {
         selectedCategoryInstitutions.push(option.geographicLocationFilter)
-      }})
+      }
+    })
     onOptionsChange(selectedCategoryInstitutions)
   };
 
-  // Render checkboxes recursively
-  const renderCheckboxes = filterOptions?.map((option: filterOptionModel, index) => {
+  const renderAccordionCheckboxes = (options: filterOptionModel[]) => {
+    const result = []
+    for (let i = 0; i < options.length; i++) {
+      const option = options[i]
+      if (option.level === 2) {
+        const parent = renderCheckbox(option, i)
+        const children = []
+        while (i + 1 < options.length && options[i + 1].level === 4) {
+          i += 1
+          children.push(renderCheckbox(options[i], i))
+        }
+
+        const accordion = (
+          <Accordion key={i}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel2-content"
+              id="panel2-header"
+            >
+              {parent}
+            </AccordionSummary>
+            <AccordionDetails>
+              {children}
+            </AccordionDetails>
+          </Accordion>
+        )
+        result.push(accordion)
+      }
+      else {
+        result.push(
+          renderCheckbox(option, i)
+        )
+      }
+    }
+    return result;
+  }
+
+  const renderCheckbox = (option: filterOptionModel, index: number) => {
     return (
       <Box key={index} sx={{ display: 'flex', flexDirection: 'column', ml: option.level, textAlign: 'left' }}>
         <FormControlLabel
           label={option.label}
-          control={<Checkbox checked={option.checked} indeterminate={option.indeterminate} onChange={(e) => handleCheckboxChange(option, e.target.checked)} />}
+          control={
+            <Checkbox
+              checked={option.checked}
+              indeterminate={option.indeterminate}
+              onChange={(e) => handleCheckboxChange(option, e.target.checked)}
+            />
+          }
         />
       </Box>
-    );
-  });
+    )
+  }
+  const renderCheckboxes = renderAccordionCheckboxes(filterOptions)
 
   return (
     <>
