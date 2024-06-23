@@ -4,7 +4,7 @@ import {
     Form,
     redirect,
 } from "react-router-dom"
-import GeographicCategory from "../../../models/GeographicCategory";
+import GeographicCategory, { primaryKeyName } from "../../../models/GeographicCategory";
 import { Box, Button, Drawer, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import { createGeographicCategory, getGeographicCategorys } from "../../../api/services/GeographicCategoryService";
@@ -19,7 +19,7 @@ export async function loader() {
 
 export async function action() {
     const geographicCategory = await createGeographicCategory();
-    return redirect(`/admin/geographicCategorys/${geographicCategory.id}/edit`);
+    return redirect(`/admin/geographicCategorys/${geographicCategory.categoryId}/edit`);
 }
 
 const GeographicCategorys = () => {
@@ -58,7 +58,7 @@ const GeographicCategorys = () => {
                     </Form>
                 </Box>
                 <Box sx={{ my: 2 }}>
-                    <BasicTable tableHeaderInfo={tableHeaderInfo} rows={tableRows} handleTableRowClick={handleTableClick} />
+                    <BasicTable tableHeaderInfo={tableHeaderInfo} rows={tableRows} primaryKeyName={primaryKeyName} handleTableRowClick={handleTableClick} />
                 </Box>
             </Paper>
             <Drawer

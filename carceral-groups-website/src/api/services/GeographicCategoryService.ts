@@ -7,9 +7,9 @@ const localForageKey = "geo-category"
 const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
 export async function createGeographicCategory() {
-    const id = Date.now().toString()
+    const id = Date.now()
     const newGeographicCategory = {
-        id: id,
+        categoryId: id,
         name: "New Category",
     }
     let geographicCategorys = await getGeographicCategorys();
@@ -34,7 +34,7 @@ export async function getGeographicCategorys() {
 export async function getGeographicCategory(id: string) {
     const geographicCategorys = await getGeographicCategorys();
     const geographicCategory = geographicCategorys.find(
-        geographicCategory => geographicCategory.id === id
+        geographicCategory => geographicCategory.categoryId === parseInt(id)
     );
     return geographicCategory ?? null;
 }
@@ -42,11 +42,11 @@ export async function getGeographicCategory(id: string) {
 export async function updateGeographicCategory(id: string, updates: any) {
     let geographicCategorys = await getGeographicCategorys();
     const geographicCategory = geographicCategorys.find(
-        geographicCategory => geographicCategory.id === id
+        geographicCategory => geographicCategory.categoryId === parseInt(id)
     );
     const updatedGeographicCategory = { ...geographicCategory, ...updates }
     geographicCategorys = geographicCategorys.map(
-        geographicCategory => geographicCategory.id === id ? updatedGeographicCategory : geographicCategory
+        geographicCategory => geographicCategory.categoryId === parseInt(id) ? updatedGeographicCategory : geographicCategory
     )
     await set(geographicCategorys);
     return updatedGeographicCategory;
@@ -55,7 +55,7 @@ export async function updateGeographicCategory(id: string, updates: any) {
 export async function deleteGeographicCategory(id: string) {
     let geographicCategorys = await getGeographicCategorys();
     const index = geographicCategorys.findIndex(
-        geographicCategory => geographicCategory.id === id
+        geographicCategory => geographicCategory.categoryId === parseInt(id)
     );
     if (index > -1) {
         geographicCategorys.splice(index, 1);

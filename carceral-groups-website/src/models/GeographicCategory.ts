@@ -1,24 +1,26 @@
 export const DUMMY_GEOGRAPHIC_CATEGORY: GeographicCategory[] = [
     {
-        id: "1",
+        categoryId: 1,
         name: "Federal",
     },
     {
-        id: "2",
+        categoryId: 2,
         name: "Media",
     },
     {
-        id: "3",
+        categoryId: 3,
         name: "Outside Community",
     },
     {
-        id: "4",
+        categoryId: 4,
         name: "State",
     }
 ]
 
+export const primaryKeyName = "categoryId"; // used in BasicTable.tsx
+
 type GeographicCategory = {
-    id: string,
+    categoryId: number,
     name: string
 }
 
