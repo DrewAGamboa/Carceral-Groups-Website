@@ -6,7 +6,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { FormEvent, useState } from "react";
 import GeographicDocument from "../../../models/GeographicDocument";
 import { useMsal } from "@azure/msal-react";
-import { loginRequest } from "../../../authConfig";
+import { blobStorageRequest } from "../../../authConfig";
+import { InteractionRequiredAuthError } from "@azure/msal-browser";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function action({ request }: any) {
@@ -54,10 +55,7 @@ export default function GeographicDocumentCreate() {
 
         // handle upload file
         try{
-            const response = await instance.acquireTokenSilent({
-                ...loginRequest,
-                account: accounts[0]
-              });
+            const response = await instance.acquireTokenSilent(blobStorageRequest);
             const token = response.accessToken;
             const documentUri = await uploadFile(newFile, token);
             const newDocument = {
@@ -69,7 +67,10 @@ export default function GeographicDocumentCreate() {
             setUploadedFile(true);
         }
         catch (error) {
-            // console.error("Error uploading file:", error, error.message);
+            if (error instanceof InteractionRequiredAuthError) {
+                console.error("TODO_InteractionRequiredAuthError")
+                return instance.acquireTokenPopup(blobStorageRequest)
+            }
             return;
         }
     }

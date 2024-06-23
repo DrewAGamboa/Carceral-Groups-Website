@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import App from './App.tsx'
-import { PublicClientApplication } from '@azure/msal-browser';
+import * as msal from '@azure/msal-browser';
 import { MsalProvider } from '@azure/msal-react';
 import { msalConfig } from './authConfig';
 import ErrorPage from './error-page.tsx';
@@ -35,7 +35,8 @@ import { action as geographicSubCategoryDestroyAction }  from './components/CRUD
 import GeographicDocumentCreate from './components/CRUD/GeographicDocument/GeographicDocumentCreate.tsx';
 
 
-const msalInstance = new PublicClientApplication(msalConfig);
+// const msalInstance = new msal.PublicClientApplication(msalConfig);
+const msalInstance = await msal.createStandardPublicClientApplication(msalConfig);
 
 const router = createBrowserRouter([
   {
