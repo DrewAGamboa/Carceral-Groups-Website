@@ -61,7 +61,7 @@ export default function GeographicDocumentCreate() {
             setUploadedFile(true);
         }
         catch (error) {
-            console.error("Error uploading file:", error);
+            console.error("TODO_Error uploading file:", error);
             return;
         }
     }

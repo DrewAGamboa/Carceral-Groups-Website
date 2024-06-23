@@ -13,10 +13,10 @@ export async function uploadFile(fileInfo: {fileToUpload: File}) {
     // get the URI of the uploaded file
     try {
         const url = await uploadFileToBlob(fileInfo.fileToUpload)
-        const sasTokenIndex = url.indexOf('?');
-        return url.substring(0, sasTokenIndex);
+        return url;
     } 
     catch (error) {
+        console.error("Error uploading file to Azure Blob Storage:", error);
         throw new Error("Error uploading file to Azure Blob Storage")
     }
 }
