@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import localforage from "localforage"
-import GeographicSubCategory, { DUMMY_GEOGRAPHIC_SUB_CATEGORY} from "../../models/GeographicSubCategory"
+import GeographicSubCategory from "../../models/GeographicSubCategory"
 
 const localForageKey = "geo-sub-category"
+// defined in .env file
+const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
 export async function createGeographicSubCategory() {
-    const id = Date.now().toString()
+    const id = Date.now()
     const newGeographicSubCategory = {
-        id: id,
+        institutionId: id,
         name: "New Sub Category",
     }
     let geographicSubCategorys = await getGeographicSubCategorys();
@@ -17,27 +19,40 @@ export async function createGeographicSubCategory() {
 }
 
 export async function getGeographicSubCategorys() {
-    let geographicSubCategorys = await localforage.getItem(localForageKey) as GeographicSubCategory[];
-    if (!geographicSubCategorys) geographicSubCategorys = DUMMY_GEOGRAPHIC_SUB_CATEGORY;
-    return geographicSubCategorys
+    try {
+        const response = await fetch(`${backend_api_url}/Institution`)
+        const resJson = await response.json()
+        const institutions = resJson as GeographicSubCategory[]
+        return institutions
+    }
+    catch (error) {
+        console.error('Error fetching institutions:', error);
+        return [];
+    }
 }
 
 export async function getGeographicSubCategory(id: string) {
-    const geographicSubCategorys = await getGeographicSubCategorys();
-    const geographicSubCategory = geographicSubCategorys.find(
-        geographicSubCategory => geographicSubCategory.id === id
-    );
-    return geographicSubCategory ?? null;
+    try {
+        const response = await fetch(`${backend_api_url}/Institution/${id}`)
+        const resJson = await response.json()
+        const institution = resJson as GeographicSubCategory
+        console.info('Get Response institution:', response, resJson)
+        return institution
+    }
+    catch (error) {
+        console.error('Error fetching institution:', error);
+        return null;
+    }
 }
 
 export async function updateGeographicSubCategory(id: string, updates: any) {
     let geographicSubCategorys = await getGeographicSubCategorys();
     const geographicSubCategory = geographicSubCategorys.find(
-        geographicSubCategory => geographicSubCategory.id === id
+        geographicSubCategory => geographicSubCategory.institutionId === parseInt(id)
     );
     const updatedGeographicSubCategory = { ...geographicSubCategory, ...updates }
     geographicSubCategorys = geographicSubCategorys.map(
-        geographicSubCategory => geographicSubCategory.id === id ? updatedGeographicSubCategory : geographicSubCategory
+        geographicSubCategory => geographicSubCategory.institutionId === parseInt(id) ? updatedGeographicSubCategory : geographicSubCategory
     )
     await set(geographicSubCategorys);
     return updatedGeographicSubCategory;
@@ -46,7 +61,7 @@ export async function updateGeographicSubCategory(id: string, updates: any) {
 export async function deleteGeographicSubCategory(id: string) {
     let geographicSubCategorys = await getGeographicSubCategorys();
     const index = geographicSubCategorys.findIndex(
-        geographicSubCategory => geographicSubCategory.id === id
+        geographicSubCategory => geographicSubCategory.institutionId === parseInt(id)
     );
     if (index > -1) {
         geographicSubCategorys.splice(index, 1);

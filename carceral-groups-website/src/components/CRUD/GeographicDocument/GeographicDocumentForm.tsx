@@ -29,7 +29,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
 
     const [geographicSubCategorys, setGeographicSubCategorys] = useState<readonly GeographicSubCategory[]>([]);
     const subCategoryMenuItems = geographicSubCategorys.map((subCategory: GeographicSubCategory) => {
-        return <MenuItem key={subCategory.id} value={subCategory.id}>{subCategory.name}</MenuItem>
+        return <MenuItem key={subCategory.institutionId} value={subCategory.institutionId}>{subCategory.name}</MenuItem>
     });
 
     const [inputDocumentTitle, setInputDocumentTitle] = useState<string>(geographicDocument.geographicDocumentTitle || '');
