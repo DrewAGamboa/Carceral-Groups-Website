@@ -17,7 +17,7 @@ type tableHeader = {
 
 type BasicTableProps = {
     tableHeaderInfo: tableHeader[];
-    primaryKeyName: string;
+    primaryKeyName?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rows: any[];
     handleTableRowClick: (rowId: string) => void;
