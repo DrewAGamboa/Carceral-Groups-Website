@@ -1,4 +1,4 @@
-export const DUMMY_GEOGRAPHIC_SUB_CATEGORY: GeographicSubCategory[] = [
+export const DUMMY_GEOGRAPHIC_SUB_CATEGORY: Institution[] = [
     { institutionId: 1, name: 'Daily Evergreen' },
     { institutionId: 2, name: 'Union Bulletin' },
     { institutionId: 3, name: 'Seattle Post Intelligencer' },
@@ -14,9 +14,9 @@ export const DUMMY_GEOGRAPHIC_SUB_CATEGORY: GeographicSubCategory[] = [
 
 export const primaryKeyName = "institutionId"; // used in BasicTable.tsx
 
-type GeographicSubCategory = {
+type Institution = {
     institutionId: number,
     name: string
 }
 
-export default GeographicSubCategory;
+export default Institution;

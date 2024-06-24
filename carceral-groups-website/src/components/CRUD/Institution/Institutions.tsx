@@ -4,28 +4,28 @@ import {
     Form,
     redirect,
 } from "react-router-dom"
-import GeographicSubCategory, { primaryKeyName }  from "../../../models/GeographicSubCategory";
+import Institution, { primaryKeyName }  from "../../../models/Institution";
 import { Box, Button, Drawer, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
-import { createGeographicSubCategory, getGeographicSubCategorys } from "../../../api/services/GeographicSubCategoryService";
+import { createInstitution, getInstitutions } from "../../../api/services/InstitutionService";
 import BasicTable from "../../MaterialUI/BasicTable";
 import Paper from '@mui/material/Paper';
 import { useState } from "react";
 
 export async function loader() {
-    const geographicSubCategorys = await getGeographicSubCategorys();
-    return { geographicSubCategorys }
+    const institutions = await getInstitutions();
+    return { institutions }
 }
 
 export async function action() {
-    const geographicSubCategory = await createGeographicSubCategory();
-    return redirect(`/admin/geographicSubCategorys/${geographicSubCategory.institutionId}/edit`);
+    const institution = await createInstitution();
+    return redirect(`/admin/institutions/${institution.institutionId}/edit`);
 }
 
-const GeographicSubCategorys = () => {
-    const { geographicSubCategorys } = useLoaderData() as { geographicSubCategorys: GeographicSubCategory[] };
-    const tableHeaderInfo = [{ name: "Id" }, { name: "Sub Category" }]
-    const tableRows = geographicSubCategorys
+const Institutions = () => {
+    const { institutions } = useLoaderData() as { institutions: Institution[] };
+    const tableHeaderInfo = [{ name: "Id" }, { name: "Institution" }]
+    const tableRows = institutions
     const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
@@ -47,7 +47,7 @@ const GeographicSubCategorys = () => {
                     noWrap
                     sx={{ flexGrow: 1 }}
                 >
-                    Sub Categories
+                    Institutions
                 </Typography>
                 <Box
                     display="flex"
@@ -75,4 +75,4 @@ const GeographicSubCategorys = () => {
     )
 }
 
-export default GeographicSubCategorys;
+export default Institutions;

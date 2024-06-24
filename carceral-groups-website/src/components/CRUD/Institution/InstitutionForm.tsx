@@ -1,18 +1,18 @@
 import { Box, TextField, Typography } from "@mui/material";
-import GeographicSubCategory from "../../../models/GeographicSubCategory";
+import Institution from "../../../models/Institution";
 import { useEffect, useState } from "react";
 
 
-type GeographicSubCategoryFormProps = {
-    geographicSubCategory: GeographicSubCategory
+type InstitutionFormProps = {
+    institution: Institution
     children?: React.ReactNode;
     isEdit?: boolean;
 }
 
-const GeographicSubCategoryForm = (props: GeographicSubCategoryFormProps) => {
-    const { geographicSubCategory, children, isEdit } = props;
+const InstitutionForm = (props: InstitutionFormProps) => {
+    const { institution, children, isEdit } = props;
 
-    const [inputName, setInputName] = useState<string>(geographicSubCategory.name || '');
+    const [inputName, setInputName] = useState<string>(institution.name || '');
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputName(event.target.value);
@@ -21,8 +21,8 @@ const GeographicSubCategoryForm = (props: GeographicSubCategoryFormProps) => {
     const textProps = isEdit ? { required: true } : { disabled: true };
 
     useEffect(() => {
-        setInputName(geographicSubCategory.name);
-    }, [geographicSubCategory])
+        setInputName(institution.name);
+    }, [institution])
 
     return (
         <Box
@@ -45,7 +45,7 @@ const GeographicSubCategoryForm = (props: GeographicSubCategoryFormProps) => {
                 margin="dense"
                 id="name"
                 name="name"
-                label="Sub Category Name"
+                label="Institution Name"
                 type="text"
                 value={inputName}
                 onChange={handleNameChange}
@@ -62,4 +62,4 @@ const GeographicSubCategoryForm = (props: GeographicSubCategoryFormProps) => {
     )
 }
 
-export default GeographicSubCategoryForm;
+export default InstitutionForm;

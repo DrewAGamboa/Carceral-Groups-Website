@@ -23,7 +23,7 @@ const GeographicDocuments = () => {
         { name: "Document URI" },
         { name: "Location" },
         { name: "Category" },
-        { name: "SubCategory" },
+        { name: "Institution" },
     ]
     const tableRows = geographicDocuments.map((geographicDocument) => {
         return {
@@ -32,7 +32,7 @@ const GeographicDocuments = () => {
             geographicDocumentUri: geographicDocument.geographicDocumentUri,
             fromGeographicLocationId: geographicDocument.fromGeographicLocationId,
             fromGeographicCategoryId: geographicDocument.fromGeographicCategoryId,
-            fromGeographicSubCategoryId: geographicDocument.fromGeographicSubCategoryId,
+            fromInstitutionId: geographicDocument.fromInstitutionId,
         }
     });
     const navigate = useNavigate();

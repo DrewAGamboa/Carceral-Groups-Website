@@ -28,10 +28,10 @@ import GeographicCategoryDetails, { loader as geographicCategoryLoader } from '.
 import GeographicCategoryEdit, { loader as geographicCategoryEditLoader, action as geographicCategoryEditAction } from './components/CRUD/GeographicCategory/GeographicCategoryEdit.tsx';
 import { action as geographicCategoryDestroyAction }  from './components/CRUD/GeographicCategory/GeographicCategoryDestroy.tsx';
 
-import GeographicSubCategorys, {loader as geographicSubCategorysLoader, action as geographicSubCategorysAction } from './components/CRUD/GeographicSubCategory/GeographicSubCategorys.tsx';
-import GeographicSubCategoryDetails, { loader as geographicSubCategoryLoader } from './components/CRUD/GeographicSubCategory/GeographicSubCategoryDetail.tsx';
-import GeographicSubCategoryEdit, { loader as geographicSubCategoryEditLoader, action as geographicSubCategoryEditAction } from './components/CRUD/GeographicSubCategory/GeographicSubCategoryEdit.tsx';
-import { action as geographicSubCategoryDestroyAction }  from './components/CRUD/GeographicSubCategory/GeographicSubCategoryDestroy.tsx';
+import Institutions, {loader as institutionsLoader, action as institutionsAction } from './components/CRUD/Institution/Institutions.tsx';
+import InstitutionDetails, { loader as institutionLoader } from './components/CRUD/Institution/InstitutionDetail.tsx';
+import InstitutionEdit, { loader as institutionEditLoader, action as institutionEditAction } from './components/CRUD/Institution/InstitutionEdit.tsx';
+import { action as institutionDestroyAction }  from './components/CRUD/Institution/InstitutionDestroy.tsx';
 import GeographicDocumentCreate from './components/CRUD/GeographicDocument/GeographicDocumentCreate.tsx';
 
 
@@ -122,25 +122,25 @@ const router = createBrowserRouter([
         ]
       },
       {
-        path: "geographicSubCategorys",
-        element: <GeographicSubCategorys/>,
-        loader: geographicSubCategorysLoader,
-        action: geographicSubCategorysAction,
+        path: "institutions",
+        element: <Institutions/>,
+        loader: institutionsLoader,
+        action: institutionsAction,
         children: [
           {
             path: ":id",
-            element: <GeographicSubCategoryDetails />,
-            loader: geographicSubCategoryLoader
+            element: <InstitutionDetails />,
+            loader: institutionLoader
           },
           {
             path: ":id/edit",
-            element: <GeographicSubCategoryEdit />,
-            loader: geographicSubCategoryEditLoader,
-            action: geographicSubCategoryEditAction,
+            element: <InstitutionEdit />,
+            loader: institutionEditLoader,
+            action: institutionEditAction,
           },
           {
             path: ":id/destroy",
-            action: geographicSubCategoryDestroyAction,
+            action: institutionDestroyAction,
           }
         ]
       }

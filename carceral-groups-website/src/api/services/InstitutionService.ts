@@ -1,28 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import localforage from "localforage"
-import GeographicSubCategory from "../../models/GeographicSubCategory"
+import Institution from "../../models/Institution"
 
 const localForageKey = "geo-sub-category"
 // defined in .env file
 const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
-export async function createGeographicSubCategory() {
+export async function createInstitution() {
     const id = Date.now()
     const newGeographicSubCategory = {
         institutionId: id,
-        name: "New Sub Category",
+        name: "New Institution",
     }
-    let geographicSubCategorys = await getGeographicSubCategorys();
+    let geographicSubCategorys = await getInstitutions();
     geographicSubCategorys = [newGeographicSubCategory, ...geographicSubCategorys]
     await set(geographicSubCategorys);
     return newGeographicSubCategory;
 }
 
-export async function getGeographicSubCategorys() {
+export async function getInstitutions() {
     try {
         const response = await fetch(`${backend_api_url}/Institution`)
         const resJson = await response.json()
-        const institutions = resJson as GeographicSubCategory[]
+        const institutions = resJson as Institution[]
         return institutions
     }
     catch (error) {
@@ -31,11 +31,11 @@ export async function getGeographicSubCategorys() {
     }
 }
 
-export async function getGeographicSubCategory(id: string) {
+export async function getInstitution(id: string) {
     try {
         const response = await fetch(`${backend_api_url}/Institution/${id}`)
         const resJson = await response.json()
-        const institution = resJson as GeographicSubCategory
+        const institution = resJson as Institution
         console.info('Get Response institution:', response, resJson)
         return institution
     }
@@ -45,8 +45,8 @@ export async function getGeographicSubCategory(id: string) {
     }
 }
 
-export async function updateGeographicSubCategory(id: string, updates: any) {
-    let geographicSubCategorys = await getGeographicSubCategorys();
+export async function updateInstitution(id: string, updates: any) {
+    let geographicSubCategorys = await getInstitutions();
     const geographicSubCategory = geographicSubCategorys.find(
         geographicSubCategory => geographicSubCategory.institutionId === parseInt(id)
     );
@@ -58,8 +58,8 @@ export async function updateGeographicSubCategory(id: string, updates: any) {
     return updatedGeographicSubCategory;
 }
 
-export async function deleteGeographicSubCategory(id: string) {
-    let geographicSubCategorys = await getGeographicSubCategorys();
+export async function deleteInstitution(id: string) {
+    let geographicSubCategorys = await getInstitutions();
     const index = geographicSubCategorys.findIndex(
         geographicSubCategory => geographicSubCategory.institutionId === parseInt(id)
     );
@@ -72,6 +72,6 @@ export async function deleteGeographicSubCategory(id: string) {
     return false;
 }
 
-function set(geographicSubCategorys: GeographicSubCategory[]) {
+function set(geographicSubCategorys: Institution[]) {
     return localforage.setItem(localForageKey, geographicSubCategorys);
 }

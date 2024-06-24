@@ -41,7 +41,7 @@ export default function GeographicDocumentCreate() {
         geographicDocumentUri: "",
         fromGeographicLocationId: undefined,
         fromGeographicCategoryId: undefined,
-        fromGeographicSubCategoryId: undefined
+        fromInstitutionId: undefined
     });
 
     const handleFileUploadSubmit = async (event: FormEvent<HTMLFormElement>) => {

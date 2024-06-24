@@ -22,7 +22,7 @@ type GeographicDocument = {
     geographicDocumentUri: string
     fromGeographicLocationId?: string
     fromGeographicCategoryId?: string
-    fromGeographicSubCategoryId?: string
+    fromInstitutionId?: string
 }
 
 export type DocumentListResponseItem = {
