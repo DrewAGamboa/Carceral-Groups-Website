@@ -17,13 +17,14 @@ type tableHeader = {
 
 type BasicTableProps = {
     tableHeaderInfo: tableHeader[];
+    primaryKeyName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     rows: any[];
     handleTableRowClick: (rowId: string) => void;
 }
 
 export default function BasicTable(props: BasicTableProps) {
-    const { tableHeaderInfo, rows, handleTableRowClick } = props;
+    const { tableHeaderInfo, primaryKeyName = "id", rows, handleTableRowClick } = props;
 
     const [selectedRow, setSelectedRow] = useState<string>('');
 
@@ -51,8 +52,8 @@ export default function BasicTable(props: BasicTableProps) {
                     {rows.map((row, index) => (
                         <TableRow
                             key={index}
-                            onClick={(event) => handleClick(event, row.id)}
-                            selected={isSelected(row.id)}
+                            onClick={(event) => handleClick(event, row[primaryKeyName].toString())}
+                            selected={isSelected(row[primaryKeyName].toString())}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             hover
                         >
