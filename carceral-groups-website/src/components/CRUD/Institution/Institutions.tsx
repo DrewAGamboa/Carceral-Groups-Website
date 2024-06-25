@@ -19,6 +19,9 @@ export async function loader() {
 
 export async function action() {
     const institution = await createInstitution();
+    if (institution === null) {
+        return redirect('/admin/institutions');
+    }
     return redirect(`/admin/institutions/${institution.institutionId}/edit`);
 }
 
