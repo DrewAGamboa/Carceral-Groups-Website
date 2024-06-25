@@ -10,12 +10,15 @@ namespace CarceralGroupsAPI
         [SetsRequiredMembers]
         public CommentCRUDModel(Comment comment)
         {
+            CommentId = comment.CommentId;
             FullName = comment.FullName;
             Email = comment.Email;
             CommentText = comment.CommentText;
             IsApproved = comment.IsApproved;
             DocumentId = comment.DocumentId;
         }
+
+        public int CommentId { get; set; }
 
         [StringLength(maximumLength: 128)]
         public required string FullName {get; set; }

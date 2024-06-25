@@ -34,6 +34,7 @@ import InstitutionEdit, { loader as institutionEditLoader, action as institution
 import { action as institutionDestroyAction }  from './components/CRUD/Institution/InstitutionDestroy.tsx';
 import GeographicDocumentCreate from './components/CRUD/GeographicDocument/GeographicDocumentCreate.tsx';
 
+import GeographicDocumentComments, { loader as commentsLoader } from './components/CRUD/GeographicDocumentComment/GeographicDocumentComments.tsx';
 
 const msalInstance = await msal.createStandardPublicClientApplication(msalConfig);
 
@@ -143,6 +144,11 @@ const router = createBrowserRouter([
             action: institutionDestroyAction,
           }
         ]
+      },
+      {
+        path: "comments",
+        element: <GeographicDocumentComments/>,
+        loader: commentsLoader,
       }
     ]
   }

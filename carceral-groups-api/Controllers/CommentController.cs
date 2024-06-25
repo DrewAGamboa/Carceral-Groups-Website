@@ -11,6 +11,23 @@ namespace carceral_groups_api.Controllers
     {
         private readonly AppDbContext _dbContext = dbContext;
 
+        [HttpGet("unapproved")]
+        public async Task<IActionResult?> GetAllUnapproved()
+        {
+            try
+            {
+                List<CommentCRUDModel> comments = await _dbContext.Comments.AsNoTracking()
+                    .Where(m => !m.IsApproved)
+                    .Select(m => new CommentCRUDModel(m))
+                    .ToListAsync();
+                return Ok(comments);
+            }
+            catch (Exception)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult?> Get(int id)
         {
