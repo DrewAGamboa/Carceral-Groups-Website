@@ -11,6 +11,20 @@ namespace carceral_groups_api.Controllers
     {
         private readonly AppDbContext _dbContext = dbContext;
 
+        [HttpGet]
+        public async Task<IActionResult?> GetAll()
+        {
+            try
+            {
+                List<DocumentType> documentTypes = await _dbContext.DocumentTypes.AsNoTracking().ToListAsync();
+                return Ok(documentTypes);
+            }
+            catch (Exception)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult?> Get(int id)
         {
