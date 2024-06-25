@@ -10,10 +10,13 @@ namespace CarceralGroupsAPI
         [SetsRequiredMembers]
         public GeographicLocationCRUDModel(GeographicLocation geographicLocation)
         {
+            GeographicLocationId = geographicLocation.GeographicLocationId;
             GeographicLocationName = geographicLocation.GeographicLocationName;
             Latitude = geographicLocation.Latitude;
             Longitude = geographicLocation.Longitude;
         }
+
+        public int GeographicLocationId { get; set; }
         
         [StringLength(maximumLength: 256)]
         public required string GeographicLocationName { get; set; }
