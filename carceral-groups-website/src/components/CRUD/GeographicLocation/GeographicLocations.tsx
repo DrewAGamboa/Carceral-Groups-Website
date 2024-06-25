@@ -4,7 +4,7 @@ import {
     Form,
     redirect,
 } from "react-router-dom"
-import GeographicLocation, { primaryKeyName } from "../../../models/GeographicLocation";
+import GeographicLocation from "../../../models/GeographicLocation";
 import { Box, Button, Drawer, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import { createGeographicLocation, getGeographicLocations } from "../../../api/services/GeographicLocationService";
