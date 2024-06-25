@@ -36,12 +36,12 @@ export default function GeographicDocumentCreate() {
     const navigate = useNavigate();
     const [uploadedFile, setUploadedFile] = useState(false);
     const [geographicDocument, setGeographicDocument] = useState({
-        geographicDocumentId: "",
-        geographicDocumentTitle: "",
-        geographicDocumentUri: "",
-        fromGeographicLocationId: undefined,
-        fromGeographicCategoryId: undefined,
-        fromInstitutionId: undefined
+        documentId: "",
+        documentTypeId: 0,
+        fileTypeId: 0,
+        categoryId: 0,
+        institutionId: 0,
+        geographicLocationId: 0,
     });
 
     const handleFileUploadSubmit = async (event: FormEvent<HTMLFormElement>) => {
