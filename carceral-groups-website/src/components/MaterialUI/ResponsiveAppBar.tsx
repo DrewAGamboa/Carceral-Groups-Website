@@ -19,7 +19,7 @@ const pages = [
     {name:'Geographic Location', link:'geographicLocations'},
     {name:'Documents', link:'geographicDocuments'},
     {name:'Category', link:'geographicCategorys'},
-    {name:'Sub Category', link:'geographicSubCategorys'},
+    {name:'Institution', link:'institutions'},
 ];
 
 type ResponsiveAppBarProps = {

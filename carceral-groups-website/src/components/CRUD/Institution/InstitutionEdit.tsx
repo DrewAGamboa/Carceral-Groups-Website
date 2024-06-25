@@ -1,30 +1,30 @@
 import { Form, useLoaderData, redirect, useNavigate, } from "react-router-dom";
-import GeographicSubCategory from "../../../models/GeographicSubCategory";
-import { getGeographicSubCategory, updateGeographicSubCategory } from "../../../api/services/GeographicSubCategoryService";
+import Institution from "../../../models/Institution";
+import { getInstitution, updateInstitution } from "../../../api/services/InstitutionService";
 import { Button, Stack } from "@mui/material";
-import GeographicSubCategoryForm from "./GeographicSubCategoryForm";
+import InstitutionForm from "./InstitutionForm";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function loader({ params }: any) {
-    const geographicSubCategory = await getGeographicSubCategory(params.id);
-    return { geographicSubCategory }
+    const institution = await getInstitution(params.id);
+    return { institution }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function action({ request, params }: any) {
     const formData = await request.formData();
     const updates = Object.fromEntries(formData);
-    await updateGeographicSubCategory(params.id, updates);
-    return redirect(`/admin/geographicSubCategorys/${params.id}`);
+    await updateInstitution(params.id, updates);
+    return redirect(`/admin/institutions/${params.id}`);
 }
 
-export default function GeographicSubCategoryEdit() {
-    const { geographicSubCategory } = useLoaderData() as { geographicSubCategory: GeographicSubCategory };
+export default function InstitutionEdit() {
+    const { institution } = useLoaderData() as { institution: Institution };
     const navigate = useNavigate();
 
     return (
-        <Form method="post" id="geographicSubCategory-form">
-            <GeographicSubCategoryForm geographicSubCategory={geographicSubCategory} isEdit>
+        <Form method="post" id="institution-form">
+            <InstitutionForm institution={institution} isEdit>
                 <Stack spacing={2} direction={"row"}>
                     <Button type="submit" variant="contained" color="success">Save</Button>
                     <Button
@@ -37,7 +37,7 @@ export default function GeographicSubCategoryEdit() {
                         Cancel
                     </Button>
                 </Stack>
-            </GeographicSubCategoryForm>
+            </InstitutionForm>
         </Form >
     );
 }

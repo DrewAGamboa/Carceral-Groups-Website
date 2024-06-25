@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { getGeographicLocations } from "../../../api/services/GeographicLocationService";
 import GeographicLocation from "../../../models/GeographicLocation";
 import GeographicCategory from "../../../models/GeographicCategory";
-import GeographicSubCategory from "../../../models/GeographicSubCategory";
+import Institution from "../../../models/Institution";
 import { getGeographicCategorys } from "../../../api/services/GeographicCategoryService";
-import { getGeographicSubCategorys } from "../../../api/services/GeographicSubCategoryService";
+import { getInstitutions } from "../../../api/services/InstitutionService";
 
 type GeographicDocumentFormProps = {
     geographicDocument: GeographicDocument
@@ -27,16 +27,16 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         return <MenuItem key={category.categoryId} value={category.categoryId}>{category.name}</MenuItem>
     });
 
-    const [geographicSubCategorys, setGeographicSubCategorys] = useState<readonly GeographicSubCategory[]>([]);
-    const subCategoryMenuItems = geographicSubCategorys.map((subCategory: GeographicSubCategory) => {
-        return <MenuItem key={subCategory.id} value={subCategory.id}>{subCategory.name}</MenuItem>
+    const [institutions, setInstitutions] = useState<readonly Institution[]>([]);
+    const institutionMenuItems = institutions.map((institution: Institution) => {
+        return <MenuItem key={institution.institutionId} value={institution.institutionId}>{institution.name}</MenuItem>
     });
 
     const [inputDocumentTitle, setInputDocumentTitle] = useState<string>(geographicDocument.geographicDocumentTitle || '');
     const [inputDocumentUri, setInputDocumentUri] = useState<string>(geographicDocument.geographicDocumentUri || '');
     const [inputFromLocationId, setInputFromLocationId] = useState<string>(geographicDocument.fromGeographicLocationId || '');
     const [inputFromCategoryId, setInputFromCategoryId] = useState<string>(geographicDocument.fromGeographicCategoryId || '');
-    const [inputFromSubCategoryId, setInputFromSubCategoryId] = useState<string>(geographicDocument.fromGeographicSubCategoryId || '');
+    const [inputFromInstitutionId, setInputFromInstitutionId] = useState<string>(geographicDocument.fromInstitutionId || '');
 
     const handleDocumentTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputDocumentTitle(event.target.value);
@@ -54,8 +54,8 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputFromCategoryId(event.target.value);
     }
 
-    const handleFormSubCategoryChange = (event: SelectChangeEvent) => {
-        setInputFromSubCategoryId(event.target.value);
+    const handleFormInstitutionChange = (event: SelectChangeEvent) => {
+        setInputFromInstitutionId(event.target.value);
     }
 
     const textProps = isEdit ? { required: true } : { disabled: true };
@@ -69,8 +69,8 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                 const categorys = await getGeographicCategorys();
                 setGeographicCategorys([...categorys]);
 
-                const subCategorys = await getGeographicSubCategorys();
-                setGeographicSubCategorys([...subCategorys]);
+                const institutions = await getInstitutions();
+                setInstitutions([...institutions]);
             }
             catch (error) {
                 console.error('Error fetching data:', error);
@@ -84,7 +84,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputDocumentUri(geographicDocument.geographicDocumentUri);
         setInputFromLocationId(geographicDocument.fromGeographicLocationId || '');
         setInputFromCategoryId(geographicDocument.fromGeographicCategoryId || '');
-        setInputFromSubCategoryId(geographicDocument.fromGeographicSubCategoryId || '');
+        setInputFromInstitutionId(geographicDocument.fromInstitutionId || '');
     }, [geographicDocument])
 
     return (
@@ -151,16 +151,16 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                 </Select>
             </FormControl>
             <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="fromGeographicSubCategoryId-select-label">SubCategory</InputLabel>
+                <InputLabel id="fromInstitutionId-select-label">Institution</InputLabel>
                 <Select
-                    id="fromGeographicSubCategoryId-select"
-                    name="fromGeographicSubCategoryId"
-                    label="SubCategory"
-                    value={inputFromSubCategoryId}
-                    onChange={handleFormSubCategoryChange}
+                    id="fromInstitutionId-select"
+                    name="fromInstitutionId"
+                    label="Institution"
+                    value={inputFromInstitutionId}
+                    onChange={handleFormInstitutionChange}
                     {...textProps}
                 >
-                    {subCategoryMenuItems}
+                    {institutionMenuItems}
                 </Select>
             </FormControl>
             <Box

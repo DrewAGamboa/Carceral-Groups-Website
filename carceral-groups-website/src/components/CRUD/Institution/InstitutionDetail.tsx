@@ -1,20 +1,20 @@
 import { Button, Stack } from "@mui/material";
 import { Form, useLoaderData } from "react-router-dom";
-import { getGeographicSubCategory } from "../../../api/services/GeographicSubCategoryService";
-import GeographicSubCategory from "../../../models/GeographicSubCategory";
-import GeographicSubCategoryForm from "./GeographicSubCategoryForm";
+import { getInstitution } from "../../../api/services/InstitutionService";
+import Institution from "../../../models/Institution";
+import InstitutionForm from "./InstitutionForm";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function loader({ params }: any) {
-    const geographicSubCategory = await getGeographicSubCategory(params.id);
-    return { geographicSubCategory }
+    const institution = await getInstitution(params.id);
+    return { institution }
 }
 
-const GeographicSubCategoryDetails = () => {
-    const { geographicSubCategory } = useLoaderData() as { geographicSubCategory: GeographicSubCategory };
+const InstitutionDetails = () => {
+    const { institution } = useLoaderData() as { institution: Institution };
 
     return (
-        <GeographicSubCategoryForm geographicSubCategory={geographicSubCategory}>
+        <InstitutionForm institution={institution}>
             <Stack spacing={2} direction={"row"}>
                 <Form action="edit">
                     <Button type="submit" variant="contained">Edit</Button>
@@ -35,8 +35,8 @@ const GeographicSubCategoryDetails = () => {
                     <Button type="submit" variant="contained" color="error">Delete</Button>
                 </Form>
             </Stack>
-        </GeographicSubCategoryForm>
+        </InstitutionForm>
     )
 }
 
-export default GeographicSubCategoryDetails;
+export default InstitutionDetails;
