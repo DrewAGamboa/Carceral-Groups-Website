@@ -1,14 +1,11 @@
 import {
-    Outlet,
     useLoaderData,
 } from "react-router-dom"
 import GeographicDocumentComment, { primaryKeyName } from "../../../models/GeographicDocumentComment";
-import { Box, Drawer, Typography } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
+import { Box, Typography } from "@mui/material";
 import { getUnapprovedComments } from "../../../api/services/GeographicDocumentCommentService";
 import BasicTable from "../../MaterialUI/BasicTable";
 import Paper from '@mui/material/Paper';
-import { useState } from "react";
 
 export async function loader() {
     const geographicDocumentComments = await getUnapprovedComments();
@@ -33,13 +30,9 @@ const GeographicDocumentComments = () => {
             documentId: geographicDocumentComment.documentId,
         }
     });
-    const navigate = useNavigate();
-
-    const [open, setOpen] = useState(false);
 
     const handleTableClick = (rowId: string) => {
-        setOpen(true);
-        navigate(`${rowId}`);
+        console.log("TODO: Approve Comment id ",rowId);
     }
 
     return (
@@ -60,16 +53,6 @@ const GeographicDocumentComments = () => {
                     <BasicTable tableHeaderInfo={tableHeaderInfo} rows={tableRows} primaryKeyName={primaryKeyName} handleTableRowClick={handleTableClick} />
                 </Box>
             </Paper>
-            <Drawer
-                anchor="right"
-                open={open}
-                onClose={() => setOpen(false)}
-                sx={{
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: '25%' },
-                }}
-            >
-                <Outlet />
-            </Drawer>
         </>
     )
 }
