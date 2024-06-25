@@ -39,11 +39,17 @@ export async function getGeographicCategorys() {
 }
 
 export async function getGeographicCategory(id: string) {
-    const geographicCategorys = await getGeographicCategorys();
-    const geographicCategory = geographicCategorys.find(
-        geographicCategory => geographicCategory.categoryId === parseInt(id)
-    );
-    return geographicCategory ?? null;
+    try {
+        const response = await fetch(`${backend_api_url}/Category/${id}`)
+        const resJson = await response.json()
+        const category = resJson as GeographicCategory
+        console.info('Get Response category:', response, resJson)
+        return category
+    }
+    catch (error) {
+        console.error('Error fetching category:', error);
+        return null;
+    }
 }
 
 export async function updateGeographicCategory(id: string, updates: any) {
