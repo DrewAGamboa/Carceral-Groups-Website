@@ -10,6 +10,7 @@ namespace CarceralGroupsAPI
         [SetsRequiredMembers]
         public DocumentCRUDModel(Document document)
         {
+            DocumentId = document.DocumentId;
             DocumentTitle = document.DocumentTitle;
             FileTitle = document.FileTitle;
             URI = document.URI;
@@ -20,6 +21,8 @@ namespace CarceralGroupsAPI
             InstitutionId = document.InstitutionId;
             GeographicLocationId = document.GeographicLocationId;
         }
+
+        public int DocumentId { get; set; }
 
         [StringLength(maximumLength: 256)]
         public required string DocumentTitle { get; set; }

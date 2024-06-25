@@ -32,11 +32,11 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         return <MenuItem key={institution.institutionId} value={institution.institutionId}>{institution.name}</MenuItem>
     });
 
-    const [inputDocumentTitle, setInputDocumentTitle] = useState<string>(geographicDocument.geographicDocumentTitle || '');
-    const [inputDocumentUri, setInputDocumentUri] = useState<string>(geographicDocument.geographicDocumentUri || '');
-    const [inputFromLocationId, setInputFromLocationId] = useState<string>(geographicDocument.fromGeographicLocationId || '');
-    const [inputFromCategoryId, setInputFromCategoryId] = useState<string>(geographicDocument.fromGeographicCategoryId || '');
-    const [inputFromInstitutionId, setInputFromInstitutionId] = useState<string>(geographicDocument.fromInstitutionId || '');
+    const [inputDocumentTitle, setInputDocumentTitle] = useState<string>(geographicDocument.documentTitle || '');
+    const [inputDocumentUri, setInputDocumentUri] = useState<string>(geographicDocument.uri || '');
+    const [inputFromLocationId, setInputFromLocationId] = useState<number>(geographicDocument.geographicLocationId);
+    const [inputFromCategoryId, setInputFromCategoryId] = useState<number>(geographicDocument.categoryId);
+    const [inputFromInstitutionId, setInputFromInstitutionId] = useState<number>(geographicDocument.institutionId);
 
     const handleDocumentTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputDocumentTitle(event.target.value);
@@ -47,15 +47,18 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     }
 
     const handleFormLocationChange = (event: SelectChangeEvent) => {
-        setInputFromLocationId(event.target.value);
+        const newlocationId = parseInt(event.target.value);
+        setInputFromLocationId(newlocationId);
     }
 
     const handleFormCategoryChange = (event: SelectChangeEvent) => {
-        setInputFromCategoryId(event.target.value);
+        const newCategoryId = parseInt(event.target.value);
+        setInputFromCategoryId(newCategoryId);
     }
 
     const handleFormInstitutionChange = (event: SelectChangeEvent) => {
-        setInputFromInstitutionId(event.target.value);
+        const newInstitutionId = parseInt(event.target.value);
+        setInputFromInstitutionId(newInstitutionId);
     }
 
     const textProps = isEdit ? { required: true } : { disabled: true };
@@ -80,11 +83,11 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     }, [])
 
     useEffect(() => {
-        setInputDocumentTitle(geographicDocument.geographicDocumentTitle);
-        setInputDocumentUri(geographicDocument.geographicDocumentUri);
-        setInputFromLocationId(geographicDocument.fromGeographicLocationId || '');
-        setInputFromCategoryId(geographicDocument.fromGeographicCategoryId || '');
-        setInputFromInstitutionId(geographicDocument.fromInstitutionId || '');
+        setInputDocumentTitle(geographicDocument.documentTitle || '');
+        setInputDocumentUri(geographicDocument.uri || '');
+        setInputFromLocationId(geographicDocument.geographicLocationId);
+        setInputFromCategoryId(geographicDocument.categoryId);
+        setInputFromInstitutionId(geographicDocument.institutionId);
     }, [geographicDocument])
 
     return (
@@ -130,7 +133,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     id="fromGeographicLocationId-select"
                     name="fromGeographicLocationId"
                     label="Location"
-                    value={inputFromLocationId}
+                    value={inputFromLocationId.toString()}
                     onChange={handleFormLocationChange}
                     {...textProps}
                 >
@@ -143,7 +146,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     id="fromGeographicCategoryId-select"
                     name="fromGeographicCategoryId"
                     label="Category"
-                    value={inputFromCategoryId}
+                    value={inputFromCategoryId.toString()}
                     onChange={handleFormCategoryChange}
                     {...textProps}
                 >
@@ -156,7 +159,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     id="fromInstitutionId-select"
                     name="fromInstitutionId"
                     label="Institution"
-                    value={inputFromInstitutionId}
+                    value={inputFromInstitutionId.toString()}
                     onChange={handleFormInstitutionChange}
                     {...textProps}
                 >
