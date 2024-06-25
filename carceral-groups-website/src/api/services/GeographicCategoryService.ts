@@ -1,21 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import localforage from "localforage"
 import GeographicCategory from "../../models/GeographicCategory"
 
-const localForageKey = "geo-category"
 // defined in .env file
 const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
 export async function createGeographicCategory() {
-    const id = Date.now()
-    const newGeographicCategory = {
-        categoryId: id,
-        name: "New Category",
+    try {
+        const response = await fetch(`${backend_api_url}/Category`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(`New Category ${Date.now()}`) // TODO: Revisit this if category name is not the only field
+        
+        })
+        const resJson = await response.json()
+        const geographicDocument = resJson as GeographicCategory
+        console.info('Create Response:', response, geographicDocument)
+        return geographicDocument
     }
-    let geographicCategorys = await getGeographicCategorys();
-    geographicCategorys = [newGeographicCategory, ...geographicCategorys]
-    await set(geographicCategorys);
-    return newGeographicCategory;
+    catch (error) {
+        console.error('Error creating geographic category:', error);
+        return null;
+    }
 }
 
 export async function getGeographicCategorys() {
@@ -40,32 +47,35 @@ export async function getGeographicCategory(id: string) {
 }
 
 export async function updateGeographicCategory(id: string, updates: any) {
-    let geographicCategorys = await getGeographicCategorys();
-    const geographicCategory = geographicCategorys.find(
-        geographicCategory => geographicCategory.categoryId === parseInt(id)
-    );
-    const updatedGeographicCategory = { ...geographicCategory, ...updates }
-    geographicCategorys = geographicCategorys.map(
-        geographicCategory => geographicCategory.categoryId === parseInt(id) ? updatedGeographicCategory : geographicCategory
-    )
-    await set(geographicCategorys);
-    return updatedGeographicCategory;
+    try{
+        const response = await fetch(`${backend_api_url}/Category/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updates.name) // TODO: Revisit this if category name is not the only field
+        })
+        const resJson = await response.json()
+        const updatedGeographicCategory = resJson as GeographicCategory
+        console.info('Update Response:', response, updatedGeographicCategory)
+        return updatedGeographicCategory;
+    }
+    catch (error) {
+        console.error('Error updating geographic category:', error);
+        return null;
+    }
 }
 
 export async function deleteGeographicCategory(id: string) {
-    let geographicCategorys = await getGeographicCategorys();
-    const index = geographicCategorys.findIndex(
-        geographicCategory => geographicCategory.categoryId === parseInt(id)
-    );
-    if (index > -1) {
-        geographicCategorys.splice(index, 1);
-        geographicCategorys = [...geographicCategorys]
-        await set(geographicCategorys);
+    try {
+        const response = await fetch(`${backend_api_url}/Category/${id}`, {
+            method: 'DELETE',
+        })
+        console.info('Delete Response:', response)
         return true;
     }
-    return false;
-}
-
-function set(geographicCategorys: GeographicCategory[]) {
-    return localforage.setItem(localForageKey, geographicCategorys);
+    catch (error) {
+        console.error('Error deleting geographic category:', error);
+        return false;
+    }
 }

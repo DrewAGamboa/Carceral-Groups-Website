@@ -19,6 +19,9 @@ export async function loader() {
 
 export async function action() {
     const geographicCategory = await createGeographicCategory();
+    if (geographicCategory === null) {
+        return redirect('/admin/geographicCategorys');
+    }
     return redirect(`/admin/geographicCategorys/${geographicCategory.categoryId}/edit`);
 }
 
