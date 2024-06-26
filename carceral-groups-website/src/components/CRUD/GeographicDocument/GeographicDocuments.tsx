@@ -2,7 +2,7 @@ import {
     Outlet,
     useLoaderData,
 } from "react-router-dom"
-import GeographicDocument from "../../../models/GeographicDocument";
+import GeographicDocument, { primaryKeyName } from "../../../models/GeographicDocument";
 import { Box, Button, Drawer, Typography } from "@mui/material";
 import { useNavigate } from 'react-router-dom';
 import { getGeographicDocuments } from "../../../api/services/GeographicDocumentService";
@@ -20,21 +20,16 @@ const GeographicDocuments = () => {
     const tableHeaderInfo = [
         { name: "Id" },
         { name: "Document Title" },
-        { name: "Document URI" },
-        { name: "Location" },
+        { name: "File Title" },
+        { name: "URI" },
+        { name: "Citation" },
+        { name: "Document Type" },
+        { name: "File Type" },
         { name: "Category" },
         { name: "Institution" },
+        { name: "Location" },
     ]
-    const tableRows = geographicDocuments.map((geographicDocument) => {
-        return {
-            id: geographicDocument.geographicDocumentId,
-            geographicDocumentTitle: geographicDocument.geographicDocumentTitle,
-            geographicDocumentUri: geographicDocument.geographicDocumentUri,
-            fromGeographicLocationId: geographicDocument.fromGeographicLocationId,
-            fromGeographicCategoryId: geographicDocument.fromGeographicCategoryId,
-            fromInstitutionId: geographicDocument.fromInstitutionId,
-        }
-    });
+    const tableRows = geographicDocuments;
     const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
@@ -73,7 +68,7 @@ const GeographicDocuments = () => {
                     </Button>
                 </Box>
                 <Box sx={{ my: 2 }}>
-                    <BasicTable tableHeaderInfo={tableHeaderInfo} rows={tableRows} handleTableRowClick={handleTableClick} />
+                    <BasicTable tableHeaderInfo={tableHeaderInfo} rows={tableRows} primaryKeyName={primaryKeyName} handleTableRowClick={handleTableClick} />
                 </Box>
             </Paper>
             <Drawer

@@ -1,28 +1,52 @@
 export const DUMMY_GEO_DOCS: GeographicDocument[] = [
     {
-        geographicDocumentId: "1",
-        geographicDocumentTitle: "1969.05.05, Letter | Armando Mendoza to Tomas Ybarra Frausto",
-        geographicDocumentUri: "https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf",
+        documentId: "1",
+        documentTitle: "1969.05.05, Letter | Armando Mendoza to Tomas Ybarra Frausto",
+        uri: "https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf",
+        fileTitle: "",
+        documentTypeId: 0,
+        fileTypeId: 0,
+        categoryId: 0,
+        institutionId: 0,
+        geographicLocationId: 0
     },
     {
-        geographicDocumentId: "2",
-        geographicDocumentTitle: "1969.09.14, Photograph(s) | Unidentified Meeting",
-        geographicDocumentUri: "https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf",
+        documentId: "2",
+        documentTitle: "1969.09.14, Photograph(s) | Unidentified Meeting",
+        uri: "https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf",
+        fileTitle: "",
+        documentTypeId: 0,
+        fileTypeId: 0,
+        categoryId: 0,
+        institutionId: 0,
+        geographicLocationId: 0
     },
     {
-        geographicDocumentId: "3",
-        geographicDocumentTitle: "2024.02.19, Ralph Dunuan 1",
-        geographicDocumentUri: "https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf",
+        documentId: "3",
+        documentTitle: "2024.02.19, Ralph Dunuan 1",
+        uri: "https://vialekhnstore.blob.core.windows.net/documents/All/Federal/Mexican American Self Help (MASH)/1971.07.21_Arellano Contribution MASH Pinto Fund.pdf",
+        fileTitle: "",
+        documentTypeId: 0,
+        fileTypeId: 0,
+        categoryId: 0,
+        institutionId: 0,
+        geographicLocationId: 0
     },
 ]
 
+export const primaryKeyName = "documentId"; // used in BasicTable.tsx
+
 type GeographicDocument = {
-    geographicDocumentId: string
-    geographicDocumentTitle: string
-    geographicDocumentUri: string
-    fromGeographicLocationId?: string
-    fromGeographicCategoryId?: string
-    fromInstitutionId?: string
+    documentId: string
+    documentTitle?: string
+    fileTitle?: string
+    uri?: string
+    citation?: string
+    documentTypeId: number
+    fileTypeId: number
+    categoryId: number
+    institutionId: number
+    geographicLocationId: number
 }
 
 export type DocumentListResponseItem = {
