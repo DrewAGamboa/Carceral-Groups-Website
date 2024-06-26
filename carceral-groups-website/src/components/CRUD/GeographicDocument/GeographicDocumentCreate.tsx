@@ -60,6 +60,7 @@ export default function GeographicDocumentCreate() {
             const newDocument: GeographicDocument = {
                 ...geographicDocument,
                 documentTitle: newFile.fileToUpload.name,
+                fileTitle: newFile.fileToUpload.name,
                 uri: documentUri
             };
             console.info("Finished Uploaded New Document:", newDocument);

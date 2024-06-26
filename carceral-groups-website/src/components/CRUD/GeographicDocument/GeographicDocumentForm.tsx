@@ -47,6 +47,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     });
 
     const [inputDocumentTitle, setInputDocumentTitle] = useState<string>(geographicDocument.documentTitle || '');
+    const [inputFileTitle, setInputFileTitle] = useState<string>(geographicDocument.fileTitle || '');
     const [inputDocumentUri, setInputDocumentUri] = useState<string>(geographicDocument.uri || '');
     const [inputDocumentCitation, setInputDocumentCitation] = useState<string>(geographicDocument.citation || '');
     const [inputFromDocumentTypeId, setInputFromDocumentTypeId] = useState<number>(geographicDocument.documentTypeId);
@@ -57,6 +58,10 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
 
     const handleDocumentTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputDocumentTitle(event.target.value);
+    }
+
+    const handleFileTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputFileTitle(event.target.value);
     }
 
     const handleDocumentUriChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -121,6 +126,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
 
     useEffect(() => {
         setInputDocumentTitle(geographicDocument.documentTitle || '');
+        setInputFileTitle(geographicDocument.fileTitle || '');
         setInputDocumentUri(geographicDocument.uri || '');
         setInputDocumentCitation(geographicDocument.citation || '');
         setInputFromDocumentTypeId(geographicDocument.documentTypeId);
@@ -155,6 +161,16 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                 type="text"
                 value={inputDocumentTitle}
                 onChange={handleDocumentTitleChange}
+                {...textProps}
+            />
+            <TextField
+                fullWidth
+                id="geographicFileTitle"
+                name="fileTitle"
+                label="File Title"
+                type="text"
+                value={inputFileTitle}
+                onChange={handleFileTitleChange}
                 {...textProps}
             />
             <TextField
