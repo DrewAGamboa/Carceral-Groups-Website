@@ -8,8 +8,19 @@ const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
 const localForageKey = "geo-docs-comments"
 
+export async function getUnapprovedComments() {
+    try {
+        const response = await fetch(`${backend_api_url}/Comment/unapproved`)
+        const resJson = await response.json()
+        const geographicDocumentComments = resJson as GeographicDocumentComment[]
+        return geographicDocumentComments
+    }
+    catch (error) {
+        console.error('Error fetching unapproved comments:', error);
+        return [];
+    }
+}
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function createGeographicDocumentComment(newComment: GeographicDocumentComment) {
     try{
         const newGeographicDocumentComment = {...newComment}
