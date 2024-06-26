@@ -12,7 +12,11 @@ export async function action({ request }: any) {
     const newDocument = Object.fromEntries(formData) as GeographicDocument;
     try {
         const geographicDocument = await createGeographicDocument(newDocument);
-        return redirect(`/admin/geographicDocuments/${geographicDocument.geographicDocumentId}`);
+        if (!geographicDocument) {
+            console.log("Error creating geographic document")
+            return redirect('/admin/geographicDocuments');
+        }
+        return redirect(`/admin/geographicDocuments/${geographicDocument.documentId}`);
     } catch (error) {
         console.error("Error creating geographic document:", error);
         return redirect("/admin/geographicDocuments");
@@ -35,7 +39,7 @@ const VisuallyHiddenInput = styled('input')({
 export default function GeographicDocumentCreate() {
     const navigate = useNavigate();
     const [uploadedFile, setUploadedFile] = useState(false);
-    const [geographicDocument, setGeographicDocument] = useState({
+    const [geographicDocument, setGeographicDocument] = useState<GeographicDocument>({
         documentId: "",
         documentTypeId: 0,
         fileTypeId: 0,
@@ -51,17 +55,19 @@ export default function GeographicDocumentCreate() {
 
         // handle upload file
         try{
+            console.info("Start Uploading New Document:", newFile)
             const documentUri = await uploadFile(newFile);
-            const newDocument = {
+            const newDocument: GeographicDocument = {
                 ...geographicDocument,
-                geographicDocumentTitle: newFile.fileToUpload.name,
-                geographicDocumentUri: documentUri
+                documentTitle: newFile.fileToUpload.name,
+                uri: documentUri
             };
+            console.info("Finished Uploaded New Document:", newDocument);
             setGeographicDocument(newDocument);
             setUploadedFile(true);
         }
         catch (error) {
-            console.error("TODO_Error uploading file:", error);
+            console.error("Error uploading file:", error);
             return;
         }
     }

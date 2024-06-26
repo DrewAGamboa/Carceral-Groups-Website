@@ -48,6 +48,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
 
     const [inputDocumentTitle, setInputDocumentTitle] = useState<string>(geographicDocument.documentTitle || '');
     const [inputDocumentUri, setInputDocumentUri] = useState<string>(geographicDocument.uri || '');
+    const [inputDocumentCitation, setInputDocumentCitation] = useState<string>(geographicDocument.citation || '');
     const [inputFromDocumentTypeId, setInputFromDocumentTypeId] = useState<number>(geographicDocument.documentTypeId);
     const [inputFromFileTypeId, setInputFromFileTypeId] = useState<number>(geographicDocument.fileTypeId);
     const [inputFromLocationId, setInputFromLocationId] = useState<number>(geographicDocument.geographicLocationId);
@@ -60,6 +61,10 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
 
     const handleDocumentUriChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputDocumentUri(event.target.value);
+    }
+
+    const handleDocumentCitationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setInputDocumentCitation(event.target.value);
     }
 
     const handleFormDocumentTypeChange = (event: SelectChangeEvent) => {
@@ -117,9 +122,12 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     useEffect(() => {
         setInputDocumentTitle(geographicDocument.documentTitle || '');
         setInputDocumentUri(geographicDocument.uri || '');
-        setInputFromLocationId(geographicDocument.geographicLocationId);
+        setInputDocumentCitation(geographicDocument.citation || '');
+        setInputFromDocumentTypeId(geographicDocument.documentTypeId);
+        setInputFromFileTypeId(geographicDocument.fileTypeId);
         setInputFromCategoryId(geographicDocument.categoryId);
         setInputFromInstitutionId(geographicDocument.institutionId);
+        setInputFromLocationId(geographicDocument.geographicLocationId);
     }, [geographicDocument])
 
     return (
@@ -142,7 +150,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
             <TextField
                 fullWidth
                 id="geographicDocumentTitle"
-                name="geographicDocumentTitle"
+                name="documentTitle"
                 label="Document Title"
                 type="text"
                 value={inputDocumentTitle}
@@ -152,72 +160,82 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
             <TextField
                 fullWidth
                 id="geographicDocumentUri"
-                name="geographicDocumentUri"
+                name="uri"
                 label="Document Link"
                 type="text"
                 value={inputDocumentUri}
                 onChange={handleDocumentUriChange}
                 {...textProps}
             />
-            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
+            <TextField
+                fullWidth
+                id="geographicDocumentCitation"
+                name="citation"
+                label="Document Citation"
+                type="text"
+                value={inputDocumentCitation}
+                onChange={handleDocumentCitationChange}
+                {...textProps}
+            />
+            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }} {...textProps}>
                 <InputLabel id="fromDocumentTypeId-select-label">Document Type</InputLabel>
                 <Select
                     id="fromDocumentTypeId-select"
                     name="documentTypeId"
-                    label="DocumentType"
-                    value={inputFromDocumentTypeId.toString()}
+                    label="DocumentType *"
+                    value={inputFromDocumentTypeId < 1 ? undefined : inputFromDocumentTypeId.toString()}
                     onChange={handleFormDocumentTypeChange}
                     {...textProps}
                 >
                     {documentTypeMenuItems}
                 </Select>
             </FormControl>
-            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
+            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }} {...textProps}>
                 <InputLabel id="fromFileTypeId-select-label">File Type</InputLabel>
                 <Select
                     id="fromFileTypeId-select"
                     name="fileTypeId"
-                    label="FileType"
-                    value={inputFromFileTypeId.toString()}
+                    label="FileType *"
+                    value={inputFromFileTypeId < 1 ? undefined : inputFromFileTypeId.toString()}
                     onChange={handleFormFileTypeChange}
                     {...textProps}
                 >
                     {fileTypeMenuItems}
                 </Select>
             </FormControl>
-            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="fromGeographicCategoryId-select-label">Category</InputLabel>
+            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }} {...textProps}>
+                <InputLabel id="categoryId-select-label">Category</InputLabel>
                 <Select
-                    id="fromGeographicCategoryId-select"
-                    name="fromGeographicCategoryId"
-                    label="Category"
-                    value={inputFromCategoryId.toString()}
+                    id="categoryId-select"
+                    name="categoryId"
+                    label="Category *"
+                    value={inputFromCategoryId < 1 ? undefined : inputFromCategoryId.toString()}
                     onChange={handleFormCategoryChange}
                     {...textProps}
                 >
                     {categoryMenuItems}
                 </Select>
             </FormControl>
-            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="fromInstitutionId-select-label">Institution</InputLabel>
+            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }} {...textProps}>
+                <InputLabel id="institutionId-select-label">Institution</InputLabel>
                 <Select
-                    id="fromInstitutionId-select"
-                    name="fromInstitutionId"
-                    label="Institution"
-                    value={inputFromInstitutionId.toString()}
+                    id="institutionId-select"
+                    name="institutionId"
+                    label="Institution *"
+                    value={inputFromInstitutionId < 1 ? undefined : inputFromInstitutionId.toString()}
                     onChange={handleFormInstitutionChange}
                     {...textProps}
                 >
                     {institutionMenuItems}
                 </Select>
             </FormControl>
-            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="fromGeographicLocationId-select-label">Location</InputLabel>
+            <FormControl fullWidth sx={{ m: 1, minWidth: 120 }} {...textProps}>
+                <InputLabel id="geographicLocationId-select-label">Location</InputLabel>
                 <Select
-                    id="fromGeographicLocationId-select"
-                    name="fromGeographicLocationId"
-                    label="Location"
-                    value={inputFromLocationId.toString()}
+                    id="geographicLocationId-select"
+                    name="geographicLocationId"
+                    label="Location *"
+                    value={inputFromLocationId < 1 ? undefined : inputFromLocationId.toString()}
                     onChange={handleFormLocationChange}
                     {...textProps}
                 >

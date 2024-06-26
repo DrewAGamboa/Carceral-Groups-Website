@@ -25,15 +25,23 @@ export async function uploadFile(fileInfo: {fileToUpload: File}) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function createGeographicDocument(newDocument: GeographicDocument) {
-    const id = Date.now().toString()
-    const newGeographicDocument = {
-        ...newDocument,
-        geographicDocumentId: id,
+    try {
+        const response = await fetch(`${backend_api_url}/Document`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newDocument)
+        })
+        const resJson = await response.json()
+        const geographicDocument = resJson as GeographicDocument
+        console.info('Create Response:', response, geographicDocument)
+        return geographicDocument
     }
-    let geographicDocuments = await getGeographicDocuments();
-    geographicDocuments = [newGeographicDocument, ...geographicDocuments]
-    await set(geographicDocuments);
-    return newGeographicDocument;
+    catch (error) {
+        console.error('Error creating geographicDocument:', error);
+        return null;
+    }
 }
 
 export async function getGeographicDocuments() {
