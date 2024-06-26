@@ -65,7 +65,7 @@ const GeographicLocationForm = (props: GeographicLocationFormProps) => {
             <TextField
                 margin="dense"
                 id="latitude"
-                name="geographicLocationLat"
+                name="latitude"
                 label="Latitude"
                 type="text"
                 value={inputLatitude}
@@ -75,7 +75,7 @@ const GeographicLocationForm = (props: GeographicLocationFormProps) => {
             <TextField
                 margin="dense"
                 id="longitude"
-                name="geographicLocationLong"
+                name="longitude"
                 label="Longitude"
                 type="text"
                 value={inputLongitude}

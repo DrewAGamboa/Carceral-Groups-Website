@@ -19,7 +19,8 @@ const useLeafletMap = () => {
 
   const handleOnGeographicLocationClick = (geographicLocationId: string) => {
     console.log(`GeographicLocation was clicked!`, geographicLocationId)
-    const newSelectedGeographicLocation = selectedGeographicLocations.find((location) => location.geographicLocationId === geographicLocationId)
+    const parsedId = parseInt(geographicLocationId)
+    const newSelectedGeographicLocation = selectedGeographicLocations.find((location) => location.geographicLocationId === parsedId)
     setSelectedGeographicLocation(newSelectedGeographicLocation)
   }
 
