@@ -74,7 +74,7 @@ export async function updateGeographicLocation(id: string, updates: any) {
         return updatedGeographicLocation;
     }
     catch (error) {
-        console.error('Error updating institution:', error);
+        console.error('Error updating geographic location:', error);
         return null;
     }
 }
