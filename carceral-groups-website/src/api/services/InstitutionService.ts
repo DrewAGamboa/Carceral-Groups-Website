@@ -1,21 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import localforage from "localforage"
 import Institution from "../../models/Institution"
 
-const localForageKey = "geo-sub-category"
 // defined in .env file
 const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
 export async function createInstitution() {
-    const id = Date.now()
-    const newGeographicSubCategory = {
-        institutionId: id,
-        name: "New Institution",
+    try {
+        const response = await fetch(`${backend_api_url}/Institution`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(`New Institution ${Date.now()}`) // TODO: Revisit this if institution name is not the only field
+        })
+        const resJson = await response.json()
+        const institution = resJson as Institution
+        console.info('Create Response:', response, institution)
+        return institution
     }
-    let geographicSubCategorys = await getInstitutions();
-    geographicSubCategorys = [newGeographicSubCategory, ...geographicSubCategorys]
-    await set(geographicSubCategorys);
-    return newGeographicSubCategory;
+    catch (error) {
+        console.error('Error creating institution:', error);
+        return null;
+    }
 }
 
 export async function getInstitutions() {
@@ -46,32 +52,35 @@ export async function getInstitution(id: string) {
 }
 
 export async function updateInstitution(id: string, updates: any) {
-    let geographicSubCategorys = await getInstitutions();
-    const geographicSubCategory = geographicSubCategorys.find(
-        geographicSubCategory => geographicSubCategory.institutionId === parseInt(id)
-    );
-    const updatedGeographicSubCategory = { ...geographicSubCategory, ...updates }
-    geographicSubCategorys = geographicSubCategorys.map(
-        geographicSubCategory => geographicSubCategory.institutionId === parseInt(id) ? updatedGeographicSubCategory : geographicSubCategory
-    )
-    await set(geographicSubCategorys);
-    return updatedGeographicSubCategory;
+    try{
+        const response = await fetch(`${backend_api_url}/Institution/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updates.name) // TODO: Revisit this if category name is not the only field
+        })
+        const resJson = await response.json()
+        const updatedInstitution = resJson as Institution
+        console.info('Update Response:', response, updatedInstitution)
+        return updatedInstitution;
+    }
+    catch (error) {
+        console.error('Error updating institution:', error);
+        return null;
+    }
 }
 
 export async function deleteInstitution(id: string) {
-    let geographicSubCategorys = await getInstitutions();
-    const index = geographicSubCategorys.findIndex(
-        geographicSubCategory => geographicSubCategory.institutionId === parseInt(id)
-    );
-    if (index > -1) {
-        geographicSubCategorys.splice(index, 1);
-        geographicSubCategorys = [...geographicSubCategorys]
-        await set(geographicSubCategorys);
+    try {
+        const response = await fetch(`${backend_api_url}/Institution/${id}`, {
+            method: 'DELETE',
+        })
+        console.info('Delete Response:', response)
         return true;
     }
-    return false;
-}
-
-function set(geographicSubCategorys: Institution[]) {
-    return localforage.setItem(localForageKey, geographicSubCategorys);
+    catch (error) {
+        console.error('Error deleting institution:', error);
+        return false;
+    }
 }
