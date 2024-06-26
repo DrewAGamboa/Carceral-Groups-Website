@@ -11,6 +11,24 @@ namespace carceral_groups_api.Controllers
     {
         private readonly AppDbContext _dbContext = dbContext;
 
+        [HttpGet]
+        public async Task<IActionResult?> GetAll()
+        {
+            try
+            {
+                List<GeographicLocationCRUDModel> geographicLocations = await _dbContext.GeographicLocations.AsNoTracking()
+                    .Select(m => new GeographicLocationCRUDModel(m))
+                    .ToListAsync();
+
+                return Ok(geographicLocations);
+            }
+            catch (Exception)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
+            }
+        }
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult?> Get(int id)
         {

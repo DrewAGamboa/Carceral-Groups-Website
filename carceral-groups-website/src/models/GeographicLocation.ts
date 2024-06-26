@@ -19,6 +19,8 @@ export const DUMMY_GEO_LOCS: GeographicLocation[] = [
     }
 ]
 
+export const primaryKeyName = "geographicLocationId"; // used in BasicTable.tsx
+
 type GeographicLocation = {
     geographicLocationId: string
     geographicLocationName: string

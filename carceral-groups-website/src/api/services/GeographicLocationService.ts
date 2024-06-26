@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import localforage from "localforage"
-import GeographicLocation, { DUMMY_GEO_LOCS } from "../../models/GeographicLocation"
+import GeographicLocation from "../../models/GeographicLocation"
 
 const localForageKey = "geo-locs"
+// defined in .env file
+const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
 export async function createGeographicLocation() {
     const id = Date.now().toString()
@@ -19,17 +21,31 @@ export async function createGeographicLocation() {
 }
 
 export async function getGeographicLocations() {
-    let geographicLocations = await localforage.getItem(localForageKey) as GeographicLocation[];
-    if (!geographicLocations) geographicLocations = DUMMY_GEO_LOCS;
-    return geographicLocations
+    try {
+        const response = await fetch(`${backend_api_url}/GeographicLocation`)
+        const resJson = await response.json()
+        const geographicLocations = resJson as GeographicLocation[]
+        console.info('Get Response geographicLocations:', response, resJson)
+        return geographicLocations
+    }
+    catch (error) {
+        console.error('Error fetching geographicLocations:', error);
+        return [];
+    }
 }
 
 export async function getGeographicLocation(id: string) {
-    const geographicLocations = await getGeographicLocations();
-    const geographicLocation = geographicLocations.find(
-        geographicLocation => geographicLocation.geographicLocationId === id
-    );
-    return geographicLocation ?? null;
+    try {
+        const response = await fetch(`${backend_api_url}/GeographicLocation/${id}`)
+        const resJson = await response.json()
+        const geographicLocation = resJson as GeographicLocation
+        console.info('Get Response geographicLocation:', response, resJson)
+        return geographicLocation
+    }
+    catch (error) {
+        console.error('Error fetching geographicLocation:', error);
+        return null;
+    }
 }
 
 export async function updateGeographicLocation(id: string, updates: any) {

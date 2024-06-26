@@ -25,14 +25,7 @@ export async function action() {
 const GeographicLocations = () => {
     const { geographicLocations } = useLoaderData() as { geographicLocations: GeographicLocation[] };
     const tableHeaderInfo = [{ name: "Id" }, { name: "Name" }, { name: "Latitude" }, { name: "Long" }]
-    const tableRows = geographicLocations.map((geographicLocation) => {
-        return {
-            id: geographicLocation.geographicLocationId,
-            geographicLocationName: geographicLocation.geographicLocationName,
-            geographicLocationLat: geographicLocation.latitude,
-            geographicLocationLong: geographicLocation.longitude,
-        }
-    });
+    const tableRows = geographicLocations
     const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
@@ -65,7 +58,7 @@ const GeographicLocations = () => {
                     </Form>
                 </Box>
                 <Box sx={{ my: 2 }}>
-                    <BasicTable tableHeaderInfo={tableHeaderInfo} rows={tableRows} handleTableRowClick={handleTableClick} />
+                    <BasicTable tableHeaderInfo={tableHeaderInfo} rows={tableRows} primaryKeyName={"geographicLocationId"} handleTableRowClick={handleTableClick} />
                 </Box>
             </Paper>
             <Drawer
