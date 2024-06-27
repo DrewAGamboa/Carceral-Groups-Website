@@ -266,7 +266,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     {locationMenuItems}
                 </Select>
             </FormControl>
-            <MultipleSelectChip options={chipOptions} />
+            <MultipleSelectChip label={"To Geographic Locations"} options={chipOptions} />
             <Box
                 display="flex"
                 justifyContent={'flex-end'}

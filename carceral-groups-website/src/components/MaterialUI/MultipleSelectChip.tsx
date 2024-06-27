@@ -29,10 +29,11 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 }
 
 type MultipleSelectChipProps = {
+    label: string,
     options: { value: string; label: string }[];
 };
 
-export default function MultipleSelectChip({ options }: MultipleSelectChipProps) {
+export default function MultipleSelectChip({ label, options }: MultipleSelectChipProps) {
     const theme = useTheme();
     const [selectedLabel, setSelectedLabel] = React.useState<string[]>([]);
 
@@ -45,40 +46,40 @@ export default function MultipleSelectChip({ options }: MultipleSelectChipProps)
             // On autofill we get a stringified value.
             labels,
         );
+        const selectedValues = options.filter((option) => labels.includes(option.label))
+        console.log('TODO_1', labels, selectedValues)
 
     };
 
     return (
-        <div>
-            <FormControl sx={{ m: 1, width: 300 }}>
-                <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
-                <Select
-                    labelId="demo-multiple-chip-label"
-                    id="demo-multiple-chip"
-                    multiple
-                    value={selectedLabel}
-                    onChange={handleChange}
-                    input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                    renderValue={(selected) => (
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                            {selected.map((value) => (
-                                <Chip key={value} label={value} />
-                            ))}
-                        </Box>
-                    )}
-                    MenuProps={MenuProps}
-                >
-                    {options.map((name) => (
-                        <MenuItem
-                            key={name.value}
-                            value={name.label}
-                            style={getStyles(name.label, selectedLabel, theme)}
-                        >
-                            {name.label}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-        </div>
+        <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
+            <Select
+                labelId="demo-multiple-chip-label"
+                id="demo-multiple-chip"
+                multiple
+                value={selectedLabel}
+                onChange={handleChange}
+                input={<OutlinedInput id="select-multiple-chip" label={label} />}
+                renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((value) => (
+                            <Chip key={value} label={value} />
+                        ))}
+                    </Box>
+                )}
+                MenuProps={MenuProps}
+            >
+                {options.map((name) => (
+                    <MenuItem
+                        key={name.value}
+                        value={name.label}
+                        style={getStyles(name.label, selectedLabel, theme)}
+                    >
+                        {name.label}
+                    </MenuItem>
+                ))}
+            </Select>
+        </FormControl>
     );
 }
