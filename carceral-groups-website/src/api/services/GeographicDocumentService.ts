@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import localforage from "localforage"
 import GeographicDocument from "../../models/GeographicDocument"
 import { uploadFileToBlob } from "./AzureStorageService";
 
-const localForageKey = "geo-docs"
 
 // defined in .env file
 const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
@@ -25,15 +23,23 @@ export async function uploadFile(fileInfo: {fileToUpload: File}) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function createGeographicDocument(newDocument: GeographicDocument) {
-    const id = Date.now().toString()
-    const newGeographicDocument = {
-        ...newDocument,
-        geographicDocumentId: id,
+    try {
+        const response = await fetch(`${backend_api_url}/Document`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newDocument)
+        })
+        const resJson = await response.json()
+        const geographicDocument = resJson as GeographicDocument
+        console.info('Create Response:', response, geographicDocument)
+        return geographicDocument
     }
-    let geographicDocuments = await getGeographicDocuments();
-    geographicDocuments = [newGeographicDocument, ...geographicDocuments]
-    await set(geographicDocuments);
-    return newGeographicDocument;
+    catch (error) {
+        console.error('Error creating geographicDocument:', error);
+        return null;
+    }
 }
 
 export async function getGeographicDocuments() {
@@ -65,32 +71,35 @@ export async function getGeographicDocument(id: string) {
 }
 
 export async function updateGeographicDocument(id: string, updates: any) {
-    let geographicDocuments = await getGeographicDocuments();
-    const geographicDocument = geographicDocuments.find(
-        geographicDocument => geographicDocument.documentId === id
-    );
-    const updatedGeographicDocument = { ...geographicDocument, ...updates }
-    geographicDocuments = geographicDocuments.map(
-        geographicDocument => geographicDocument.documentId === id ? updatedGeographicDocument : geographicDocument
-    )
-    await set(geographicDocuments);
-    return updatedGeographicDocument;
+    try{
+        const response = await fetch(`${backend_api_url}/Document/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updates)
+        })
+        const resJson = await response.json()
+        const updatedGeographicDocument = resJson as GeographicDocument
+        console.info('Update Response:', response, updatedGeographicDocument)
+        return updatedGeographicDocument;
+    }
+    catch (error) {
+        console.error('Error updating geographic document:', error);
+        return null;
+    }
 }
 
 export async function deleteGeographicDocument(id: string) {
-    let geographicDocuments = await getGeographicDocuments();
-    const index = geographicDocuments.findIndex(
-        geographicDocument => geographicDocument.documentId === id
-    );
-    if (index > -1) {
-        geographicDocuments.splice(index, 1);
-        geographicDocuments = [...geographicDocuments]
-        await set(geographicDocuments);
+    try {
+        const response = await fetch(`${backend_api_url}/Document/${id}`, {
+            method: 'DELETE',
+        })
+        console.info('Delete Response:', response)
         return true;
     }
-    return false;
-}
-
-function set(geographicDocuments: GeographicDocument[]) {
-    return localforage.setItem(localForageKey, geographicDocuments);
+    catch (error) {
+        console.error('Error deleting geographic document:', error);
+        return false;
+    }
 }
