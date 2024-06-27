@@ -12,6 +12,7 @@ import { getDocumentTypes } from "../../../api/services/DocumentTypeService";
 import { getFileTypes } from "../../../api/services/FileTypeService";
 import GeographicDocumentType from "../../../models/GeographicDocumentType";
 import FileType from "../../../models/FileType";
+import MultipleSelectChip from "../../MaterialUI/MultipleSelectChip";
 
 type GeographicDocumentFormProps = {
     geographicDocument: GeographicDocument
@@ -136,6 +137,13 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputFromLocationId(geographicDocument.geographicLocationId);
     }, [geographicDocument])
 
+    const chipOptions = geographicLocations.map(loc => { 
+        return {
+            value: loc.geographicLocationId.toString(),
+            label: loc.geographicLocationName
+        }
+    });
+
     return (
         <Box
             component="section"
@@ -258,6 +266,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     {locationMenuItems}
                 </Select>
             </FormControl>
+            <MultipleSelectChip options={chipOptions} />
             <Box
                 display="flex"
                 justifyContent={'flex-end'}
