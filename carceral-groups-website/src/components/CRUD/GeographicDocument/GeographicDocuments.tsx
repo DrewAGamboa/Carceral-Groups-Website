@@ -1,6 +1,8 @@
 import {
     Outlet,
     useLoaderData,
+    useLocation,
+    useMatch,
 } from "react-router-dom"
 import GeographicDocument, { primaryKeyName } from "../../../models/GeographicDocument";
 import { Box, Button, Drawer, Typography } from "@mui/material";
@@ -8,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { getGeographicDocuments } from "../../../api/services/GeographicDocumentService";
 import BasicTable from "../../MaterialUI/BasicTable";
 import Paper from '@mui/material/Paper';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export async function loader() {
     const geographicDocuments = await getGeographicDocuments();
@@ -31,17 +33,25 @@ const GeographicDocuments = () => {
     ]
     const tableRows = geographicDocuments;
     const navigate = useNavigate();
+    const location = useLocation();
+    const match = useMatch("/admin/geographicDocuments/*");
 
     const [open, setOpen] = useState(false);
 
+    useEffect(() => {
+        // Check if the current location is a child of the parent path
+        if (match) {
+            setOpen(location.pathname !== match.pathnameBase);
+        } else {
+            setOpen(false);
+        }
+    }, [location, match]);
+
     const handleTableClick = (rowId: string) => {
-        setOpen(true);
         navigate(`${rowId}`);
     }
 
-
     const handleNewClick = () => {
-        setOpen(true);
         navigate(`new`);
     }
 
