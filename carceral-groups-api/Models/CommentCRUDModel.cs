@@ -16,6 +16,7 @@ namespace CarceralGroupsAPI
             CommentText = comment.CommentText;
             IsApproved = comment.IsApproved;
             DocumentId = comment.DocumentId;
+            DocumentTitle = comment.Document?.DocumentTitle ?? "";
         }
 
         public int CommentId { get; set; }
@@ -32,5 +33,7 @@ namespace CarceralGroupsAPI
         public required bool IsApproved { get; set; }
 
         public required int DocumentId { get; set; }
+
+        public string DocumentTitle { get; set; }
     }
 }

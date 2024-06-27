@@ -18,5 +18,7 @@ namespace CarceralGroupsAPI
         public required bool IsApproved {get; set; }
 
         public required int DocumentId { get; set; }
+
+        public Document? Document { get; set; }
     }
 }

@@ -16,7 +16,9 @@ namespace carceral_groups_api.Controllers
         {
             try
             {
-                List<CommentCRUDModel> comments = await _dbContext.Comments.AsNoTracking()
+                List<CommentCRUDModel> comments = await _dbContext.Comments
+                    .Include(m => m.Document)
+                    .AsNoTracking()
                     .Where(m => !m.IsApproved)
                     .Select(m => new CommentCRUDModel(m))
                     .ToListAsync();
