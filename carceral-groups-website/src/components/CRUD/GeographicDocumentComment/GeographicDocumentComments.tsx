@@ -7,6 +7,9 @@ import { Box, Typography } from "@mui/material";
 import { getUnapprovedComments, updateGeographicDocumentComment } from "../../../api/services/GeographicDocumentCommentService";
 import BasicTable from "../../MaterialUI/BasicTable";
 import Paper from '@mui/material/Paper';
+import { Link as RouterLink } from 'react-router-dom';
+import Link from '@mui/material/Link';
+
 
 export async function loader() {
     const geographicDocumentComments = await getUnapprovedComments();
@@ -23,6 +26,7 @@ const GeographicDocumentComments = () => {
         { name: "Email" },
         { name: "Comment" },
         { name: "Document" },
+        { name: "Document" },
     ]
     const tableRows = geographicDocumentComments.map((geographicDocumentComment) => {
         return {
@@ -31,6 +35,7 @@ const GeographicDocumentComments = () => {
             email: geographicDocumentComment.email,
             commentText: geographicDocumentComment.commentText,
             documentId: geographicDocumentComment.documentId,
+            documentTitle: <Link component={RouterLink} to={`/admin/geographicDocuments/${geographicDocumentComment.commentId}`}>{geographicDocumentComment.documentTitle ?? geographicDocumentComment.documentId}</Link>,
         }
     });
 
