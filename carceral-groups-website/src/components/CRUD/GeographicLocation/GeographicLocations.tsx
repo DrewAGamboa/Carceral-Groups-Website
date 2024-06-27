@@ -19,6 +19,10 @@ export async function loader() {
 
 export async function action() {
     const geographicLocation = await createGeographicLocation();
+    if (geographicLocation === null) {
+        console.error('Error creating geographicLocation');
+        return redirect('/admin/geographicLocations');
+    }
     return redirect(`/admin/geographicLocations/${geographicLocation.geographicLocationId}/edit`);
 }
 

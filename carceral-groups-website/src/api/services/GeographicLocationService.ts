@@ -1,23 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import localforage from "localforage"
 import GeographicLocation from "../../models/GeographicLocation"
 
-const localForageKey = "geo-locs"
 // defined in .env file
 const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
 export async function createGeographicLocation() {
-    const id = Date.now().toString()
-    const newGeographicLocation: GeographicLocation = {
-        geographicLocationId: id,
-        geographicLocationName: "A New Location",
-        latitude: "45",
-        longitude: "-120",
+    try {
+        const newGeographicLocation: GeographicLocation = {
+            geographicLocationId: -1,
+            geographicLocationName: `A New Location ${Date.now()}`,
+            latitude: "45",
+            longitude: "-120",
+        }
+
+        const response = await fetch(`${backend_api_url}/GeographicLocation`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newGeographicLocation)
+        })
+        const resJson = await response.json()
+        const geographicLocation = resJson as GeographicLocation
+        console.info('Create Response:', response, geographicLocation)
+        return geographicLocation
     }
-    let geographicLocations = await getGeographicLocations();
-    geographicLocations = [newGeographicLocation, ...geographicLocations]
-    await set(geographicLocations);
-    return newGeographicLocation;
+    catch (error) {
+        console.error('Error creating geographicLocation:', error);
+        return null;
+    }
 }
 
 export async function getGeographicLocations() {
@@ -49,32 +60,35 @@ export async function getGeographicLocation(id: string) {
 }
 
 export async function updateGeographicLocation(id: string, updates: any) {
-    let geographicLocations = await getGeographicLocations();
-    const geographicLocation = geographicLocations.find(
-        geographicLocation => geographicLocation.geographicLocationId === id
-    );
-    const updatedGeographicLocation = { ...geographicLocation, ...updates }
-    geographicLocations = geographicLocations.map(
-        geographicLocation => geographicLocation.geographicLocationId === id ? updatedGeographicLocation : geographicLocation
-    )
-    await set(geographicLocations);
-    return updatedGeographicLocation;
+    try{
+        const response = await fetch(`${backend_api_url}/GeographicLocation/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updates)
+        })
+        const resJson = await response.json()
+        const updatedGeographicLocation = resJson as GeographicLocation
+        console.info('Update Response:', response, updatedGeographicLocation)
+        return updatedGeographicLocation;
+    }
+    catch (error) {
+        console.error('Error updating geographic location:', error);
+        return null;
+    }
 }
 
 export async function deleteGeographicLocation(id: string) {
-    let geographicLocations = await getGeographicLocations();
-    const index = geographicLocations.findIndex(
-        geographicLocation => geographicLocation.geographicLocationId === id
-    );
-    if (index > -1) {
-        geographicLocations.splice(index, 1);
-        geographicLocations = [...geographicLocations]
-        await set(geographicLocations);
+    try {
+        const response = await fetch(`${backend_api_url}/GeographicLocation/${id}`, {
+            method: 'DELETE',
+        })
+        console.info('Delete Response:', response)
         return true;
     }
-    return false;
-}
-
-function set(geographicLocations: GeographicLocation[]) {
-    return localforage.setItem(localForageKey, geographicLocations);
+    catch (error) {
+        console.error('Error deleting geographic location:', error);
+        return false;
+    }
 }
