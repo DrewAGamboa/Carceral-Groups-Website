@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Theme, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -31,34 +30,32 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 type MultipleSelectChipProps = {
     label: string,
     options: { value: string; label: string }[];
+    selectedValue: { value: string; label: string }[];
+    onSelectValue: (selectedValues: { value: string; label: string }[]) => void;    
 };
 
-export default function MultipleSelectChip({ label, options }: MultipleSelectChipProps) {
+export default function MultipleSelectChip({ label, options, selectedValue, onSelectValue }: MultipleSelectChipProps) {
     const theme = useTheme();
-    const [selectedLabel, setSelectedLabel] = React.useState<string[]>([]);
+    const values = selectedValue.map((option) => option.label)
 
-    const handleChange = (event: SelectChangeEvent<typeof selectedLabel>) => {
+    const handleChange = (event: SelectChangeEvent<typeof values>) => {
         const {
             target: { value },
         } = event;
         const labels = typeof value === 'string' ? value.split(',') : value
-        setSelectedLabel(
-            // On autofill we get a stringified value.
-            labels,
-        );
         const selectedValues = options.filter((option) => labels.includes(option.label))
-        console.log('TODO_1', labels, selectedValues)
-
+        onSelectValue(selectedValues)
     };
+
 
     return (
         <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
+            <InputLabel id="multiple-chip-label">{label}</InputLabel>
             <Select
-                labelId="demo-multiple-chip-label"
-                id="demo-multiple-chip"
+                labelId="multiple-chip-label"
+                id="multiple-chip"
                 multiple
-                value={selectedLabel}
+                value={values}
                 onChange={handleChange}
                 input={<OutlinedInput id="select-multiple-chip" label={label} />}
                 renderValue={(selected) => (
@@ -74,7 +71,7 @@ export default function MultipleSelectChip({ label, options }: MultipleSelectChi
                     <MenuItem
                         key={name.value}
                         value={name.label}
-                        style={getStyles(name.label, selectedLabel, theme)}
+                        style={getStyles(name.label, values, theme)}
                     >
                         {name.label}
                     </MenuItem>

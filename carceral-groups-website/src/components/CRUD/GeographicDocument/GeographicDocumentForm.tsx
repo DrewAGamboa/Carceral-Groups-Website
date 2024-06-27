@@ -56,6 +56,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     const [inputFromLocationId, setInputFromLocationId] = useState<number>(geographicDocument.geographicLocationId);
     const [inputFromCategoryId, setInputFromCategoryId] = useState<number>(geographicDocument.categoryId);
     const [inputFromInstitutionId, setInputFromInstitutionId] = useState<number>(geographicDocument.institutionId);
+    const [inputToLocation, setInputToLocation] = useState<{ value: string; label: string }[]>([]);
 
     const handleDocumentTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputDocumentTitle(event.target.value);
@@ -96,6 +97,10 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     const handleFormInstitutionChange = (event: SelectChangeEvent) => {
         const newInstitutionId = parseInt(event.target.value);
         setInputFromInstitutionId(newInstitutionId);
+    }
+
+    const handleFormToLoctionChange = (selectedValues: { value: string; label: string }[]) => {
+        setInputToLocation(selectedValues);
     }
 
     const textProps = isEdit ? { required: true } : { disabled: true };
@@ -266,7 +271,12 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     {locationMenuItems}
                 </Select>
             </FormControl>
-            <MultipleSelectChip label={"To Geographic Locations"} options={chipOptions} />
+            <MultipleSelectChip 
+                label={"To Geographic Locations"}
+                selectedValue={inputToLocation}
+                options={chipOptions}
+                onSelectValue={handleFormToLoctionChange}
+            />
             <Box
                 display="flex"
                 justifyContent={'flex-end'}
