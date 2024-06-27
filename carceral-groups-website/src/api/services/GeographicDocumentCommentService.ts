@@ -61,16 +61,23 @@ export async function getGeographicDocumentComment(id: string) {
 }
 
 export async function updateGeographicDocumentComment(id: string, updates: any) {
-    let geographicDocumentComments = await localforage.getItem(localForageKey) as GeographicDocumentComment[];
-    const geographicDocumentComment = geographicDocumentComments.find(
-        geographicDocumentComment => geographicDocumentComment.commentId === id
-    );
-    const updatedGeographicDocumentComment = { ...geographicDocumentComment, ...updates }
-    geographicDocumentComments = geographicDocumentComments.map(
-        geographicDocumentComment => geographicDocumentComment.commentId === id ? updatedGeographicDocumentComment : geographicDocumentComment
-    )
-    await set(geographicDocumentComments);
-    return updatedGeographicDocumentComment;
+    try{
+        const response = await fetch(`${backend_api_url}/Comment/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updates)
+        })
+        const resJson = await response.json()
+        const updatedComment = resJson as GeographicDocumentComment
+        console.info('Update Response:', response, updatedComment)
+        return updatedComment;
+    }
+    catch (error) {
+        console.error('Error updating institution:', error);
+        return null;
+    }
 }
 
 export async function deleteGeographicDocumentComment(id: string) {

@@ -1,9 +1,10 @@
 import {
     useLoaderData,
+    useNavigate,
 } from "react-router-dom"
 import GeographicDocumentComment, { primaryKeyName } from "../../../models/GeographicDocumentComment";
 import { Box, Typography } from "@mui/material";
-import { getUnapprovedComments } from "../../../api/services/GeographicDocumentCommentService";
+import { getUnapprovedComments, updateGeographicDocumentComment } from "../../../api/services/GeographicDocumentCommentService";
 import BasicTable from "../../MaterialUI/BasicTable";
 import Paper from '@mui/material/Paper';
 
@@ -14,6 +15,8 @@ export async function loader() {
 
 const GeographicDocumentComments = () => {
     const { geographicDocumentComments } = useLoaderData() as { geographicDocumentComments: GeographicDocumentComment[] };
+    const navigate = useNavigate();
+
     const tableHeaderInfo = [
         { name: "Id" },
         { name: "Full Name" },
@@ -31,8 +34,21 @@ const GeographicDocumentComments = () => {
         }
     });
 
+    const approveComment = async (commentId: string) => {
+        const comment = geographicDocumentComments.find(comment => comment.commentId == commentId);
+        if(comment){
+            // Approve Comment
+            const updatedComment: GeographicDocumentComment = {...comment, isApproved: true }
+            // Update the comment in the backend
+            await updateGeographicDocumentComment(updatedComment.commentId, updatedComment);
+            navigate(".", { replace: true })
+        }
+    }
+
     const handleTableClick = (rowId: string) => {
-        console.log("TODO: Approve Comment id ",rowId);
+        if(confirm("Approve Comment?")){
+            approveComment(rowId);
+        }
     }
 
     return (
