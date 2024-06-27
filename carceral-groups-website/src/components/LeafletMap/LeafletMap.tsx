@@ -59,7 +59,7 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, onMarkerClick }) => {
           const style = {color: geoJsonPoint.properties.color, radius: 8, fillColor: geoJsonPoint.properties.color, fillOpacity: 0.8}
           return L.circleMarker(latlng, style)
         },
-        onEachFeature: (feature, layer) => {
+        onEachFeature: (feature: any, layer) => {
           if (feature.properties?.popupContent) {
             layer.bindPopup(feature.properties.popupContent);
             layer.on('mouseover', () => {
@@ -68,7 +68,13 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, onMarkerClick }) => {
             layer.on('click', ((event: LeafletMouseEvent) =>{
               handleOnMarkerClick(event, feature.properties.geographicLocationId);
               layer.openPopup();
-            }));
+            })); 
+            if(leafletHelperRef.current){
+              const map = leafletHelperRef.current.map
+              const origin = (feature.geometry as any).coordinates.map((coord: string) => parseFloat(coord));
+              console.log("TODO_1", feature.geometry, origin);
+              L.polyline([origin.reverse(), [45.34, -120.19]], {color: 'white', dashArray: '10, 10'}).addTo(map);
+            }
           }
         },
         filter: (feature) => {
