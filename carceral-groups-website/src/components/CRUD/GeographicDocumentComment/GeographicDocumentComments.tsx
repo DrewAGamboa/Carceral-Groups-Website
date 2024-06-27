@@ -26,7 +26,6 @@ const GeographicDocumentComments = () => {
         { name: "Email" },
         { name: "Comment" },
         { name: "Document" },
-        { name: "Document" },
     ]
     const tableRows = geographicDocumentComments.map((geographicDocumentComment) => {
         return {
@@ -34,8 +33,7 @@ const GeographicDocumentComments = () => {
             fullName: geographicDocumentComment.fullName,
             email: geographicDocumentComment.email,
             commentText: geographicDocumentComment.commentText,
-            documentId: geographicDocumentComment.documentId,
-            documentTitle: <Link component={RouterLink} to={`/admin/geographicDocuments/${geographicDocumentComment.commentId}`}>{geographicDocumentComment.documentTitle ?? geographicDocumentComment.documentId}</Link>,
+            documentTitle: <Link component={RouterLink} to={`/admin/geographicDocuments/${geographicDocumentComment.documentId}`}>{geographicDocumentComment.documentTitle ?? geographicDocumentComment.documentId}</Link>,
         }
     });
 
