@@ -28,13 +28,17 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
 }
 
 type MultipleSelectChipProps = {
+    name: string,
     label: string,
-    options: { value: string; label: string }[];
-    selectedValue: { value: string; label: string }[];
-    onSelectValue: (selectedValues: { value: string; label: string }[]) => void;    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options: { value: any; label: string }[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    selectedValue: { value: any; label: string }[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onSelectValue: (selectedValues: { value: any; label: string }[]) => void;    
 };
 
-export default function MultipleSelectChip({ label, options, selectedValue, onSelectValue }: MultipleSelectChipProps) {
+export default function MultipleSelectChip({ name, label, options, selectedValue, onSelectValue }: MultipleSelectChipProps) {
     const theme = useTheme();
     const values = selectedValue.map((option) => option.label)
 
@@ -54,6 +58,7 @@ export default function MultipleSelectChip({ label, options, selectedValue, onSe
             <Select
                 labelId="multiple-chip-label"
                 id="multiple-chip"
+                name={name}
                 multiple
                 value={values}
                 onChange={handleChange}

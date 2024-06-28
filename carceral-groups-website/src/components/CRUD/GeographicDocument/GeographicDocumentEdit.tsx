@@ -14,6 +14,7 @@ export async function loader({ params }: any) {
 export async function action({ request, params }: any) {
     const formData = await request.formData();
     const updates = Object.fromEntries(formData);
+    console.log("TODO_updates", updates)
     await updateGeographicDocument(params.id, updates);
     return redirect(`/admin/geographicDocuments/${params.id}`);
 }

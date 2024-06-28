@@ -47,6 +47,7 @@ type GeographicDocument = {
     categoryId: number
     institutionId: number
     geographicLocationId: number
+    toGeographicLocations?: number[]
 }
 
 export type DocumentListResponseItem = {
