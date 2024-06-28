@@ -7,6 +7,7 @@ type GeographicDocumentComment = {
     commentText: string
     isApproved: boolean
     documentId: string
+    documentTitle?: string
 }
 
 export default GeographicDocumentComment;

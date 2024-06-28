@@ -3,10 +3,13 @@ import {
     useNavigate,
 } from "react-router-dom"
 import GeographicDocumentComment, { primaryKeyName } from "../../../models/GeographicDocumentComment";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { getUnapprovedComments, updateGeographicDocumentComment } from "../../../api/services/GeographicDocumentCommentService";
 import BasicTable from "../../MaterialUI/BasicTable";
 import Paper from '@mui/material/Paper';
+import { Link as RouterLink } from 'react-router-dom';
+import Link from '@mui/material/Link';
+
 
 export async function loader() {
     const geographicDocumentComments = await getUnapprovedComments();
@@ -23,6 +26,7 @@ const GeographicDocumentComments = () => {
         { name: "Email" },
         { name: "Comment" },
         { name: "Document" },
+        { name: "" },
     ]
     const tableRows = geographicDocumentComments.map((geographicDocumentComment) => {
         return {
@@ -30,13 +34,14 @@ const GeographicDocumentComments = () => {
             fullName: geographicDocumentComment.fullName,
             email: geographicDocumentComment.email,
             commentText: geographicDocumentComment.commentText,
-            documentId: geographicDocumentComment.documentId,
+            documentTitle: <Link component={RouterLink} to={`/admin/geographicDocuments/${geographicDocumentComment.documentId}`}>{geographicDocumentComment.documentTitle ?? geographicDocumentComment.documentId}</Link>,
+            approve: <Button variant="contained" color="success" onClick={() => approveComment(geographicDocumentComment.commentId)}>Approve</Button>,
         }
     });
 
     const approveComment = async (commentId: string) => {
         const comment = geographicDocumentComments.find(comment => comment.commentId == commentId);
-        if(comment){
+        if(confirm("Approve Comment?") && comment){
             // Approve Comment
             const updatedComment: GeographicDocumentComment = {...comment, isApproved: true }
             // Update the comment in the backend
@@ -46,9 +51,7 @@ const GeographicDocumentComments = () => {
     }
 
     const handleTableClick = (rowId: string) => {
-        if(confirm("Approve Comment?")){
-            approveComment(rowId);
-        }
+        console.info('Row clicked:', rowId)
     }
 
     return (
