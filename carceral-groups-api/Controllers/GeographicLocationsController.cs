@@ -17,16 +17,22 @@ namespace carceral_groups_api.Controllers
         }
 
         [HttpPost]
-        public async Task<IEnumerable<GeographicLocation?>> Post(GeographicFilterRequest request)
+        public async Task<IEnumerable<GeographicLocationCRUDModel?>> Post(GeographicFilterRequest request)
         {
-            var query = _dbContext.Documents.AsQueryable();
-            var predicate = PredicateBuilder.New<Document>();
+            var query = _dbContext.LocationDocumentStats.AsQueryable();
+            var predicate = PredicateBuilder.New<LocationDocumentStat>();
 
             foreach(var item in request.Filters){
                 predicate = predicate.Or(m => m.CategoryId == item.CategoryId && m.InstitutionId == item.InstitutionId);
             }
 
-            return await query.Where(predicate).Select(m => m.GeographicLocation).Distinct().ToListAsync();
+            var result = await query
+                .Where(predicate)
+                .Where(m => m.DocumentCount > 0)
+                .Select(m => new GeographicLocationCRUDModel(m.GeographicLocation, m.Category))
+                .ToListAsync();
+            // TODO: only return the highest count locations
+            return result;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace CarceralGroupsAPI
         public DbSet<FileType> FileTypes { get; set; }
         public DbSet<GeographicLocation> GeographicLocations { get; set; }
         public DbSet<Institution> Institutions { get; set; }
+        public DbSet<LocationDocumentStat> LocationDocumentStats { get; set; }
 
         public AppDbContext() {}
 
