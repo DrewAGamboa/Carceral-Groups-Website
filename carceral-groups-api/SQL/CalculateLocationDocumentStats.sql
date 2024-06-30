@@ -1,3 +1,6 @@
+-- Summary: This script calculates the number of documents for each location and category and inserts the results into the LocationDocumentStats table.
+-- The script is intended to run to calculate all the statistics for all current documents in the database.
+
 BEGIN TRANSACTION;
 
 -- Step 1: Clear the LocationStat table

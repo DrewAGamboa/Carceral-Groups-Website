@@ -75,7 +75,7 @@ namespace carceral_groups_api.Controllers
                     GeographicLocationId = request.GeographicLocationId
                 };
 
-                // increment location stat
+                // increment location stat. TODO: refactor this into a method
                 var locationStat = await _dbContext.LocationDocumentStats.FirstOrDefaultAsync(m => m.GeographicLocationId == request.GeographicLocationId && m.CategoryId == request.CategoryId && m.InstitutionId == request.InstitutionId);
                 if (locationStat == null)
                 {
@@ -129,7 +129,7 @@ namespace carceral_groups_api.Controllers
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
             try{
-                // decrement previous location stat
+                // decrement previous location stat. TODO: refactor this into a method
                 var oldLocationStat = await _dbContext.LocationDocumentStats.FirstOrDefaultAsync(m => m.GeographicLocationId == document.GeographicLocationId && m.CategoryId == document.CategoryId && m.InstitutionId == document.InstitutionId);
                 if (oldLocationStat != null)
                 {
@@ -154,7 +154,7 @@ namespace carceral_groups_api.Controllers
                 document.InstitutionId = request.InstitutionId;
                 document.GeographicLocationId = request.GeographicLocationId;
 
-                // increment location stat
+                // increment location stat. TODO: refactor this into a method
                 var locationStat = await _dbContext.LocationDocumentStats.FirstOrDefaultAsync(m => m.GeographicLocationId == request.GeographicLocationId && m.CategoryId == request.CategoryId && m.InstitutionId == request.InstitutionId);
                 if (locationStat == null)
                 {
@@ -203,7 +203,7 @@ namespace carceral_groups_api.Controllers
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
             try{
-                // decrement previous location stat
+                // decrement previous location stat. TODO: refactor this into a method
                 var locationStat = await _dbContext.LocationDocumentStats.FirstOrDefaultAsync(m => m.GeographicLocationId == document.GeographicLocationId && m.CategoryId == document.CategoryId && m.InstitutionId == document.InstitutionId);
                 if (locationStat != null)
                 {
