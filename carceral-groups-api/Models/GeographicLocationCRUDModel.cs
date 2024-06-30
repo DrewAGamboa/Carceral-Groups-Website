@@ -17,13 +17,14 @@ namespace CarceralGroupsAPI
         }
 
         [SetsRequiredMembers]
-        public GeographicLocationCRUDModel(GeographicLocation geographicLocation, Category category)
+        public GeographicLocationCRUDModel(GeographicLocation geographicLocation, Category category, int documentCount)
         {
             GeographicLocationId = geographicLocation.GeographicLocationId;
             GeographicLocationName = geographicLocation.GeographicLocationName;
             Latitude = geographicLocation.Latitude;
             Longitude = geographicLocation.Longitude;
             Color = category?.Color;
+            DocumentCount = documentCount;
         }
 
         public int GeographicLocationId { get; set; }
@@ -37,6 +38,7 @@ namespace CarceralGroupsAPI
         [StringLength(maximumLength: 32)]
         public required string Longitude { get; set; }
 
+        public int DocumentCount { get; set; }
         public string? Color { get; set; }
     }
 }

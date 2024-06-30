@@ -29,9 +29,11 @@ namespace carceral_groups_api.Controllers
             var result = await query
                 .Where(predicate)
                 .Where(m => m.DocumentCount > 0)
-                .Select(m => new GeographicLocationCRUDModel(m.GeographicLocation, m.Category))
+                .Select(m => new GeographicLocationCRUDModel(m.GeographicLocation, m.Category, m.DocumentCount))
                 .ToListAsync();
-            // TODO: only return the highest count locations
+            result = result.GroupBy(m => m.GeographicLocationId)
+                .Select(m => m.OrderByDescending(n => n.DocumentCount).FirstOrDefault())
+                .ToList();
             return result;
         }
     }
