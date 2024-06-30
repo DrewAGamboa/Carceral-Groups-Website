@@ -23,6 +23,17 @@ namespace CarceralGroupsAPI
                 .HasKey(m => new { m.CategoryId, m.InstitutionId, m.GeographicLocationId });
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Document>()
+                .HasMany(e => e.ToGeographicLocations)
+                .WithMany()
+                .UsingEntity(
+                    l => l.HasOne(typeof(GeographicLocation)).WithMany().OnDelete(DeleteBehavior.ClientCascade),
+                    r => r.HasOne(typeof(Document)).WithMany().OnDelete(DeleteBehavior.ClientCascade)
+                );
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options) =>
         options.UseSqlServer(@"Server=tcp:carceral-webmap-mssql.database.windows.net,1433;Initial Catalog=carceral-webmap-db;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=""Active Directory Default"";");
     }
