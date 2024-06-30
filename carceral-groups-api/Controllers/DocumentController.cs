@@ -202,7 +202,7 @@ namespace carceral_groups_api.Controllers
             Document? document = null;
 
             try{
-                document = await _dbContext.Documents.FirstOrDefaultAsync(m => m.DocumentId == id);
+                document = await _dbContext.Documents.Include(m => m.ToGeographicLocations).FirstOrDefaultAsync(m => m.DocumentId == id);
                 if(document == null)
                     return NotFound();
             }
