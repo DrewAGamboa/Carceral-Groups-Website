@@ -14,9 +14,23 @@ export async function loader({ params }: any) {
 export async function action({ request, params }: any) {
     const formData = await request.formData();
     const updates = Object.fromEntries(formData);
-    console.log("TODO_updates", updates)
-    await updateGeographicDocument(params.id, updates);
+    const updatedGeographicDocument = formatFormDataToGeographicDocument(updates);
+    await updateGeographicDocument(params.id, updatedGeographicDocument);
     return redirect(`/admin/geographicDocuments/${params.id}`);
+}
+
+const newGeographicLocationWithJustId = (geographicLocationId: string) => ({ geographicLocationId, latitude: "", longitude: "", geographicLocationName: ""});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const formatFormDataToGeographicDocument = (geographicDocumentForm: any) => {
+    const toGeographicLocations = []
+    if(geographicDocumentForm.toGeographicLocations)
+    {
+        const geographicLocations = geographicDocumentForm.toGeographicLocations.split(",");
+        const toGeographicLocationFormatted = geographicLocations.map((geographicLocationId: string) => newGeographicLocationWithJustId(geographicLocationId));
+        toGeographicLocations.push(...toGeographicLocationFormatted)
+    }
+    return { ...geographicDocumentForm, toGeographicLocations };
 }
 
 export default function GeographicDocumentEdit() {

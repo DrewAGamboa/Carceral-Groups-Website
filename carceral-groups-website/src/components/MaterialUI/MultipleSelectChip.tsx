@@ -31,18 +31,19 @@ type MultipleSelectChipProps = {
     name: string,
     label: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    options: { value: any; label: string }[];
+    options: { value: string; label: string; original: any }[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    selectedValue: { value: any; label: string }[];
+    selectedValue: { value: string; label: string; original: any  }[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onSelectValue: (selectedValues: { value: any; label: string }[]) => void;    
+    onSelectValue: (selectedValues: { value: string; label: string; original: any }[]) => void;
+    disabled?: boolean;
 };
 
-export default function MultipleSelectChip({ name, label, options, selectedValue, onSelectValue }: MultipleSelectChipProps) {
+export default function MultipleSelectChip({ name, label, options, selectedValue, onSelectValue, disabled }: MultipleSelectChipProps) {
     const theme = useTheme();
-    const values = selectedValue.map((option) => option.label)
+    const labelValues = selectedValue.map((option) => option.label)
 
-    const handleChange = (event: SelectChangeEvent<typeof values>) => {
+    const handleChange = (event: SelectChangeEvent<typeof labelValues>) => {
         const {
             target: { value },
         } = event;
@@ -53,14 +54,14 @@ export default function MultipleSelectChip({ name, label, options, selectedValue
 
 
     return (
-        <FormControl fullWidth sx={{ m: 1, minWidth: 120 }}>
+        <FormControl fullWidth sx={{ m: 1, minWidth: 120 }} disabled={disabled}>
             <InputLabel id="multiple-chip-label">{label}</InputLabel>
             <Select
                 labelId="multiple-chip-label"
                 id="multiple-chip"
                 name={name}
                 multiple
-                value={values}
+                value={labelValues}
                 onChange={handleChange}
                 input={<OutlinedInput id="select-multiple-chip" label={label} />}
                 renderValue={(selected) => (
@@ -71,17 +72,19 @@ export default function MultipleSelectChip({ name, label, options, selectedValue
                     </Box>
                 )}
                 MenuProps={MenuProps}
+                disabled={disabled}
             >
                 {options.map((name) => (
                     <MenuItem
                         key={name.value}
                         value={name.label}
-                        style={getStyles(name.label, values, theme)}
+                        style={getStyles(name.label, labelValues, theme)}
                     >
                         {name.label}
                     </MenuItem>
                 ))}
             </Select>
+            <input type="hidden" name={name} value={selectedValue.map((option) => option.value)} />
         </FormControl>
     );
 }

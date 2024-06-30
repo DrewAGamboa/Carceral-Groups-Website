@@ -56,7 +56,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     const [inputFromLocationId, setInputFromLocationId] = useState<number>(geographicDocument.geographicLocationId);
     const [inputFromCategoryId, setInputFromCategoryId] = useState<number>(geographicDocument.categoryId);
     const [inputFromInstitutionId, setInputFromInstitutionId] = useState<number>(geographicDocument.institutionId);
-    const [inputToLocation, setInputToLocation] = useState<{ value: GeographicLocation; label: string }[]>([]);
+    const [inputToLocation, setInputToLocation] = useState<{ value: string; label: string, original: GeographicLocation }[]>([]);
 
     const handleDocumentTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputDocumentTitle(event.target.value);
@@ -99,7 +99,8 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputFromInstitutionId(newInstitutionId);
     }
 
-    const handleFormToLoctionChange = (selectedValues: { value: GeographicLocation; label: string }[]) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleFormToLoctionChange = (selectedValues: { value: string; label: string; original: GeographicLocation }[]) => {
         console.log("TODO_selectedValues", selectedValues)
         setInputToLocation(selectedValues);
     }
@@ -141,25 +142,21 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputFromCategoryId(geographicDocument.categoryId);
         setInputFromInstitutionId(geographicDocument.institutionId);
         setInputFromLocationId(geographicDocument.geographicLocationId);
-        const newLocs: {value: GeographicLocation, label: string}[] = [];
-        geographicDocument.toGeographicLocations?.map(locId => {
-            const loc = geographicLocations.find(loc => loc.geographicLocationId === locId);
-            if (!loc) {
-                return
+        const toLocations = geographicDocument.toGeographicLocations?.map(loc => {
+            return {
+                value: loc.geographicLocationId.toString(),
+                label: loc.geographicLocationName,
+                original: loc,
             }
-            newLocs.push({
-                value: loc,
-                label: loc.geographicLocationName
-            });
         })
-        
-        setInputToLocation(newLocs || []);
+        setInputToLocation(toLocations);
     }, [geographicDocument, geographicLocations])
 
     const chipOptions = geographicLocations.map(loc => { 
         return {
-            value: loc,
-            label: loc.geographicLocationName
+            value: loc.geographicLocationId.toString(),
+            label: loc.geographicLocationName,
+            original: loc,
         }
     });
 
@@ -286,11 +283,12 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                 </Select>
             </FormControl>
             <MultipleSelectChip
-                name={"toLocation"}
+                name={"toGeographicLocations"}
                 label={"To Geographic Locations"}
                 selectedValue={inputToLocation}
                 options={chipOptions}
                 onSelectValue={handleFormToLoctionChange}
+                {...textProps}
             />
             <Box
                 display="flex"
