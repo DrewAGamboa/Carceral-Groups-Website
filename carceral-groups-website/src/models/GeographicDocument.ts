@@ -52,6 +52,7 @@ type GeographicDocument = {
     categoryId: number
     institutionId: number
     geographicLocationId: number
+    geographicLocation?: GeographicLocation
     toGeographicLocations: GeographicLocation[]
 }
 

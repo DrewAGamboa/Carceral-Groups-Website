@@ -15,10 +15,11 @@ type LeafLetHelper = {
 
 type LeafletMapProps = {
   geojson?: any;
+  linesGeojson?: any;
   onMarkerClick: (geographicLocationId: string) => void;
 };
 
-const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, onMarkerClick }) => {
+const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, linesGeojson, onMarkerClick }) => {
   const leafletHelperRef = useRef<LeafLetHelper | null>(null);
 
   const handleOnMarkerClick = (_event: LeafletMouseEvent, geographicLocationId: string) => {
@@ -65,16 +66,10 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, onMarkerClick }) => {
             layer.on('mouseover', () => {
               layer.openPopup();
             });
-            layer.on('click', ((event: LeafletMouseEvent) =>{
+            layer.on('click', ((event: LeafletMouseEvent) => {
               handleOnMarkerClick(event, feature.properties.geographicLocationId);
               layer.openPopup();
-            })); 
-            if(leafletHelperRef.current){
-              const map = leafletHelperRef.current.map
-              const origin = (feature.geometry as any).coordinates.map((coord: string) => parseFloat(coord));
-              console.log("TODO_1", feature.geometry, origin);
-              L.polyline([origin.reverse(), [45.34, -120.19]], {color: 'white', dashArray: '10, 10'}).addTo(map);
-            }
+            }));
           }
         },
         filter: (feature) => {
@@ -85,6 +80,22 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, onMarkerClick }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [geojson]); // Re-run this effect if geojson prop changes
+
+
+  useEffect(() => {
+    const myStyle = { color: 'white', dashArray: '10, 10' }
+    const alreadyHasGeoJSON = leafletHelperRef.current?.groups.find(group => group.name === "LineGeoJSON");
+    if (leafletHelperRef.current && alreadyHasGeoJSON) {
+      leafletHelperRef.current.map.removeLayer(alreadyHasGeoJSON.group as L.LayerGroup);
+      leafletHelperRef.current.groups = leafletHelperRef.current.groups.filter(group => group.name !== "LineGeoJSON");
+    }
+    if (leafletHelperRef.current && linesGeojson) {
+      // Add GeoJSON layer
+      const geoJSON = L.geoJSON(linesGeojson, { style: myStyle }).addTo(leafletHelperRef.current.map);
+      leafletHelperRef.current.groups.push({ group: geoJSON, name: "LineGeoJSON" });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [linesGeojson]); // Re-run this effect if geojson prop changes
 
   return (
     <>

@@ -99,7 +99,6 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputFromInstitutionId(newInstitutionId);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleFormToLoctionChange = (selectedValues: { value: string; label: string; original: GeographicLocation }[]) => {
         console.log("TODO_selectedValues", selectedValues)
         setInputToLocation(selectedValues);

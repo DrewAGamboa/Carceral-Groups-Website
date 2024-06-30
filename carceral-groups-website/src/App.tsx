@@ -21,6 +21,7 @@ function App() {
     filterOptions,
     selectedGeographicLocation,
     selectedGeoJSON,
+    selectedLinesGeoJSON,
     handleSelectedInstitutions,
     handleOnGeographicLocationClick,
     handleOnDetailsClose
@@ -31,6 +32,7 @@ function App() {
       <MenuDrawer options={filterOptions} onOptionsChange={handleSelectedInstitutions} />
       <LeafletMap
         geojson={selectedGeoJSON}
+        linesGeojson={selectedLinesGeoJSON}
         onMarkerClick={handleOnGeographicLocationClick}
       />
       <DetailsDrawer selectedMark={selectedGeographicLocation} onDetailsClose={handleOnDetailsClose} />

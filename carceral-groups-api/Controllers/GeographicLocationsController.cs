@@ -45,5 +45,25 @@ namespace carceral_groups_api.Controllers
                 
             return result;
         }
+
+        [HttpPost("destinations")]
+        public async Task<IEnumerable<Document?>> PostDestinations(GeographicFilterRequest request)
+        {
+            var query = _dbContext.Documents.AsQueryable();
+            var predicate = PredicateBuilder.New<Document>();
+
+            foreach (var item in request.Filters)
+            {
+                predicate = predicate.Or(m => m.CategoryId == item.CategoryId && m.InstitutionId == item.InstitutionId);
+            }
+
+            var documents = await query.AsNoTracking()
+                .Where(predicate)
+                .Where(m => m.ToGeographicLocations.Count > 0)
+                .Include(m => m.GeographicLocation)
+                .Include(m => m.ToGeographicLocations)
+                .ToListAsync();
+            return documents;
+        }
     }
 }

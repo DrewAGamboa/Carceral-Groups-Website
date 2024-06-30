@@ -2,7 +2,7 @@
 import FiltersResponseFilter from '../../models/FiltersResponseFilter';
 import GeographicLocationFilter from '../../models/GeographicLocationFilter';
 import GeographicLocation from '../../models/GeographicLocation';
-import { DocumentListResponseItem } from '../../models/GeographicDocument';
+import GeographicDocument, { DocumentListResponseItem } from '../../models/GeographicDocument';
 import DocumentResponse from '../../models/DocumentResponse';
 import localforage from 'localforage';
 import GeographicDocumentType from '../../models/GeographicDocumentType';
@@ -151,6 +151,43 @@ export const getGeographicLocations = async (selectedGeographicLocationFilters: 
     }
     catch (error) {
         console.error('Error fetching geographic locations:', error);
+        return [];
+    }
+}
+
+/**
+ * Filters and returns geographic documents with destinations of where they traveled to.
+ * 
+ * API Call: POST /GeographicLocations/destinations
+ *
+ * @param {GeographicLocationFilter[]} selectedGeographicLocationFilters - An array of filter objects used to filter the geographic locations. Each filter object contains a `Category` and `Institution`.
+ * @returns {GeographicDocument[]} An array of geographic document objects that meet the filter criteria. Each object includes:
+ * - `DocumentId` {string} - The unique identifier for the document.
+ * - `ToGeographicLocations` {GeographicLocation[]} - An array of geographic locations that the document is associated with.
+ * - `GeographicLocation` {GeographicLocation} - The geographic location object containing latitude and longitude.
+ */
+export const getGeographicDocumentDestinations = async (selectedGeographicLocationFilters: GeographicLocationFilter[]) => {
+    if (selectedGeographicLocationFilters.length === 0) {
+        return [];
+    }
+    try {
+        const geographicFilterRequest = { filters: selectedGeographicLocationFilters }
+        const response = await fetch(`${backend_api_url}/geographiclocations/destinations`,
+            {
+                method: 'POST',
+                body: JSON.stringify(geographicFilterRequest),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        const geographicDocuments = await response.json() as GeographicDocument[];
+        console.info('Get Response geographiclocations/destinations:', response)
+        return geographicDocuments
+
+    }
+    catch (error) {
+        console.error('Error fetching geographic document destinations:', error);
         return [];
     }
 }
