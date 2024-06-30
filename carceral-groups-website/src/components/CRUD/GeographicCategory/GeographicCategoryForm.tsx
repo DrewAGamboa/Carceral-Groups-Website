@@ -1,7 +1,7 @@
 import { Box, TextField, Typography } from "@mui/material";
 import GeographicCategory from "../../../models/GeographicCategory";
 import { useEffect, useState } from "react";
-
+import { MuiColorInput } from 'mui-color-input'
 
 type GeographicCategoryFormProps = {
     geographicCategory: GeographicCategory
@@ -19,8 +19,8 @@ const GeographicCategoryForm = (props: GeographicCategoryFormProps) => {
         setInputName(event.target.value);
     }
 
-    const handleColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputColor(event.target.value);
+    const handleColorChange = (value: string) => {
+        setInputColor(value);
     }
 
     const textProps = isEdit ? { required: true } : { disabled: true };
@@ -59,15 +59,15 @@ const GeographicCategoryForm = (props: GeographicCategoryFormProps) => {
                 onChange={handleNameChange}
                 {...textProps}
             />
-            <TextField
+            <MuiColorInput
                 fullWidth
                 margin="dense"
                 id="color"
                 name="color"
-                label="Category Color"
-                type="text"
+                format="hex"
                 value={inputColor}
                 onChange={handleColorChange}
+                label="Category Color"
                 {...notRequiredTextProps}
             />
             <Box
