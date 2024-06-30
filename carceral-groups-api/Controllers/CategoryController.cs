@@ -80,7 +80,7 @@ namespace carceral_groups_api.Controllers
                 if(category == null)
                     return NotFound();
 
-                var categoryExists = _dbContext.Categories.Any(m => m.Name == request.Name);
+                var categoryExists = _dbContext.Categories.Any(m => m.Name == request.Name && m.CategoryId != id);
                 if(categoryExists)
                     return StatusCode((int)HttpStatusCode.Conflict, Messages.ResourceAlreadyExists);
             }

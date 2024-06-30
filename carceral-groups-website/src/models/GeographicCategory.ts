@@ -21,7 +21,8 @@ export const primaryKeyName = "categoryId"; // used in BasicTable.tsx
 
 type GeographicCategory = {
     categoryId: number,
-    name: string
+    name: string,
+    color?: string
 }
 
 export default GeographicCategory;
