@@ -13,7 +13,15 @@ namespace CarceralGroupsAPI
         public DbSet<Institution> Institutions { get; set; }
         public DbSet<LocationDocumentStat> LocationDocumentStats { get; set; }
 
-        public AppDbContext() {}
+        public AppDbContext() { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<LocationDocumentStat>()
+                .HasKey(m => new { m.CategoryId, m.InstitutionId, m.GeographicLocationId });
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options) =>
         options.UseSqlServer(@"Server=tcp:carceral-webmap-mssql.database.windows.net,1433;Initial Catalog=carceral-webmap-db;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=""Active Directory Default"";");

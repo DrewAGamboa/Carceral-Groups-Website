@@ -39,7 +39,7 @@ namespace carceral_groups_api.Controllers
 
                 if(document == null)
                     return NotFound(document);
-                
+
                 return Ok(document);
             }
             catch(Exception){
@@ -59,6 +59,9 @@ namespace carceral_groups_api.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
 
+            // https://learn.microsoft.com/en-us/ef/core/saving/transactions#controlling-transactions
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
             try{
                 var document = new Document{
                     DocumentTitle = request.DocumentTitle,
@@ -72,8 +75,30 @@ namespace carceral_groups_api.Controllers
                     GeographicLocationId = request.GeographicLocationId
                 };
 
+                // increment location stat
+                var locationStat = await _dbContext.LocationDocumentStats.FirstOrDefaultAsync(m => m.GeographicLocationId == request.GeographicLocationId && m.CategoryId == request.CategoryId && m.InstitutionId == request.InstitutionId);
+                if (locationStat == null)
+                {
+                    locationStat = new LocationDocumentStat
+                    {
+                        GeographicLocationId = request.GeographicLocationId,
+                        CategoryId = request.CategoryId,
+                        InstitutionId = request.InstitutionId,
+                        DocumentCount = 0,
+                        LastUpdated = DateTime.UtcNow
+                    };
+                    await _dbContext.LocationDocumentStats.AddAsync(locationStat);
+                    await _dbContext.SaveChangesAsync();
+                }
+                locationStat.DocumentCount++;
+                locationStat.LastUpdated = DateTime.UtcNow;
+                _dbContext.LocationDocumentStats.Update(locationStat);
+                await _dbContext.SaveChangesAsync();
+
                 await _dbContext.Documents.AddAsync(document);
                 await _dbContext.SaveChangesAsync();
+
+                transaction.Commit();
                 return Ok(new DocumentCreateResponse(document));
             }
             catch (Exception)
@@ -100,7 +125,25 @@ namespace carceral_groups_api.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
 
+            // https://learn.microsoft.com/en-us/ef/core/saving/transactions#controlling-transactions
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
             try{
+                // decrement previous location stat
+                var oldLocationStat = await _dbContext.LocationDocumentStats.FirstOrDefaultAsync(m => m.GeographicLocationId == document.GeographicLocationId && m.CategoryId == document.CategoryId && m.InstitutionId == document.InstitutionId);
+                if (oldLocationStat != null)
+                {
+                    oldLocationStat.DocumentCount--;
+                    oldLocationStat.LastUpdated = DateTime.UtcNow;
+                    _dbContext.LocationDocumentStats.Update(oldLocationStat);
+                    await _dbContext.SaveChangesAsync();
+                }
+                if (oldLocationStat != null && oldLocationStat.DocumentCount <= 0)
+                {
+                    _dbContext.LocationDocumentStats.Remove(oldLocationStat);
+                    await _dbContext.SaveChangesAsync();
+                }
+
                 document.DocumentTitle = request.DocumentTitle;
                 document.FileTitle = request.FileTitle;
                 document.URI = request.URI;
@@ -111,8 +154,30 @@ namespace carceral_groups_api.Controllers
                 document.InstitutionId = request.InstitutionId;
                 document.GeographicLocationId = request.GeographicLocationId;
 
+                // increment location stat
+                var locationStat = await _dbContext.LocationDocumentStats.FirstOrDefaultAsync(m => m.GeographicLocationId == request.GeographicLocationId && m.CategoryId == request.CategoryId && m.InstitutionId == request.InstitutionId);
+                if (locationStat == null)
+                {
+                    locationStat = new LocationDocumentStat
+                    {
+                        GeographicLocationId = request.GeographicLocationId,
+                        CategoryId = request.CategoryId,
+                        InstitutionId = request.InstitutionId,
+                        DocumentCount = 0,
+                        LastUpdated = DateTime.UtcNow
+                    };
+                    await _dbContext.LocationDocumentStats.AddAsync(locationStat);
+                    await _dbContext.SaveChangesAsync();
+                }
+                locationStat.DocumentCount++;
+                locationStat.LastUpdated = DateTime.UtcNow;
+                _dbContext.LocationDocumentStats.Update(locationStat);
+                await _dbContext.SaveChangesAsync();
+
                 _dbContext.Documents.Update(document);
                 await _dbContext.SaveChangesAsync();
+
+                transaction.Commit();
                 return Ok(new DocumentCRUDModel(document));
             }
             catch(Exception){
@@ -121,7 +186,7 @@ namespace carceral_groups_api.Controllers
         }
 
         [HttpDelete("{id}")]
-            public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             Document? document = null;
 
@@ -134,9 +199,28 @@ namespace carceral_groups_api.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, Messages.DatabaseReadError);
             }
 
+            // https://learn.microsoft.com/en-us/ef/core/saving/transactions#controlling-transactions
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
             try{
+                // decrement previous location stat
+                var locationStat = await _dbContext.LocationDocumentStats.FirstOrDefaultAsync(m => m.GeographicLocationId == document.GeographicLocationId && m.CategoryId == document.CategoryId && m.InstitutionId == document.InstitutionId);
+                if (locationStat != null)
+                {
+                    locationStat.DocumentCount--;
+                    _dbContext.LocationDocumentStats.Update(locationStat);
+                    await _dbContext.SaveChangesAsync();
+
+                }
+                if (locationStat != null && locationStat.DocumentCount <= 0)
+                {
+                    _dbContext.LocationDocumentStats.Remove(locationStat);
+                    await _dbContext.SaveChangesAsync();
+                }
+
                 _dbContext.Documents.Remove(document);
                 await _dbContext.SaveChangesAsync();
+                transaction.Commit();
                 return Ok();
             }
             catch(Exception){

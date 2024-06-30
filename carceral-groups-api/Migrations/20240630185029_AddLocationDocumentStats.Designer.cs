@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace carceral_groups_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240630174207_AddLocationDocumentStats")]
+    [Migration("20240630185029_AddLocationDocumentStats")]
     partial class AddLocationDocumentStats
     {
         /// <inheritdoc />
@@ -224,30 +224,22 @@ namespace carceral_groups_api.Migrations
 
             modelBuilder.Entity("CarceralGroupsAPI.LocationDocumentStat", b =>
                 {
-                    b.Property<int>("LocationDocumentStatId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LocationDocumentStatId"));
-
                     b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DocumentCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GeographicLocationId")
                         .HasColumnType("int");
 
                     b.Property<int>("InstitutionId")
                         .HasColumnType("int");
 
+                    b.Property<int>("GeographicLocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DocumentCount")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("LocationDocumentStatId");
-
-                    b.HasIndex("CategoryId");
+                    b.HasKey("CategoryId", "InstitutionId", "GeographicLocationId");
 
                     b.HasIndex("GeographicLocationId");
 

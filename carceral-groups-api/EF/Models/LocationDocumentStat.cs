@@ -2,8 +2,6 @@ namespace CarceralGroupsAPI
 {
     public class LocationDocumentStat
     {
-        public required int LocationDocumentStatId { get; set; }
-
         public required int CategoryId { get; set; }
         public Category? Category { get; set; }
         

@@ -15,8 +15,6 @@ namespace carceral_groups_api.Migrations
                 name: "LocationDocumentStats",
                 columns: table => new
                 {
-                    LocationDocumentStatId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     InstitutionId = table.Column<int>(type: "int", nullable: false),
                     GeographicLocationId = table.Column<int>(type: "int", nullable: false),
@@ -25,7 +23,7 @@ namespace carceral_groups_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LocationDocumentStats", x => x.LocationDocumentStatId);
+                    table.PrimaryKey("PK_LocationDocumentStats", x => new { x.CategoryId, x.InstitutionId, x.GeographicLocationId });
                     table.ForeignKey(
                         name: "FK_LocationDocumentStats_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -45,11 +43,6 @@ namespace carceral_groups_api.Migrations
                         principalColumn: "InstitutionId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LocationDocumentStats_CategoryId",
-                table: "LocationDocumentStats",
-                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LocationDocumentStats_GeographicLocationId",
