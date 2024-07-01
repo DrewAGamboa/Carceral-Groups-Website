@@ -1,4 +1,5 @@
 
+// represents one selected institution.
 type GeographicLocationFilter = {
     Category: string,
     Institution: string,

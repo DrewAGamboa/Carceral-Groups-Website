@@ -13,16 +13,6 @@ type LeafLetHelper = {
   groups: LeafLetGroup[];
 };
 
-const RedMarkerIcon = L.icon({
-  // iconUrl: '/assets/red_pin.png',
-  // TODO: figure out how to get the assets URL from the environment in squarespace.
-  iconUrl: "https://vialekhnstore.z1.web.core.windows.net/assets/red_pin.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
-
 type LeafletMapProps = {
   geojson?: any;
   onMarkerClick: (geographicLocationId: string) => void;
@@ -65,8 +55,9 @@ const LeafletMap: React.FC<LeafletMapProps> = ({ geojson, onMarkerClick }) => {
     if (leafletHelperRef.current && geojson) {
       // Add GeoJSON layer
       const geoJSON = L.geoJSON(geojson, {
-        pointToLayer: (_geoJsonPoint, latlng) => {
-          return L.marker(latlng, { icon: RedMarkerIcon })
+        pointToLayer: (geoJsonPoint, latlng) => {
+          const style = {color: geoJsonPoint.properties.color, radius: 8, fillColor: geoJsonPoint.properties.color, fillOpacity: 0.8}
+          return L.circleMarker(latlng, style)
         },
         onEachFeature: (feature, layer) => {
           if (feature.properties?.popupContent) {

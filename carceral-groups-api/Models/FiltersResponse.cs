@@ -10,6 +10,8 @@ namespace CarceralGroupsAPI
         public required int CategoryId { get; set; }
         public required string Category { get; set; }
 
+        public string? Color { get; set; }
+
         public List<FiltersResponseFilterInstitution>? Institutions { get; set; }
     }
 

@@ -27,6 +27,7 @@ namespace carceral_groups_api.Controllers
                 response.Filters.Add(new FiltersResponseFilter{
                     Category = category.Name,
                     CategoryId = category.CategoryId,
+                    Color = category.Color,
                     Institutions = await _dbContext.Documents
                         .Where(m => m.CategoryId == category.CategoryId)
                         .Select(m => m.Institution != null ? 

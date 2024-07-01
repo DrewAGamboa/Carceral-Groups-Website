@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useEffect, useState } from 'react';
 import FiltersResponseFilter from '../../models/FiltersResponseFilter';
@@ -10,6 +9,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 
 
+import CustomColorCheckbox from './CustomColorCheckbox';
 
 export interface FilterOptionsProps {
   options: FiltersResponseFilter[]
@@ -23,12 +23,13 @@ type filterOptionModel = {
   checked: boolean,
   indeterminate: boolean,
   geographicLocationFilter?: GeographicLocationFilter,
+  color?: string
 }
 
 const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filterOptionModel[] => {
   // add all option
   const newFilterOptions: filterOptionModel[] = []
-  const defaultOption: filterOptionModel = { prefix: '', label: 'All', level: 0, checked: true, indeterminate: false }
+  const defaultOption: filterOptionModel = { prefix: '', label: 'All', level: 0, checked: true, indeterminate: false}
   newFilterOptions.push(defaultOption)
 
   // add categories and institutions
@@ -43,14 +44,16 @@ const transformFiltersToFilterOptions = (filters: FiltersResponseFilter[]): filt
           level: 4,
           checked: true,
           indeterminate: false,
+          color: filter.color,
           geographicLocationFilter: { Category: filter.category, Institution: curInstitution.institution, CategoryId: filter.categoryId, InstitutionId: curInstitution.institutionId }
         }
       })
       institionOptions.push(...possibleInstitutions)
     }
 
-    return { category: { prefix: ':All', label: filter.category, level: 2, checked: true, indeterminate: false }, institutions: institionOptions }
+    return { category: { prefix: ':All', label: filter.category, level: 2, checked: true, indeterminate: false, color: filter.color }, institutions: institionOptions }
   })
+
 
   categoryOptions.forEach((categoryOption) => {
     // add category as a filter option
@@ -144,10 +147,11 @@ export default function FilterOptions({ options, onOptionsChange }: FilterOption
         <FormControlLabel
           label={option.label}
           control={
-            <Checkbox
+            <CustomColorCheckbox 
               checked={option.checked}
               indeterminate={option.indeterminate}
-              onChange={(e) => handleCheckboxChange(option, e.target.checked)}
+              onChange={(e) => handleCheckboxChange(option, e.target.checked)} 
+              customColor={option.color}
             />
           }
         />
