@@ -41,7 +41,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.Comment", b =>
@@ -77,7 +77,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasIndex("DocumentId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.Document", b =>
@@ -134,7 +134,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasIndex("InstitutionId");
 
-                    b.ToTable("Documents", (string)null);
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.DocumentType", b =>
@@ -152,7 +152,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasKey("DocumentTypeId");
 
-                    b.ToTable("DocumentTypes", (string)null);
+                    b.ToTable("DocumentTypes");
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.FileType", b =>
@@ -170,7 +170,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasKey("FileTypeId");
 
-                    b.ToTable("FileTypes", (string)null);
+                    b.ToTable("FileTypes");
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.GeographicLocation", b =>
@@ -198,7 +198,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasKey("GeographicLocationId");
 
-                    b.ToTable("GeographicLocations", (string)null);
+                    b.ToTable("GeographicLocations");
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.Institution", b =>
@@ -245,24 +245,9 @@ namespace carceral_groups_api.Migrations
                     b.ToTable("LocationDocumentStats");
                 });
 
-            modelBuilder.Entity("DocumentGeographicLocation", b =>
-                {
-                    b.Property<int>("DocumentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ToGeographicLocationsGeographicLocationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DocumentId", "ToGeographicLocationsGeographicLocationId");
-
-                    b.HasIndex("ToGeographicLocationsGeographicLocationId");
-
-                    b.ToTable("DocumentGeographicLocation");
-                });
-
             modelBuilder.Entity("CarceralGroupsAPI.Comment", b =>
                 {
-                    b.HasOne("CarceralGroupsAPI.Document", null)
+                    b.HasOne("CarceralGroupsAPI.Document", "Document")
                         .WithMany("Comments")
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -337,21 +322,6 @@ namespace carceral_groups_api.Migrations
                     b.Navigation("GeographicLocation");
 
                     b.Navigation("Institution");
-                });
-
-            modelBuilder.Entity("DocumentGeographicLocation", b =>
-                {
-                    b.HasOne("CarceralGroupsAPI.Document", null)
-                        .WithMany()
-                        .HasForeignKey("DocumentId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.HasOne("CarceralGroupsAPI.GeographicLocation", null)
-                        .WithMany()
-                        .HasForeignKey("ToGeographicLocationsGeographicLocationId")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.Document", b =>
