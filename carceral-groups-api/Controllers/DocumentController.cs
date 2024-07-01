@@ -77,7 +77,7 @@ namespace carceral_groups_api.Controllers
                     FileTypeId = request.FileTypeId,
                     CategoryId = request.CategoryId,
                     InstitutionId = request.InstitutionId,
-                    GeographicLocationId = request.GeographicLocationId
+                    GeographicLocationId = request.GeographicLocationId,
                     ToGeographicLocations = toGeographicLocations
                 };
 

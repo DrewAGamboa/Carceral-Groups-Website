@@ -21,10 +21,7 @@ namespace CarceralGroupsAPI
 
             modelBuilder.Entity<LocationDocumentStat>()
                 .HasKey(m => new { m.CategoryId, m.InstitutionId, m.GeographicLocationId });
-        }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
             modelBuilder.Entity<Document>()
                 .HasMany(e => e.ToGeographicLocations)
                 .WithMany()
