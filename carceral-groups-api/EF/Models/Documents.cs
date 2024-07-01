@@ -35,5 +35,7 @@ namespace CarceralGroupsAPI
         public GeographicLocation? GeographicLocation { get; set; }
 
         public ICollection<Comment>? Comments { get; set; }
+
+        public ICollection<GeographicLocation>? ToGeographicLocations { get; set; }
     }
 }

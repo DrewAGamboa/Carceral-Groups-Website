@@ -46,6 +46,7 @@ export default function GeographicDocumentCreate() {
         categoryId: 0,
         institutionId: 0,
         geographicLocationId: 0,
+        toGeographicLocations: []
     });
 
     const handleFileUploadSubmit = async (event: FormEvent<HTMLFormElement>) => {

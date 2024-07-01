@@ -1,3 +1,5 @@
+import GeographicLocation from "./GeographicLocation";
+
 export const DUMMY_GEO_DOCS: GeographicDocument[] = [
     {
         documentId: "1",
@@ -8,7 +10,8 @@ export const DUMMY_GEO_DOCS: GeographicDocument[] = [
         fileTypeId: 0,
         categoryId: 0,
         institutionId: 0,
-        geographicLocationId: 0
+        geographicLocationId: 0,
+        toGeographicLocations: []
     },
     {
         documentId: "2",
@@ -19,7 +22,8 @@ export const DUMMY_GEO_DOCS: GeographicDocument[] = [
         fileTypeId: 0,
         categoryId: 0,
         institutionId: 0,
-        geographicLocationId: 0
+        geographicLocationId: 0,
+        toGeographicLocations: []
     },
     {
         documentId: "3",
@@ -30,7 +34,8 @@ export const DUMMY_GEO_DOCS: GeographicDocument[] = [
         fileTypeId: 0,
         categoryId: 0,
         institutionId: 0,
-        geographicLocationId: 0
+        geographicLocationId: 0,
+        toGeographicLocations: []
     },
 ]
 
@@ -47,6 +52,8 @@ type GeographicDocument = {
     categoryId: number
     institutionId: number
     geographicLocationId: number
+    geographicLocation?: GeographicLocation
+    toGeographicLocations: GeographicLocation[]
 }
 
 export type DocumentListResponseItem = {

@@ -21,6 +21,14 @@ namespace CarceralGroupsAPI
 
             modelBuilder.Entity<LocationDocumentStat>()
                 .HasKey(m => new { m.CategoryId, m.InstitutionId, m.GeographicLocationId });
+
+            modelBuilder.Entity<Document>()
+                .HasMany(e => e.ToGeographicLocations)
+                .WithMany()
+                .UsingEntity(
+                    l => l.HasOne(typeof(GeographicLocation)).WithMany().OnDelete(DeleteBehavior.ClientCascade),
+                    r => r.HasOne(typeof(Document)).WithMany().OnDelete(DeleteBehavior.ClientCascade)
+                );
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options) =>

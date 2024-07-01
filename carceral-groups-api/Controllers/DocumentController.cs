@@ -33,6 +33,7 @@ namespace carceral_groups_api.Controllers
         {
             try{
                 DocumentCRUDModel? document = await _dbContext.Documents.AsNoTracking()
+                    .Include(m => m.ToGeographicLocations)
                     .Where(m => m.DocumentId == id)
                     .Select(m => new DocumentCRUDModel(m))
                     .FirstOrDefaultAsync();
@@ -63,6 +64,10 @@ namespace carceral_groups_api.Controllers
             using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
             try{
+                var requestToGeographicLocation = request.ToGeographicLocations.Select(m => m.GeographicLocationId).ToList();
+                var toGeographicLocations = _dbContext.GeographicLocations.Where(m => requestToGeographicLocation.Contains(m.GeographicLocationId))
+                .ToList();
+
                 var document = new Document{
                     DocumentTitle = request.DocumentTitle,
                     FileTitle = request.FileTitle,
@@ -72,7 +77,8 @@ namespace carceral_groups_api.Controllers
                     FileTypeId = request.FileTypeId,
                     CategoryId = request.CategoryId,
                     InstitutionId = request.InstitutionId,
-                    GeographicLocationId = request.GeographicLocationId
+                    GeographicLocationId = request.GeographicLocationId,
+                    ToGeographicLocations = toGeographicLocations
                 };
 
                 // increment location stat. TODO: refactor this into a method
@@ -113,7 +119,7 @@ namespace carceral_groups_api.Controllers
             Document? document = null;
 
             try{
-                document = await _dbContext.Documents.FirstOrDefaultAsync(m => m.DocumentId == id);
+                document = await _dbContext.Documents.Include(m => m.ToGeographicLocations).FirstOrDefaultAsync(m => m.DocumentId == id);
                 if(document == null)
                     return NotFound();
 
@@ -144,6 +150,10 @@ namespace carceral_groups_api.Controllers
                     await _dbContext.SaveChangesAsync();
                 }
 
+                var requestToGeographicLocation = request.ToGeographicLocations.Select(m => m.GeographicLocationId).ToList();
+                var toGeographicLocations = _dbContext.GeographicLocations.Where(m => requestToGeographicLocation.Contains(m.GeographicLocationId))
+                .ToList();
+
                 document.DocumentTitle = request.DocumentTitle;
                 document.FileTitle = request.FileTitle;
                 document.URI = request.URI;
@@ -153,6 +163,7 @@ namespace carceral_groups_api.Controllers
                 document.CategoryId = request.CategoryId;
                 document.InstitutionId = request.InstitutionId;
                 document.GeographicLocationId = request.GeographicLocationId;
+                document.ToGeographicLocations = toGeographicLocations;
 
                 // increment location stat. TODO: refactor this into a method
                 var locationStat = await _dbContext.LocationDocumentStats.FirstOrDefaultAsync(m => m.GeographicLocationId == request.GeographicLocationId && m.CategoryId == request.CategoryId && m.InstitutionId == request.InstitutionId);
@@ -191,7 +202,7 @@ namespace carceral_groups_api.Controllers
             Document? document = null;
 
             try{
-                document = await _dbContext.Documents.FirstOrDefaultAsync(m => m.DocumentId == id);
+                document = await _dbContext.Documents.Include(m => m.ToGeographicLocations).FirstOrDefaultAsync(m => m.DocumentId == id);
                 if(document == null)
                     return NotFound();
             }

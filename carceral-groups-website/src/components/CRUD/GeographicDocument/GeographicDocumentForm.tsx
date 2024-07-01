@@ -12,6 +12,7 @@ import { getDocumentTypes } from "../../../api/services/DocumentTypeService";
 import { getFileTypes } from "../../../api/services/FileTypeService";
 import GeographicDocumentType from "../../../models/GeographicDocumentType";
 import FileType from "../../../models/FileType";
+import MultipleSelectChip from "../../MaterialUI/MultipleSelectChip";
 
 type GeographicDocumentFormProps = {
     geographicDocument: GeographicDocument
@@ -55,6 +56,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
     const [inputFromLocationId, setInputFromLocationId] = useState<number>(geographicDocument.geographicLocationId);
     const [inputFromCategoryId, setInputFromCategoryId] = useState<number>(geographicDocument.categoryId);
     const [inputFromInstitutionId, setInputFromInstitutionId] = useState<number>(geographicDocument.institutionId);
+    const [inputToLocation, setInputToLocation] = useState<{ value: string; label: string, original: GeographicLocation }[]>([]);
 
     const handleDocumentTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputDocumentTitle(event.target.value);
@@ -97,6 +99,11 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputFromInstitutionId(newInstitutionId);
     }
 
+    const handleFormToLoctionChange = (selectedValues: { value: string; label: string; original: GeographicLocation }[]) => {
+        console.log("TODO_selectedValues", selectedValues)
+        setInputToLocation(selectedValues);
+    }
+
     const textProps = isEdit ? { required: true } : { disabled: true };
 
     useEffect(() => {
@@ -134,7 +141,23 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
         setInputFromCategoryId(geographicDocument.categoryId);
         setInputFromInstitutionId(geographicDocument.institutionId);
         setInputFromLocationId(geographicDocument.geographicLocationId);
-    }, [geographicDocument])
+        const toLocations = geographicDocument.toGeographicLocations?.map(loc => {
+            return {
+                value: loc.geographicLocationId.toString(),
+                label: loc.geographicLocationName,
+                original: loc,
+            }
+        })
+        setInputToLocation(toLocations);
+    }, [geographicDocument, geographicLocations])
+
+    const chipOptions = geographicLocations.map(loc => { 
+        return {
+            value: loc.geographicLocationId.toString(),
+            label: loc.geographicLocationName,
+            original: loc,
+        }
+    });
 
     return (
         <Box
@@ -258,6 +281,14 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     {locationMenuItems}
                 </Select>
             </FormControl>
+            <MultipleSelectChip
+                name={"toGeographicLocations"}
+                label={"To Geographic Locations"}
+                selectedValue={inputToLocation}
+                options={chipOptions}
+                onSelectValue={handleFormToLoctionChange}
+                {...textProps}
+            />
             <Box
                 display="flex"
                 justifyContent={'flex-end'}

@@ -20,6 +20,7 @@ namespace CarceralGroupsAPI
             CategoryId = document.CategoryId;
             InstitutionId = document.InstitutionId;
             GeographicLocationId = document.GeographicLocationId;
+            ToGeographicLocations = document.ToGeographicLocations ?? new List<GeographicLocation>();
         }
 
         public int DocumentId { get; set; }
@@ -45,5 +46,7 @@ namespace CarceralGroupsAPI
         public required int InstitutionId { get; set; }
 
         public required int GeographicLocationId { get; set; }
+
+        public ICollection<GeographicLocation> ToGeographicLocations { get; set; }
     }
 }

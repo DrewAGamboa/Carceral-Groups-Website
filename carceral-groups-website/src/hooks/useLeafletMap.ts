@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
-import { getFilterOptions, getGeographicLocations } from "../api/services/MapPointsService";
+import { getFilterOptions, getGeographicDocumentDestinations, getGeographicLocations } from "../api/services/MapPointsService";
 import FiltersResponseFilter from "../models/FiltersResponseFilter";
 import GeographicLocationFilter from "../models/GeographicLocationFilter";
 import GeographicLocation from "../models/GeographicLocation";
-// import GeographicLocation from "../models/GeographicLocation";
 
 const useLeafletMap = () => {
   const [filterOptions, setFilterOptions] = useState<FiltersResponseFilter[]>([]);
   const [selectedGeographicLocationFilters, setSelectedGeographicLocationFilter] = useState<GeographicLocationFilter[]>([]);
   const [selectedGeoJSON, setDataGeoJson] = useState<any[]>([])
+  const [selectedLinesGeoJSON, setDataLinesGeoJson] = useState<any[]>([])
   const [selectedGeographicLocation, setSelectedGeographicLocation] = useState<GeographicLocation>()
   const [selectedGeographicLocations, setSelectedGeographicLocations] = useState<GeographicLocation[]>([])
 
@@ -76,6 +76,23 @@ const useLeafletMap = () => {
           }
         })
         setDataGeoJson(newGeoJSON)
+
+        // transform document destinations to GeoJSON
+        const newGeographicDocumentDestinations = await getGeographicDocumentDestinations(selectedGeographicLocationFilters);
+        const newDestinationPolyLines: {type: string, coordinates: string[][]}[] = []
+        newGeographicDocumentDestinations.map((destination) => {
+          if (!destination.geographicLocation) {
+            return
+          }
+
+          const fromGeographicLocation = [destination.geographicLocation?.longitude, destination.geographicLocation?.latitude]
+          const toGeographicLocations = destination.toGeographicLocations.map((location) => {
+            const toLocation = [location.longitude, location.latitude]
+            return {type: "LineString" , coordinates: [fromGeographicLocation, toLocation]}
+          });
+          newDestinationPolyLines.push(...toGeographicLocations)
+        })
+        setDataLinesGeoJson(newDestinationPolyLines)
       }
       catch (error) {
         console.error('Error fetching data:', error);
@@ -88,6 +105,7 @@ const useLeafletMap = () => {
   return {
     selectedGeographicLocation,
     selectedGeoJSON,
+    selectedLinesGeoJSON,
     filterOptions,
     handleSelectedInstitutions,
     handleOnGeographicLocationClick,
