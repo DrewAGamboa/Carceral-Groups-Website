@@ -252,6 +252,8 @@ namespace carceral_groups_api.Migrations
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Document");
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.Document", b =>
