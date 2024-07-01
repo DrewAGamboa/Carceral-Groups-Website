@@ -41,7 +41,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.Comment", b =>
@@ -77,7 +77,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasIndex("DocumentId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.Document", b =>
@@ -134,7 +134,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasIndex("InstitutionId");
 
-                    b.ToTable("Documents");
+                    b.ToTable("Documents", (string)null);
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.DocumentType", b =>
@@ -152,7 +152,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasKey("DocumentTypeId");
 
-                    b.ToTable("DocumentTypes");
+                    b.ToTable("DocumentTypes", (string)null);
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.FileType", b =>
@@ -170,7 +170,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasKey("FileTypeId");
 
-                    b.ToTable("FileTypes");
+                    b.ToTable("FileTypes", (string)null);
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.GeographicLocation", b =>
@@ -198,7 +198,7 @@ namespace carceral_groups_api.Migrations
 
                     b.HasKey("GeographicLocationId");
 
-                    b.ToTable("GeographicLocations");
+                    b.ToTable("GeographicLocations", (string)null);
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.Institution", b =>
@@ -262,13 +262,11 @@ namespace carceral_groups_api.Migrations
 
             modelBuilder.Entity("CarceralGroupsAPI.Comment", b =>
                 {
-                    b.HasOne("CarceralGroupsAPI.Document", "Document")
+                    b.HasOne("CarceralGroupsAPI.Document", null)
                         .WithMany("Comments")
                         .HasForeignKey("DocumentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Document");
                 });
 
             modelBuilder.Entity("CarceralGroupsAPI.Document", b =>
