@@ -116,40 +116,6 @@ export const getFilterOptions = async () => {
     }
 }
 
-const locationColors = (locations: GeographicLocation[]) => {
-    const locationAddedColors = addColorProperty(locations)
-    return locationAddedColors;
-
-}
-
-const addColorProperty = (model: any[]) => {
-    const colors = [
-        'red',
-        'blue',
-        'green',
-        'purple',
-        'orange',
-        'darkred',
-        'lightred',
-        'beige',
-        'darkblue',
-        'darkgreen',
-        'cadetblue',
-        'darkpurple',
-        'white',
-        'pink',
-        'lightblue',
-        'lightgreen',
-        'gray',
-        'black',
-        'lightgray'
-    ]
-    model.forEach((cur, index) => {
-        cur.color = colors[index % colors.length]
-    })
-    return model;
-}
-
 /**
  * Filters and transforms geographic data points based on selected filters.
  * 
@@ -178,8 +144,7 @@ export const getGeographicLocations = async (selectedGeographicLocationFilters: 
                 }
             }
         )
-        let geographicLocations = await response.json() as GeographicLocation[];
-        geographicLocations = locationColors(geographicLocations) // determine if we want to add colors as part of the model or not
+        const geographicLocations = await response.json() as GeographicLocation[];
         console.log("TODO_getGeographicLocation_response", geographicLocations)
         return geographicLocations
 

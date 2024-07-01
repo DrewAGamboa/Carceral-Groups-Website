@@ -27,6 +27,7 @@ namespace carceral_groups_api.Controllers
                 response.Filters.Add(new FiltersResponseFilter{
                     Category = category.Name,
                     CategoryId = category.CategoryId,
+                    Color = category.Color,
                     Institutions = await _dbContext.Documents
                         .Where(m => m.CategoryId == category.CategoryId)
                         .Select(m => m.Institution != null ? 
@@ -38,35 +39,7 @@ namespace carceral_groups_api.Controllers
                 });
             }
 
-            // TODO: Remove when added as column to DB
-            response.Filters = AddColorToCategories(response.Filters);
-
             return response;
         }
-
-
-        // TODO: Remove when added as column to DB
-        private List<FiltersResponseFilter> AddColorToCategories(List<FiltersResponseFilter> categories){
-            var random = new Random();
-            foreach(var category in categories){
-                category.Color = Colors[random.Next(Colors.Count)];
-            }
-            return categories;
-        }
-
-        // TODO: Remove when added as column to DB
-        private List<string> Colors = new List<string>{
-            "red",
-            "blue",
-            "green",
-            "purple",
-            "orange",
-            "darkred",
-            "lightred",
-            "beige",
-            "pink",
-            "lightblue",
-            "lightgreen",
-        };
     }
 }
