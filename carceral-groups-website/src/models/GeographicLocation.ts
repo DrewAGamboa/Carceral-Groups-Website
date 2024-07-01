@@ -29,7 +29,7 @@ type GeographicLocation = {
     geographicLocationName: string
     latitude: string
     longitude: string
-    color: string
+    color?: string
 }
 
 export default GeographicLocation;
