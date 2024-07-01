@@ -6,12 +6,13 @@ const backend_api_url = import.meta.env.VITE_BACKEND_API_URL
 
 export async function createGeographicCategory() {
     try {
+        const name = `New Category ${Date.now()}`
         const response = await fetch(`${backend_api_url}/Category`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(`New Category ${Date.now()}`) // TODO: Revisit this if category name is not the only field
+            body: JSON.stringify({name})
         
         })
         const resJson = await response.json()
@@ -54,12 +55,13 @@ export async function getGeographicCategory(id: string) {
 
 export async function updateGeographicCategory(id: string, updates: any) {
     try{
+        const updatedCategory = { ...updates, color: updates.color?.length > 0 ? updates.color : undefined}
         const response = await fetch(`${backend_api_url}/Category/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(updates.name) // TODO: Revisit this if category name is not the only field
+            body: JSON.stringify(updatedCategory)
         })
         const resJson = await response.json()
         const updatedGeographicCategory = resJson as GeographicCategory

@@ -43,10 +43,10 @@ namespace carceral_groups_api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult?> Post([FromBody]string name)
+        public async Task<IActionResult?> Post([FromBody]CategoryCRUDModel request)
         {
             try{
-                var categoryExists = _dbContext.Categories.Any(m => m.Name == name);
+                var categoryExists = _dbContext.Categories.Any(m => m.Name == request.Name);
                 if(categoryExists)
                     return StatusCode((int)HttpStatusCode.Conflict, Messages.ResourceAlreadyExists);
             }
@@ -56,7 +56,8 @@ namespace carceral_groups_api.Controllers
 
             try{
                 var category = new Category{
-                    Name = name
+                    Name = request.Name,
+                    Color = request.Color
                 };
 
                 await _dbContext.Categories.AddAsync(category);
@@ -70,7 +71,7 @@ namespace carceral_groups_api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] string name)
+        public async Task<IActionResult> Put(int id, [FromBody] CategoryCRUDModel request)
         {
             Category? category = null;
 
@@ -79,7 +80,7 @@ namespace carceral_groups_api.Controllers
                 if(category == null)
                     return NotFound();
 
-                var categoryExists = _dbContext.Categories.Any(m => m.Name == name);
+                var categoryExists = _dbContext.Categories.Any(m => m.Name == request.Name && m.CategoryId != id);
                 if(categoryExists)
                     return StatusCode((int)HttpStatusCode.Conflict, Messages.ResourceAlreadyExists);
             }
@@ -88,7 +89,8 @@ namespace carceral_groups_api.Controllers
             }
 
             try{
-                category.Name = name;
+                category.Name = request.Name;
+                category.Color = request.Color;
 
                 _dbContext.Categories.Update(category);
                 await _dbContext.SaveChangesAsync();

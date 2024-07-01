@@ -27,7 +27,7 @@ export async function action() {
 
 const GeographicCategorys = () => {
     const { geographicCategorys } = useLoaderData() as { geographicCategorys: GeographicCategory[] };
-    const tableHeaderInfo = [{ name: "Id" }, { name: "Category Name" }]
+    const tableHeaderInfo = [{ name: "Id" }, { name: "Category Name" }, { name: "Color" }]
     const tableRows = geographicCategorys
     const navigate = useNavigate();
 

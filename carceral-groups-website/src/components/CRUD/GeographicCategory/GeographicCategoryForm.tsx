@@ -1,7 +1,7 @@
 import { Box, TextField, Typography } from "@mui/material";
 import GeographicCategory from "../../../models/GeographicCategory";
 import { useEffect, useState } from "react";
-
+import { MuiColorInput } from 'mui-color-input'
 
 type GeographicCategoryFormProps = {
     geographicCategory: GeographicCategory
@@ -13,22 +13,29 @@ const GeographicCategoryForm = (props: GeographicCategoryFormProps) => {
     const { geographicCategory, children, isEdit } = props;
 
     const [inputName, setInputName] = useState<string>(geographicCategory.name || '');
+    const [inputColor, setInputColor] = useState<string>(geographicCategory.color || '');
 
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputName(event.target.value);
     }
 
+    const handleColorChange = (value: string) => {
+        setInputColor(value);
+    }
+
     const textProps = isEdit ? { required: true } : { disabled: true };
+    const notRequiredTextProps = isEdit ? {} : { disabled: true };
 
     useEffect(() => {
         setInputName(geographicCategory.name);
+        setInputColor(geographicCategory.color || '');
     }, [geographicCategory])
 
     return (
         <Box
             component="section"
             sx={{
-                '& .MuiTextField-root': { m: 1, width: '25ch' },
+                '& .MuiTextField-root': { m: 1 },
                 p: 2,
                 m: 2,
             }}>
@@ -42,6 +49,7 @@ const GeographicCategoryForm = (props: GeographicCategoryFormProps) => {
                 Details
             </Typography>
             <TextField
+                fullWidth
                 margin="dense"
                 id="name"
                 name="name"
@@ -50,6 +58,17 @@ const GeographicCategoryForm = (props: GeographicCategoryFormProps) => {
                 value={inputName}
                 onChange={handleNameChange}
                 {...textProps}
+            />
+            <MuiColorInput
+                fullWidth
+                margin="dense"
+                id="color"
+                name="color"
+                format="hex"
+                value={inputColor}
+                onChange={handleColorChange}
+                label="Category Color"
+                {...notRequiredTextProps}
             />
             <Box
                 display="flex"
