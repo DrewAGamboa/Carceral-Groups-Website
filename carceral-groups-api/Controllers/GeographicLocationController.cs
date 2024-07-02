@@ -17,6 +17,7 @@ namespace carceral_groups_api.Controllers
             try
             {
                 List<GeographicLocationCRUDModel> geographicLocations = await _dbContext.GeographicLocations.AsNoTracking()
+                    .OrderBy(m => m.GeographicLocationName)
                     .Select(m => new GeographicLocationCRUDModel(m))
                     .ToListAsync();
 
