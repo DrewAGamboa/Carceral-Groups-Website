@@ -16,7 +16,10 @@ namespace carceral_groups_api.Controllers
         {
             try
             {
-                List<DocumentType> documentTypes = await _dbContext.DocumentTypes.AsNoTracking().ToListAsync();
+                List<DocumentType> documentTypes = await _dbContext.DocumentTypes
+                    .AsNoTracking()
+                    .OrderBy(m => m.Name)
+                    .ToListAsync();
                 return Ok(documentTypes);
             }
             catch (Exception)

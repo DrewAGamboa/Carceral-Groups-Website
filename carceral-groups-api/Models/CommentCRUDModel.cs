@@ -34,6 +34,6 @@ namespace CarceralGroupsAPI
 
         public required int DocumentId { get; set; }
 
-        public string DocumentTitle { get; set; }
+        public required string DocumentTitle { get; set; }
     }
 }
