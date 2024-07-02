@@ -17,6 +17,11 @@ namespace carceral_groups_api.Controllers
             try
             {
                 List<DocumentCRUDModel> documents = await _dbContext.Documents.AsNoTracking()
+                    .Include(m => m.DocumentType)
+                    .Include(m => m.FileType)
+                    .Include(m => m.Category)
+                    .Include(m => m.Institution)
+                    .Include(m => m.GeographicLocation)
                     .OrderBy(m => m.DocumentTitle)
                     .Select(m => new DocumentCRUDModel(m))
                     .ToListAsync();

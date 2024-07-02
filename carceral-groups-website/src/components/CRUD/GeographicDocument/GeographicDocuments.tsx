@@ -31,7 +31,20 @@ const GeographicDocuments = () => {
         { name: "Institution" },
         { name: "Location" },
     ]
-    const tableRows = geographicDocuments;
+    const tableRows = geographicDocuments.map((geographicDocument) => {
+        return {
+            documentId: geographicDocument.documentId,
+            documentTitle: geographicDocument.documentTitle,
+            fileTitle: geographicDocument.fileTitle,
+            uri: geographicDocument.uri,
+            citation: geographicDocument.citation,
+            documentTypeName: geographicDocument.documentTypeName,
+            fileTypeName: geographicDocument.fileTypeName,
+            categoryName: geographicDocument.categoryName,
+            institutionName: geographicDocument.institutionName,
+            geographicLocationName: geographicDocument.geographicLocationName,
+        }
+    });
     const navigate = useNavigate();
     const location = useLocation();
     const match = useMatch("/admin/geographicDocuments/*");
