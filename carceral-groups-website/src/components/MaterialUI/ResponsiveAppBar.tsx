@@ -12,8 +12,9 @@ import MenuItem from '@mui/material/MenuItem';
 import { SignOutButton } from '../Auth/SignOutButton';
 import { SignInButton } from '../Auth/SignInButton';
 import { AuthenticatedTemplate } from '@azure/msal-react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigation } from 'react-router-dom';
 import Link from '@mui/material/Link';
+import { LinearProgress } from '@mui/material';
 
 const pages = [
     {name:'Geographic Location', link:'geographicLocations'},
@@ -28,6 +29,8 @@ type ResponsiveAppBarProps = {
 };
 
 function ResponsiveAppBar(props: ResponsiveAppBarProps) {
+    const navigation = useNavigation();
+    const isLoading = navigation.state === 'loading';
     const { isAuthenticated } = props;
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
@@ -138,6 +141,7 @@ function ResponsiveAppBar(props: ResponsiveAppBarProps) {
                     </Box>
                 </Toolbar>
             </Container>
+            {isLoading && <LinearProgress />}
         </AppBar>
     );
 }
