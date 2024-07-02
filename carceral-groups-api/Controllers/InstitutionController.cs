@@ -16,7 +16,9 @@ namespace carceral_groups_api.Controllers
         {
             try
             {
-                List<Institution> institutions = await _dbContext.Institutions.AsNoTracking().ToListAsync();
+                List<Institution> institutions = await _dbContext.Institutions.AsNoTracking()
+                    .OrderBy(m => m.Name)
+                    .ToListAsync();
                 return Ok(institutions);
             }
             catch (Exception)

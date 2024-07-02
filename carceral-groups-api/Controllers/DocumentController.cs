@@ -22,6 +22,7 @@ namespace carceral_groups_api.Controllers
                     .Include(m => m.Category)
                     .Include(m => m.Institution)
                     .Include(m => m.GeographicLocation)
+                    .OrderBy(m => m.DocumentTitle)
                     .Select(m => new DocumentCRUDModel(m))
                     .ToListAsync();
 
