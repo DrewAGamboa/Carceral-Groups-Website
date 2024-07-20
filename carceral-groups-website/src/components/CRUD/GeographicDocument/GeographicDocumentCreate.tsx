@@ -9,7 +9,8 @@ import GeographicDocument from "../../../models/GeographicDocument";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function action({ request }: any) {
     const formData = await request.formData();
-    const newDocument = Object.fromEntries(formData) as GeographicDocument;
+    const formDocument = Object.fromEntries(formData)
+    const newDocument = formatFormDataToGeographicDocument(formDocument);
     try {
         const geographicDocument = await createGeographicDocument(newDocument);
         if (!geographicDocument) {
@@ -22,6 +23,20 @@ export async function action({ request }: any) {
         return redirect("/admin/geographicDocuments");
     }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const formatFormDataToGeographicDocument = (geographicDocumentForm: any) => {
+    const toGeographicLocations = []
+    if(geographicDocumentForm.toGeographicLocations)
+    {
+        const geographicLocations = geographicDocumentForm.toGeographicLocations.split(",");
+        const toGeographicLocationFormatted = geographicLocations.map((geographicLocationId: string) => newGeographicLocationWithJustId(geographicLocationId));
+        toGeographicLocations.push(...toGeographicLocationFormatted)
+    }
+    return { ...geographicDocumentForm, toGeographicLocations };
+}
+
+const newGeographicLocationWithJustId = (geographicLocationId: string) => ({ geographicLocationId, latitude: "", longitude: "", geographicLocationName: ""});
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
