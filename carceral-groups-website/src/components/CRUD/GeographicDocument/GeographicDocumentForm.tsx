@@ -222,7 +222,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     id="fromDocumentTypeId-select"
                     name="documentTypeId"
                     label="DocumentType *"
-                    value={inputFromDocumentTypeId < 1 ? undefined : inputFromDocumentTypeId.toString()}
+                    value={inputFromDocumentTypeId < 1 ? undefined : `${inputFromDocumentTypeId}`}
                     onChange={handleFormDocumentTypeChange}
                     {...textProps}
                 >
@@ -235,7 +235,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     id="fromFileTypeId-select"
                     name="fileTypeId"
                     label="FileType *"
-                    value={inputFromFileTypeId < 1 ? undefined : inputFromFileTypeId.toString()}
+                    value={inputFromFileTypeId < 1 ? undefined : `${inputFromFileTypeId}`}
                     onChange={handleFormFileTypeChange}
                     {...textProps}
                 >
@@ -248,7 +248,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     id="categoryId-select"
                     name="categoryId"
                     label="Category *"
-                    value={inputFromCategoryId < 1 ? undefined : inputFromCategoryId.toString()}
+                    value={inputFromCategoryId < 1 ? undefined : `${inputFromCategoryId}`}
                     onChange={handleFormCategoryChange}
                     {...textProps}
                 >
@@ -261,7 +261,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     id="institutionId-select"
                     name="institutionId"
                     label="Institution *"
-                    value={inputFromInstitutionId < 1 ? undefined : inputFromInstitutionId.toString()}
+                    value={inputFromInstitutionId < 1 ? undefined : `${inputFromInstitutionId}`}
                     onChange={handleFormInstitutionChange}
                     {...textProps}
                 >
@@ -274,7 +274,7 @@ const GeographicDocumentForm = (props: GeographicDocumentFormProps) => {
                     id="geographicLocationId-select"
                     name="geographicLocationId"
                     label="Location *"
-                    value={inputFromLocationId < 1 ? undefined : inputFromLocationId.toString()}
+                    value={inputFromLocationId < 1 ? undefined : `${inputFromLocationId}`}
                     onChange={handleFormLocationChange}
                     {...textProps}
                 >

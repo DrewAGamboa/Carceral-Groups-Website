@@ -33,7 +33,7 @@ type MultipleSelectChipProps = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     options: { value: string; label: string; original: any }[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    selectedValue: { value: string; label: string; original: any  }[];
+    selectedValue?: { value: string; label: string; original: any  }[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSelectValue: (selectedValues: { value: string; label: string; original: any }[]) => void;
     disabled?: boolean;
@@ -41,7 +41,7 @@ type MultipleSelectChipProps = {
 
 export default function MultipleSelectChip({ name, label, options, selectedValue, onSelectValue, disabled }: MultipleSelectChipProps) {
     const theme = useTheme();
-    const labelValues = selectedValue.map((option) => option.label)
+    const labelValues = selectedValue ? selectedValue.map((option) => option.label) : []
 
     const handleChange = (event: SelectChangeEvent<typeof labelValues>) => {
         const {
@@ -84,7 +84,7 @@ export default function MultipleSelectChip({ name, label, options, selectedValue
                     </MenuItem>
                 ))}
             </Select>
-            <input type="hidden" name={name} value={selectedValue.map((option) => option.value)} />
+            <input type="hidden" name={name} value={selectedValue ? selectedValue.map((option) => option.value) : []} />
         </FormControl>
     );
 }
